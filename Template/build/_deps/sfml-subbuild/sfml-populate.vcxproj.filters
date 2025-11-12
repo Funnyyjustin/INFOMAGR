@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\e9e9f2048c7f91ae01ee589b9b1ee13f\sfml-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\72c2d1b5ca8fadc8d70c99dc9c916b93\sfml-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\81bfe7a45d9650b07f5f16f919ae5c1b\sfml-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-subbuild\CMakeFiles\sfml-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{E58BC4B3-52CD-33E2-B3EF-A37B521DCFCB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,14 @@
+# Target labels
+ sfml-populate
+# Source files and their labels
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/81bfe7a45d9650b07f5f16f919ae5c1b/sfml-populate.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/72c2d1b5ca8fadc8d70c99dc9c916b93/sfml-populate-complete.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-build.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-configure.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-download.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-install.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-mkdir.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-patch.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-test.rule
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-update.rule

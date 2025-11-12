@@ -1,0 +1,7 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-4.1/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-4.1/Modules/FindPackageMessage.cmake
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/cmake/Modules/FindFLAC.cmake
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/cmake/Modules/FindOpenAL.cmake
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/cmake/Modules/FindVORBIS.cmake
+C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Audio/CMakeLists.txt

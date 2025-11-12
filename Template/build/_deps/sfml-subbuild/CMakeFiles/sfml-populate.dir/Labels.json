@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/81bfe7a45d9650b07f5f16f919ae5c1b/sfml-populate.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/72c2d1b5ca8fadc8d70c99dc9c916b93/sfml-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-subbuild/CMakeFiles/e9e9f2048c7f91ae01ee589b9b1ee13f/sfml-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"sfml-populate"
+		],
+		"name" : "sfml-populate"
+	}
+}

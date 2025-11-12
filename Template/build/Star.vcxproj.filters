@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{818DF9C8-6BDE-3DDB-9245-F27E891FDBAD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RayTracer">
+      <UniqueIdentifier>{0a603fe8-bf79-4fce-b2c4-ed59307ebb58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RayTracer\Math">
+      <UniqueIdentifier>{ea54ecbc-2e31-4b4c-9561-a6d29193c770}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="events.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
