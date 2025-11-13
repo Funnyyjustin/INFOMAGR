@@ -502,8 +502,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="hittable.h" />
-    <ClInclude Include="hittable_list.h" />
+    <ClInclude Include="material.h" />
+    <ClInclude Include="primitive.h" />
+    <ClInclude Include="world.h" />
     <ClInclude Include="interval.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="sphere.h" />
