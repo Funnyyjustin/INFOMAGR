@@ -2,12 +2,12 @@
 #include "events.hpp"
 #include "configuration.hpp"
 
-#include "../build/common.h"
-#include "../build/camera.h"
-#include "../build/primitive.h"
-#include "../build/material.h"
-#include "../build/sphere.h"
-#include "../build/world.h"
+#include "common.h"
+#include "camera.h"
+#include "primitive.h"
+#include "material.h"
+#include "sphere.h"
+#include "world.h"
 
 int main()
 {
