@@ -26,7 +26,7 @@ Then, you can hit "Run" at the top of the screen, and both the console (outputti
 
 ## Features
 
-- Primitives: Spheres
+- Primitives: spheres
 - Materials: diffuse, reflective, refractive
 - Anti-aliasing
 - Depth of field
@@ -37,7 +37,7 @@ Then, you can hit "Run" at the top of the screen, and both the console (outputti
 
 A nice render of three types of spheres on a big sphere
 
-coming soon
+<img width="1914" height="1075" alt="image" src="https://github.com/user-attachments/assets/2056c6c3-d511-492e-8f37-b8b3fa62abe0" />
 
 Same render, but camera positioned elsewhere, and depth of view applied
 
