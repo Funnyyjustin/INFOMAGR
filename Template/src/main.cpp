@@ -81,22 +81,25 @@ int main()
     auto material3 = make_shared<Metal>(Vec3(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));*/
 
+
+
+	sf::VertexArray res;
 	while (window.isOpen())
 	{
         // Process inputs
 		processEvents(window);
 
-		window.clear();
-
         // Render screen
-		sf::VertexArray res = cam.render(world, rendered);
+		if (!rendered) {
+			res = cam.render(world, rendered);
+			rendered = true;
+			std::cout << "Render finished. \n";
+		}
 
 		// Draw and display
+		window.clear();
 		window.draw(res);
 		window.display();
 
-        std::cout << "Render finished. \n";
-
-        rendered = true;
 	}
 }
