@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D63AA928-4ECD-3B5D-BA30-D7C75FEC4FF1}</ProjectGuid>
+    <ProjectGuid>{4FFECB73-AFED-322A-8D3C-FE209306A20B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -59,27 +59,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sfml-window.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">sfml-window-s-d</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sfml-window.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sfml-window-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">sfml-window.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">sfml-window-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">sfml-window.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">sfml-window-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -98,15 +98,15 @@
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Debug\sfml-window-s.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Debug\sfml-window-s.pdb</ProgramDataBaseFileName>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -119,8 +119,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -140,15 +140,15 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <ProgramDataBaseFileName>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Release\sfml-window-s.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\Release\sfml-window-s.pdb</ProgramDataBaseFileName>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -161,8 +161,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -182,15 +182,15 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <ProgramDataBaseFileName>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\MinSizeRel\sfml-window-s.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\MinSizeRel\sfml-window-s.pdb</ProgramDataBaseFileName>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -203,8 +203,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/extlibs/headers/glad/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -223,15 +223,15 @@
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\RelWithDebInfo\sfml-window-s.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\lib\RelWithDebInfo\sfml-window-s.pdb</ProgramDataBaseFileName>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\vulkan;C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -243,11 +243,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template -BC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
+"C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\bin\cmake.exe" -SC:/Users/justi/Desktop/INFOMAGR/Template -BC:/Users/justi/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -255,12 +255,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template -BC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
+"C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\bin\cmake.exe" -SC:/Users/justi/Desktop/INFOMAGR/Template -BC:/Users/justi/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -268,12 +268,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template -BC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
+"C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\bin\cmake.exe" -SC:/Users/justi/Desktop/INFOMAGR/Template -BC:/Users/justi/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -281,12 +281,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-src/src/SFML/Window/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template -BC:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/Funnyyjustin/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
+"C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\bin\cmake.exe" -SC:/Users/justi/Desktop/INFOMAGR/Template -BC:/Users/justi/Desktop/INFOMAGR/Template/build --check-stamp-file C:/Users/justi/Desktop/INFOMAGR/Template/build/_deps/sfml-build/src/SFML/Window/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -294,14 +294,14 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindOpenGL.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\justi\Downloads\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r1 (1)\mingw64\share\cmake-4.1\Modules\FindPackageMessage.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\Window\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Clipboard.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Clipboard.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Clipboard.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Clipboard.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -319,8 +319,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\ClipboardImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Context.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\ClipboardImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Context.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -338,8 +338,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Context.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Cursor.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Context.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Cursor.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -357,10 +357,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Cursor.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\CursorImpl.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Export.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\GlContext.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Cursor.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\CursorImpl.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Export.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\GlContext.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -378,8 +378,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\GlContext.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\GlResource.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\GlContext.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\GlResource.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -397,12 +397,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\GlResource.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\ContextSettings.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Event.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\InputImpl.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Joystick.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Joystick.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\GlResource.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\ContextSettings.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Event.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\InputImpl.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Joystick.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Joystick.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -420,8 +420,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\JoystickImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\JoystickManager.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\JoystickImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\JoystickManager.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -439,9 +439,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\JoystickManager.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Keyboard.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Keyboard.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\JoystickManager.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Keyboard.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Keyboard.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -459,8 +459,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Mouse.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Mouse.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Mouse.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Mouse.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -478,8 +478,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Touch.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Touch.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Touch.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Touch.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -497,8 +497,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Sensor.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Sensor.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Sensor.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Sensor.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -516,8 +516,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\SensorImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\SensorManager.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\SensorImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\SensorManager.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -535,8 +535,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\SensorManager.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\VideoMode.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\SensorManager.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\VideoMode.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -554,9 +554,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\VideoMode.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\VideoModeImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Vulkan.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\VideoMode.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\VideoModeImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Vulkan.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -574,8 +574,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Vulkan.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Window.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Vulkan.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Window.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -593,8 +593,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Window.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\WindowBase.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\Window.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\WindowBase.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -612,9 +612,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\WindowBase.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\WindowHandle.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\WindowImpl.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\WindowBase.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\WindowHandle.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\WindowImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -632,10 +632,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\WindowImpl.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\WindowStyle.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\CursorImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\CursorImpl.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\WindowImpl.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\include\SFML\Window\WindowStyle.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\CursorImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\CursorImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -653,8 +653,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\ClipboardImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\ClipboardImpl.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\ClipboardImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\ClipboardImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -672,7 +672,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\InputImpl.cpp">
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\InputImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -690,8 +690,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\InputImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\JoystickImpl.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\InputImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\JoystickImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -709,9 +709,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\JoystickImpl.hpp" />
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\SensorImpl.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\SensorImpl.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\JoystickImpl.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\SensorImpl.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\SensorImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -729,7 +729,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\VideoModeImpl.cpp">
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\VideoModeImpl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -747,7 +747,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\VulkanImplWin32.cpp">
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\VulkanImplWin32.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -765,8 +765,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\VulkanImplWin32.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WindowImplWin32.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\VulkanImplWin32.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WindowImplWin32.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -784,8 +784,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WindowImplWin32.hpp" />
-    <ClCompile Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WglContext.cpp">
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WindowImplWin32.hpp" />
+    <ClCompile Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WglContext.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions) /w14242 /w14254 /w14263 /w14265 /w14287 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826 /w14905 /w14906 /w14928</AdditionalOptions>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996;4068;4505;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4289</TreatSpecificWarningsAsErrors>
@@ -803,18 +803,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <TreatSpecificWarningsAsErrors Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">4289</TreatSpecificWarningsAsErrors>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClInclude Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WglContext.hpp" />
+    <ClInclude Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-src\src\SFML\Window\Win32\WglContext.hpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\ZERO_CHECK.vcxproj">
-      <Project>{7D6E009B-C220-3DED-A92E-F5B65904AA57}</Project>
+    <ProjectReference Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\ZERO_CHECK.vcxproj">
+      <Project>{C3228F7D-D0DF-3689-A0B9-0C9193BBFAD5}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\Funnyyjustin\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\System\sfml-system.vcxproj">
-      <Project>{7C5C1F05-90F6-36A8-89E2-6DE11F6787FF}</Project>
+    <ProjectReference Include="C:\Users\justi\Desktop\INFOMAGR\Template\build\_deps\sfml-build\src\SFML\System\sfml-system.vcxproj">
+      <Project>{519C169A-0315-3FFD-892E-7CC73FAC93CB}</Project>
       <Name>sfml-system</Name>
     </ProjectReference>
   </ItemGroup>

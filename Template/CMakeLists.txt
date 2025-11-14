@@ -10,15 +10,19 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-# Automatically adds all cpp files contained in the src directory
-file(GLOB_RECURSE source_files
-    "src/*.cpp"
+add_executable(${PROJECT_NAME})
+
+# Add all .cpp files relative to project root
+target_sources(${PROJECT_NAME} PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/main.cpp>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/events.cpp>
+    # Add more source files manually
 )
 
-set(SOURCES ${source_files})
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE "src")
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
