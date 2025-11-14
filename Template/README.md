@@ -41,6 +41,8 @@ A nice render of three types of spheres on a big sphere
 
 &nbsp;
 
+&nbsp;
+
 Same render, but camera positioned elsewhere, and depth of view applied
 
 <img width="1915" height="1075" alt="image" src="https://github.com/user-attachments/assets/232be032-48cd-4fb4-b9f7-758c54dc54aa" />
