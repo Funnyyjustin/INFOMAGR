@@ -9,6 +9,10 @@
 #include "material.h"
 #include "primitive.h"
 
+/// <summary>
+/// Function that writes the progress to the console. The progress is defined as the number of columns of the window that have been rendered so far.
+/// </summary>
+/// <param name="x">= the current column</param>
 inline void progress(int x)
 {   
     auto width = conf::width;
@@ -33,6 +37,7 @@ class Camera
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
             {
+                // Don't output the progress (again) if the screen is rendered already.
                 if (!rendered)
                     progress(x);
 
@@ -102,6 +107,7 @@ class Camera
 
             pixel_samples_scale = 1.0 / conf::samples_per_pixel;
 
+            // Depth of field stuff
             auto defocus_radius = conf::focus_dist * std::tan(degrees_to_radians(conf::defocus_angle / 2));
             defocus_disk_u = u * defocus_radius;
             defocus_disk_v = v * defocus_radius;
@@ -199,6 +205,10 @@ class Camera
             return Vec3(random_double() - 0.5, random_double() - 0.5, 0);
         }
 
+        /// <summary>
+        /// Function for the depth of field functionality.
+        /// </summary>
+        /// <returns></returns>
         Point3 defocus_disk_sample() const
         {
             auto p = random_in_unit_disk();

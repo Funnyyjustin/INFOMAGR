@@ -83,10 +83,12 @@ int main()
 
 	while (window.isOpen())
 	{
+        // Process inputs
 		processEvents(window);
 
 		window.clear();
 
+        // Render screen
 		sf::VertexArray res = cam.render(world, rendered);
 
 		// Draw and display

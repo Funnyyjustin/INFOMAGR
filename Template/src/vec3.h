@@ -244,11 +244,24 @@ inline Vec3 random_on_hs(const Vec3& n)
 	return -on_sphere;
 }
 
+/// <summary>
+/// Calculates the vector that is reflected, based on some incoming vector and the surface normal.
+/// </summary>
+/// <param name="v">:: Vec3</param>
+/// <param name="n">:: Vec3</param>
+/// <returns></returns>
 inline Vec3 reflect(const Vec3& v, const Vec3& n)
 {
 	return v - 2 * dot(v, n) * n;
 }
 
+/// <summary>
+/// Calculates the vector that is refracted, based on some incoming vector, the surface normal and some goofy sign I don't understand.
+/// </summary>
+/// <param name="uv">:: Vec3</param>
+/// <param name="n">:: Vec3</param>
+/// <param name="sign">:: double</param>
+/// <returns></returns>
 inline Vec3 refract(const Vec3& uv, const Vec3& n, double sign)
 {
 	auto cos_theta = std::fmin(dot(-uv, n), 1.0);
@@ -257,6 +270,10 @@ inline Vec3 refract(const Vec3& uv, const Vec3& n, double sign)
 	return r_perp + r_par;
 }
 
+/// <summary>
+/// Some other utility function that gets a random unit vector in two dimensions.
+/// </summary>
+/// <returns></returns>
 inline Vec3 random_in_unit_disk()
 {
 	while (true)

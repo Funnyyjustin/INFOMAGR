@@ -5,6 +5,7 @@
 
 #include "primitive.h"
 
+// Abstract superclass
 class Material
 {
 	public:
@@ -16,6 +17,7 @@ class Material
 		}
 };
 
+// Diffuse material
 class Lambertian : public Material
 {
 	public:
@@ -37,6 +39,7 @@ class Lambertian : public Material
 		Vec3 albedo;
 };
 
+// Metal (reflective) material
 class Metal : public Material
 {
 	public:
@@ -56,6 +59,7 @@ class Metal : public Material
 		double fuzz;
 };
 
+// Refractive material (such as glass or water)
 class Dielectric : public Material
 {
 	public:
