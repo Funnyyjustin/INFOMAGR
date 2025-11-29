@@ -1,0 +1,140 @@
+#pragma once
+
+#ifndef PARSE_H
+#define PARSE_H
+
+#include "common.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <type_traits>
+
+// This class parses an .obj file to a data structure we can use in the ray tracer.
+// File name must be in the "src/obj files" folder.
+class Parser
+{
+	using string = std::string;
+	using ifstream = std::ifstream;
+
+	public:
+		string filename;
+
+		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>> parse(string filename)
+		{
+			ifstream obj("../src/obj files/" + filename);
+
+			std::vector<Point3> vertices; // List of points of the vertices
+			std::vector<Vec3> vertex_normals; // Vertex normals --> probably not needed for basic triangulation
+
+			// The x,y,z of the "point" of the face at index i contains the three indices
+			// of the points in the "vertices" vector that make up a face at index i
+			std::vector<Point3> faces;
+
+			if (obj.is_open())
+			{
+				while (obj)
+				{
+					string line = " ";
+					std::getline(obj, line);
+
+					if (line.substr(0, 2) == "v ") // Line contains vertex info
+					{
+						std::istringstream s(line);
+						std::vector<string> res;
+						string word;
+
+						// Skip the first word, which is "v"
+						string skip;
+						s >> skip;
+
+						// Get the coordinates from the string
+						while (s >> word)
+							res.push_back(word);
+
+						auto vec = toPoint3(res);
+						vertices.push_back(vec);
+					}
+					else if (line.substr(0, 2) == "vn") // Line contains vertex normal info
+					{
+						std::istringstream s(line);
+						std::vector<string> res;
+						string word;
+
+						// Skip the first word, which is "vn"
+						string skip;
+						s >> skip;
+
+						// Get the coordinates from the string
+						while (s >> word)
+							res.push_back(word);
+
+						auto vec = toVec3(res);
+						vertex_normals.push_back(vec);
+					}
+					else if (line.substr(0, 2) == "f ") // Line contains face info
+					{
+						std::istringstream s(line);
+						std::vector<string> temp;
+						std::vector<string> res;
+						string word;
+
+						// Skip the first word, which is "f"
+						string skip;
+						s >> skip;
+
+						// Get the coordinates from the string
+						while (s >> word)
+							temp.push_back(word);
+
+						// Get the vertex nr out of the string
+						// Vertex nr == vertex normal nr
+						for (int i = 0; i < temp.size(); i++)
+						{
+							string w = temp[i];
+							std::size_t pos = w.find('/');
+							string num = w.substr(0, pos);
+							res.push_back(num);
+						}
+
+						auto vec = toPoint3(res);
+						faces.push_back(vec);
+					}
+					else continue; // Other lines can be skipped
+				}
+			}
+
+			obj.close();
+
+			//print_vectors(vertices, vertex_normals, faces);
+
+			return { vertices, vertex_normals, faces };
+		}
+
+		Point3 toPoint3(const std::vector<string>& v)
+		{
+			return Point3(std::stof(v[0]), std::stof(v[1]), std::stof(v[2]));
+		}
+
+		Vec3 toVec3(const std::vector<string>& v)
+		{
+			return Vec3(std::stof(v[0]), std::stof(v[1]), std::stof(v[2]));
+		}
+
+		void print_vectors(std::vector<Vec3> vertices, std::vector<Vec3> vertex_normals, std::vector<Vec3> faces)
+		{
+			print_vector(vertices, "Vertex");
+			print_vector(vertex_normals, "Vertex normal");
+			print_vector(faces, "Face");
+		}
+
+		void print_vector(std::vector<Vec3> vector, string name)
+		{
+			for (int i = 0; i < vector.size(); i++)
+			{
+				auto vec3 = vector[i];
+				std::cout << name << " " << i << ": " << vec3.x() << " " << vec3.y() << " " << vec3.z() << "\n";
+			}
+		}
+};
+
+#endif

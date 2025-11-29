@@ -15,7 +15,7 @@
 class Triangle : public Primitive
 {
     public:
-        Triangle(const Point3& Q, const vec3& u, const vec3& v, shared_ptr<Material> mat)
+        Triangle(const Point3& Q, const Vec3& u, const Vec3& v, shared_ptr<Material> mat)
         : Q(Q), u(u), v(v), mat(mat)
         {
             auto n = cross(u, v);
@@ -37,12 +37,11 @@ class Triangle : public Primitive
 
     private:
         Point3 Q;
-        vec3 u,v;
-        vec3 w;
+        Vec3 u,v;
+        Vec3 w;
         shared_ptr<Material> mat;
-        vec3 normal;
+        Vec3 normal;
         double D;
-
 };
 
 
