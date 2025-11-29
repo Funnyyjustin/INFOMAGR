@@ -19,7 +19,7 @@ class Parser
 	public:
 		string filename;
 
-		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>> parse(string filename)
+		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>> parse(string filename, Point3 pos)
 		{
 			ifstream obj("../src/obj files/" + filename);
 
@@ -104,6 +104,11 @@ class Parser
 			}
 
 			obj.close();
+
+			for (int j = 0; j < vertices.size(); j++)
+			{
+				vertices[j] += pos;
+			}
 
 			//print_vectors(vertices, vertex_normals, faces);
 

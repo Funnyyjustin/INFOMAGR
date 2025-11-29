@@ -41,7 +41,7 @@ int main()
     //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
-    auto [vertices, vertex_normals, faces] = parser.parse("suzanne.triangulated.obj");
+    auto [vertices, vertex_normals, faces] = parser.parse("suzanne.obj", Point3(0.0, 0.0, 0.0));
 
     // Load all triangles in the mesh
     for (int face_index = 0; face_index < faces.size(); face_index++)
