@@ -41,7 +41,9 @@ int main()
     //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
-    auto [vertices, vertex_normals, faces] = parser.parse("suzanne.obj", Point3(0.0, 0.0, 0.0));
+    auto [vertices, vertex_normals, faces] = parser.parse("Chicken_01.triangulated.obj", Point3(0.0, 0.0, 0.0));
+
+	std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
     // Load all triangles in the mesh
     for (int face_index = 0; face_index < faces.size(); face_index++)
@@ -64,6 +66,7 @@ int main()
         world.add(make_shared<Triangle>(a, A, B, material_center));
     }
 
+	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
     /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
     world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));
@@ -117,7 +120,7 @@ int main()
 
         // Render screen
 		if (!rendered) {
-			res = cam.render(world, rendered);
+			//res = cam.render(world, rendered);
 			rendered = true;
 			std::cout << "Render finished. \n";
 		}
