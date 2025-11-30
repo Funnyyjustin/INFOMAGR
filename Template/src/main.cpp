@@ -41,9 +41,10 @@ int main()
     //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
-    auto [vertices, vertex_normals, faces] = parser.parse("Chicken_01.triangulated.obj", Point3(0.0, 0.0, 0.0));
+    auto [vertices, vertex_normals, faces]
+		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
 
-	std::cout << "Number of vertices: " << vertices.size() << std::endl;
+	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
     // Load all triangles in the mesh
     for (int face_index = 0; face_index < faces.size(); face_index++)
@@ -120,7 +121,7 @@ int main()
 
         // Render screen
 		if (!rendered) {
-			//res = cam.render(world, rendered);
+			res = cam.render(world, rendered);
 			rendered = true;
 			std::cout << "Render finished. \n";
 		}

@@ -9,19 +9,23 @@
 #include <sstream>
 #include <type_traits>
 
+using string = std::string;
+using ifstream = std::ifstream;
+
 // This class parses an .obj file to a data structure we can use in the ray tracer.
 // File name must be in the "src/obj files" folder.
 class Parser
 {
-	using string = std::string;
-	using ifstream = std::ifstream;
+
 
 	public:
 		string filename;
 
 		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>> parse(string filename, Point3 pos)
 		{
-			ifstream obj("../src/obj files/" + filename);
+			string dir = lookUpDir();
+			ifstream obj(dir + filename);
+
 
 			std::vector<Point3> vertices; // List of points of the vertices
 			std::vector<Vec3> vertex_normals; // Vertex normals --> probably not needed for basic triangulation
@@ -115,6 +119,11 @@ class Parser
 			return { vertices, vertex_normals, faces };
 		}
 
+		void print(string out)
+		{
+			std::cout << out << std::endl;
+		}
+
 		Point3 toPoint3(const std::vector<string>& v)
 		{
 			return Point3(std::stof(v[0]), std::stof(v[1]), std::stof(v[2]));
@@ -139,6 +148,54 @@ class Parser
 				auto vec3 = vector[i];
 				std::cout << name << " " << i << ": " << vec3.x() << " " << vec3.y() << " " << vec3.z() << "\n";
 			}
+		}
+
+	private:
+		string lookUpDir()
+		{
+			string curr = std::filesystem::current_path().generic_string();
+
+			auto splits = split(curr, "/");
+
+			while (true)
+			{
+				int index = splits.size() - 1;
+				print(splits[index]);
+				if (splits[index] == "Template") break;
+
+				splits.erase(splits.begin() + index);
+			}
+
+			std::vector<string> newpathloose;
+			for (int i = 0; i < splits.size()-1; i++)
+			{
+				newpathloose.push_back(splits[i]);
+				newpathloose.push_back("/");
+			}
+
+			string newpath;
+			for (string elem: newpathloose)
+				newpath += elem;
+			newpath += "Template/src/obj files/";
+			return newpath;
+		}
+
+		std::vector<string> split(const string& s, string delimiter)
+		{
+			std::vector<string> elems;
+			size_t pos = s.find(delimiter);
+			string word;
+
+			string temp = s;
+			while (pos != string::npos)
+			{
+				word = temp.substr(0, pos);
+				elems.push_back(word);
+				temp.erase(0, pos + delimiter.length());
+				pos = temp.find(delimiter);
+			}
+			elems.push_back(temp);
+			return elems;
 		}
 };
 
