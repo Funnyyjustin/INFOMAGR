@@ -7,6 +7,7 @@
 #include "primitive.h"
 #include "material.h"
 #include "sphere.h"
+#include "triangle.h"
 #include "world.h"
 
 int main()
@@ -32,11 +33,15 @@ int main()
     auto material_bubble = make_shared<Dielectric>(1.00 / 1.50);
     auto material_right = make_shared<Metal>(Vec3(0.8, 0.6, 0.2), 1.0);
 
-    world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    //world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+	/*
     world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
     world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
     world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
     world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
+    */
+	world.add(
+		make_shared<Triangle>(Point3(-0.5, -0.5, -1), Vec3(1, 0, 0), Vec3(0, 1, 0), material_ground));
 
     // Nice render but takes a while
     /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));

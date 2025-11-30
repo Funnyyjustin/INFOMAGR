@@ -8,7 +8,8 @@
 class Sphere : public Primitive
 {
 	public:
-		Sphere(const Point3& center, double radius, shared_ptr<Material> mat) : center(center), radius(std::fmax(0, radius)),mat(mat) {}
+		Sphere(const Point3& center, double radius, shared_ptr<Material> mat)
+		: center(center), radius(std::fmax(0, radius)),mat(mat) {}
 
 		/// <summary>
 		/// Calculates if a ray hits this primitive.

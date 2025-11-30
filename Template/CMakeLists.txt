@@ -10,7 +10,14 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(${PROJECT_NAME})
+FetchContent_Declare(assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG master)
+FetchContent_MakeAvailable(assimp)
+
+add_executable(${PROJECT_NAME}
+        src/triangle.h
+        src/objparser.h)
 
 # Add all .cpp files relative to project root
 target_sources(${PROJECT_NAME} PRIVATE
@@ -23,7 +30,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    sfml-graphics
+    assimp
+)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 # Copy res dir to the binary directory
