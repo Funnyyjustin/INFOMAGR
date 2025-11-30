@@ -4,6 +4,7 @@
 #define PARSE_H
 
 #include "common.h"
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <sstream>
