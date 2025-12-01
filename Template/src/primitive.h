@@ -2,6 +2,7 @@
 
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
+#include "aabb.h"
 
 class Material;
 
@@ -33,6 +34,8 @@ class Primitive
 		virtual ~Primitive() = default;
 
 		virtual bool hit(const Ray& r, Interval ray_t, Hit_record& rec) const = 0;
+
+		virtual aabb hitBox() const = 0;
 };
 
 #endif

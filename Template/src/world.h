@@ -25,6 +25,12 @@ class World : public Primitive
 		void add(shared_ptr<Primitive> object)
 		{
 			objects.push_back(object);
+			primContainer = aabb(primContainer, object->hitBox());
+		}
+
+		aabb hitBox() const override
+		{
+			return primContainer;
 		}
 
 		/// <summary>
@@ -52,6 +58,9 @@ class World : public Primitive
 
 			return hit_anything;
 		}
+
+	private:
+		aabb primContainer;
 };
 
 #endif
