@@ -54,6 +54,15 @@ public:
         return x;
     }
 
+    ///<summary>
+    /// Adds inputted amount to interval (padding)
+    ///</summary>
+    Interval expand(double delta) const
+    {
+        return Interval(min - delta/2, max + delta/2);
+    }
+
+
     static const Interval empty, universe;
 };
 
