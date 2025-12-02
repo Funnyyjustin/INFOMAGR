@@ -4,6 +4,7 @@
 #define CAMERA_H
 
 #include <iomanip>
+#include <chrono> 
 
 #include "interval.h"
 #include "material.h"
@@ -30,6 +31,9 @@ class Camera
         sf::VertexArray render(const Primitive& world, bool rendered)
         {
             initialize();
+
+            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Started render at: " << std::ctime(&start) << "\n";
 
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
@@ -67,6 +71,12 @@ class Camera
                     arr[currentPixel].color = convert_to_color(color);
                 }
             }
+
+            auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Finished render at: " << std::ctime(&end) << "\n";
+
+            float total = end - start;
+            std::cout << "Total elapsed time: " << total << " seconds" << "\n";
 
             return arr;
         }
