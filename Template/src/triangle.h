@@ -11,6 +11,7 @@
 
 #include "primitive.h"
 #include "Vec3.h"
+using namespace std;
 
 class Triangle : public Primitive
 {
@@ -49,14 +50,17 @@ class Triangle : public Primitive
             return true;
         }
 
-        virtual bool is_interior(double a, double b, Hit_record& rec) const
+        bool is_interior(double a, double b, Hit_record& rec) const
         {
-            Interval unit_interval = Interval(0, 1);
-
             if ((a < 0) || (b < 0) || (a + b > 1))
                 return false;
 
             return true;
+        }
+
+        tuple<Point3, Point3, Point3> points()
+        {
+            return make_tuple(Q, Q + u, Q + v);
         }
 
     private:

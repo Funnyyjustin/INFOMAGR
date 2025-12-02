@@ -10,6 +10,7 @@ class aabb {
     public:
     Interval x, y, z;
 
+
     aabb() {}
 
     aabb(const Interval& x, const Interval& y, const Interval& z)
@@ -25,6 +26,19 @@ class aabb {
 
         if (a[2] <= b[2]) z = Interval(a[2], b[2]);
         else z = Interval(b[2], a[2]);
+    }
+
+
+    // includes point p in the intervals of the aabb
+    void include(Point3& p)
+    {
+        x.max = max(p.x(), x.max);
+        y.max = max(p.y(), y.max);
+        z.max = max(p.z(), z.max);
+
+        x.min = min(p.x(), x.min);
+        y.min = min(p.y(), y.min);
+        z.min = min(p.z(), z.min);
     }
 
     bool hit(const Ray& ray, Interval ray_t)

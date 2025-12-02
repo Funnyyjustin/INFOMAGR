@@ -27,6 +27,23 @@ class Camera
         Point3 cam_dir = Point3(0, 0, -1);
         Vec3 v_up = Vec3(0, 1, 0);
 
+
+
+        sf::VertexArray BVHrender(const Primitive& world, bool rendered)
+        {
+            initialize();
+            auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
+
+            for (int y = 0; y < conf::window_size.x; y++)
+                for (int x = 0; x < conf::window_size.x; x++)
+                {
+                    auto currentPixel = y * conf::width + x;
+                    arr[currentPixel].position = sf::Vector2f(x, y);
+
+
+                }
+        }
+
         sf::VertexArray render(const Primitive& world, bool rendered)
         {
             initialize();
@@ -48,12 +65,14 @@ class Camera
                     arr[currentPixel].position = sf::Vector2f(x, y);
 
                     // Calculate position and direction of the ray
+                    /*
                     auto pos = pixel00_loc + (x * pixel_delta_u) + (y * pixel_delta_v);
                     auto dir = pos - camera_center;
+
                     Ray r(camera_center, dir);
+                    */
 
                     Vec3 color(0, 0, 0); // Starting color is always black; if we hit nothing this is the result
-                    
                     // Anti-aliasing
                     for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                     {

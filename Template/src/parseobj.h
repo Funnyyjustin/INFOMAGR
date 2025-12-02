@@ -3,11 +3,12 @@
 #ifndef PARSE_H
 #define PARSE_H
 
+#include <filesystem>
+
 #include "common.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <type_traits>
 
 using string = std::string;
 using ifstream = std::ifstream;
@@ -119,10 +120,6 @@ class Parser
 			return { vertices, vertex_normals, faces };
 		}
 
-		void print(string out)
-		{
-			std::cout << out << std::endl;
-		}
 
 		Point3 toPoint3(const std::vector<string>& v)
 		{
@@ -160,7 +157,6 @@ class Parser
 			while (true)
 			{
 				int index = splits.size() - 1;
-				print(splits[index]);
 				if (splits[index] == "Template") break;
 
 				splits.erase(splits.begin() + index);

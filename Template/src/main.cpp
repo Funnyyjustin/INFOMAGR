@@ -44,7 +44,6 @@ int main()
     auto [vertices, vertex_normals, faces]
 		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
 
-	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
     // Load all triangles in the mesh
     for (int face_index = 0; face_index < faces.size(); face_index++)
@@ -119,12 +118,18 @@ int main()
         // Process inputs
 		processEvents(window);
 
+
         // Render screen
 		if (!rendered) {
+			auto start = std::chrono::high_resolution_clock::now();
 			res = cam.render(world, rendered);
 			rendered = true;
 			std::cout << "Render finished. \n";
+			auto end = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+			std::cout << "Render time: " << duration.count() << " ms" << std::endl;
 		}
+
 
 		// Draw and display
 		window.clear();

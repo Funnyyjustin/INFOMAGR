@@ -6,13 +6,20 @@
 #include "primitive.h"
 #include <vector>
 
+#include "BVH.h"
+
 // The world contains a list of primitives.
 class World : public Primitive
 {
 	public:
 		std::vector<shared_ptr<Primitive>> objects;
+		Node bvh;
 
-		World() {}
+		World(std::vector<shared_ptr<Primitive>> objectvec, Node n)
+		{
+			objects = objectvec;
+			bvh = n;
+		}
 
 		World(shared_ptr<Primitive> object) { add(object); }
 
@@ -25,12 +32,6 @@ class World : public Primitive
 		void add(shared_ptr<Primitive> object)
 		{
 			objects.push_back(object);
-			primContainer = aabb(primContainer, object->hitBox());
-		}
-
-		aabb hitBox() const override
-		{
-			return primContainer;
 		}
 
 		/// <summary>
@@ -59,8 +60,10 @@ class World : public Primitive
 			return hit_anything;
 		}
 
-	private:
-		aabb primContainer;
+		bool bvh_hit(const Ray& r, Interval ray_t, Hit_record& rec) const
+		{
+
+		}
 };
 
 #endif
