@@ -44,7 +44,7 @@ int main()
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
+		= parser.parse("forg.obj", Point3(0, 0, -2.5));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 

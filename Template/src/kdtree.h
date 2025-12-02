@@ -27,6 +27,7 @@ class KdTree
 {
 	public:
 		int maxDepth = 5;
+		int minLeafSize = 10;
 		std::vector<shared_ptr<Primitive>> primitives;
 
 		KdTree() { }
@@ -38,6 +39,7 @@ class KdTree
 			root->primitives = objects;
 			aabb scene = aabb(Interval::universe, Interval::universe, Interval::universe);
 			root->boundingbox = scene;
+			maxDepth = 15;
 			return buildTreeRec(root, 0);
 		}
 
@@ -47,7 +49,7 @@ class KdTree
 
 			// Make root node a leaf if we reach max depth of the tree
 			// It can also be a leaf if the box contains no primitives
-			if (depth == maxDepth || root->primitives.size() == 0)
+			if (depth == maxDepth || root->primitives.size() == 0 || root->primitives.size() <= minLeafSize)
 			{
 				root->isLeaf = true;
 				return root;
@@ -75,7 +77,7 @@ class KdTree
 			return root;
 		}
 
-		std::vector<shared_ptr<Primitive>> splitPrimitives(std::vector<shared_ptr<Primitive>> objs, aabb box)
+		std::vector<shared_ptr<Primitive>> splitPrimitives(const std::vector<shared_ptr<Primitive>>& objs, aabb box)
 		{
 			std::vector<shared_ptr<Primitive>> res;
 			for (auto obj : objs)

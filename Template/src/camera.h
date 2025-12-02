@@ -34,15 +34,15 @@ class Camera
         {
             initialize();
 
-            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            std::cout << "Started render at: " << std::ctime(&start) << "\n";
-
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
 
             KdTree tree = KdTree();
             KdNode* root = tree.buildTree(world.objects);
             this->world = world;
+
+            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Started render at: " << std::ctime(&start) << "\n";
 
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
