@@ -26,8 +26,8 @@ class KdNode
 class KdTree
 {
 	public:
-		int maxDepth = 40;
-		int minLeafSize = 12;
+		int maxDepth = 24;
+		int minLeafSize = 4;
 		std::vector<shared_ptr<Primitive>> primitives;
 
 		KdTree() { }
@@ -37,9 +37,72 @@ class KdTree
 			// Create root node of the entire tree
 			KdNode* root = new KdNode();
 			root->primitives = objects;
-			aabb scene = aabb(Interval(-500, 500), Interval(-500, 500), Interval(-500, 500));
+
+			std::vector<int> bounds = getBounds(objects);
+
+			for (int i : bounds)
+				std::cout << i << "\n";
+
+			aabb scene = aabb(
+				Interval(bounds[0], bounds[1]),
+				Interval(bounds[2], bounds[3]),
+				Interval(bounds[4], bounds[5]));
+
+			//aabb scene = aabb(Interval(-300, 300), Interval(-300, 300), Interval(-300, 300));
 			root->boundingbox = scene;
+
 			return buildTreeRec(root, 0);
+		}
+
+		std::vector<int> getBounds(std::vector<shared_ptr<Primitive>> objects)
+		{
+			int min_x = 9999999999;
+			int min_y = 9999999999;
+			int min_z = 9999999999;
+			int max_x = -9999999999;
+			int max_y = -9999999999;
+			int max_z = -9999999999;
+
+			for (const auto& obj : objects)
+			{
+				auto primitive = obj.get();
+				auto box = primitive->hitBox();
+				auto x = box.x;
+				auto y = box.y;
+				auto z = box.z;
+
+				min_x = std::min(min_x, round(x.min));
+				max_x = std::max(max_x, round(x.max));
+
+				min_y = std::min(min_y, round(y.min));
+				max_y = std::max(max_y, round(y.max));
+
+				min_z = std::min(min_z, round(z.min));
+				max_z = std::max(max_z, round(z.max));
+			}
+
+			//return std::vector<int> { min_x, max_x, min_y, max_y, min_z, max_z };
+			return std::vector<int> { clamp(min_x), clamp(max_x), clamp(min_y), clamp(max_y), clamp(min_z), clamp(max_z) };
+		}
+
+		int round(double x)
+		{
+			if (x > 0.0)
+				return static_cast<int>(std::ceil(x));
+			else
+				return static_cast<int>(std::floor(x));
+		}
+
+		int clamp(int x)
+		{
+			int div = int(x / 100);
+			int mod = x % 100;
+
+			if (mod > 0)
+				div++;
+			else div--;
+
+			return div * 100;
 		}
 
 		KdNode* buildTreeRec(KdNode* root, int depth)
