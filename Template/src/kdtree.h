@@ -4,7 +4,9 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
-
+#include "primitive.h"
+#include "aabb.h"
+#include "world.h"
 
 class KdNode
 {
@@ -27,10 +29,7 @@ class KdTree
 		int maxDepth = 5;
 		std::vector<shared_ptr<Primitive>> primitives;
 
-		KdTree(std::vector<shared_ptr<Primitive>> objects)
-		{
-			primitives = objects;
-		}
+		KdTree() { }
 
 		KdNode* buildTree(std::vector<shared_ptr<Primitive>> objects)
 		{
@@ -77,7 +76,7 @@ class KdTree
 		std::vector<shared_ptr<Primitive>> splitPrimitives(std::vector<shared_ptr<Primitive>> objs, aabb box)
 		{
 			std::vector<shared_ptr<Primitive>> res;
-			for (const std::shared_ptr<Primitive> obj : objs)
+			for (auto obj : objs)
 			{
 				auto p = obj.get();
 				if (p->hitBox().boxes_overlap(box))
@@ -85,6 +84,60 @@ class KdTree
 			}
 
 			return res;
+		}
+
+		World traverseTree(Ray& ray, KdNode* tree)
+		{
+			// Check if we hit the bounding box of the current node of the tree
+			auto [hit, entry, exit] = tree->boundingbox.boxRayIntersection(ray);
+
+			// No hit with the bounding box, so no primitives to check within the box / subtree
+			if (!hit)
+				return World();
+
+			KdNode* leaf = findLeaf(entry, tree);
+			auto primitives = leaf->primitives;
+			World world = World();
+
+			// For each primitive in the leaf, check if there is an intersection with the ray
+			for (const std::shared_ptr<Primitive> p : primitives)
+			{
+				Hit_record h;
+				if (p.get()->hit(ray, Interval(0.001, infinity), h))
+					world.objects.push_back(p);
+			}
+
+			// Intersections within the leaf have been found, we can stop traversing
+			if (world.objects.size() > 0)
+				return world;
+
+			// Otherwise, if no intersections are found, we traverse the ray through the tree until we hit the next box
+			Point3 offset = Point3(0.001, 0.001, 0.001);
+			Ray ray_new = Ray(exit + offset, ray.direction());
+			return traverseTree(ray_new, tree);
+		}
+
+		KdNode* findLeaf(Point3 point, KdNode* tree)
+		{
+			if (!tree || !tree->boundingbox.contains(point))
+				return nullptr;
+
+			if (tree->isLeaf)
+				return tree;
+
+			if (tree->left->boundingbox.contains(point))
+			{
+				KdNode* res = findLeaf(point, tree->left);
+				if (res) return res;
+			}
+
+			if (tree->right->boundingbox.contains(point))
+			{
+				KdNode* res = findLeaf(point, tree->right);
+				if (res) return res;
+			}
+
+			return nullptr;
 		}
 };
 

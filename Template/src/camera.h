@@ -6,8 +6,10 @@
 #include <iomanip>
 
 #include "interval.h"
+#include "kdtree.h"
 #include "material.h"
 #include "primitive.h"
+#include "world.h"
 
 /// <summary>
 /// Function that writes the progress to the console. The progress is defined as the number of columns of the window that have been rendered so far.
@@ -27,12 +29,15 @@ class Camera
         Point3 cam_dir = Point3(0, 0, -1);
         Vec3 v_up = Vec3(0, 1, 0);
 
-        sf::VertexArray render(const Primitive& world, bool rendered)
+        sf::VertexArray render(World& world, bool rendered)
         {
             initialize();
 
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
+
+            auto tree = KdTree();
+            KdNode* root = tree.buildTree(world.objects);
 
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
@@ -58,7 +63,8 @@ class Camera
                     for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                     {
                         Ray r = get_ray(x, y);
-                        color += ray_color(r, conf::max_depth, world); // Track the ray a certain amount of times
+                        World subset = tree.traverseTree(r, root);
+                        color += ray_color(r, conf::max_depth, subset); // Track the ray a certain amount of times
                     }
 
                     // Set color of current pixel on the screen and apply gamma correction
@@ -121,7 +127,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 ray_color(const Ray& r, int depth, const Primitive& world) const
+        Vec3 ray_color(const Ray& r, int depth, const World world) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);

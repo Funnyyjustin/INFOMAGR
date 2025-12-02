@@ -67,6 +67,14 @@ class aabb {
             return x_overlap || y_overlap || z_overlap;
         }
 
+        bool contains(Point3 point)
+        {
+            bool x_contains = point.x() >= x.min && point.x() <= x.max;
+            bool y_contains = point.y() >= y.min && point.y() <= y.max;
+            bool z_contains = point.z() >= z.min && point.z() <= z.max;
+            return x_contains && y_contains && z_contains;
+        }
+
         std::tuple<aabb, aabb> split(int axis)
         {
             if (axis == 0) // We split along the x-axis
@@ -90,6 +98,50 @@ class aabb {
                 aabb right = aabb(x, y, Interval(mid, z.max));
                 return { left, right };
             }
+        }
+
+        std::tuple<bool, Point3, Point3> boxRayIntersection(Ray ray)
+        {
+            float tEnter = -INFINITY;
+            float tEnd = INFINITY;
+
+            const Interval axes[3] = { x, y, z };
+            const float origin[3] = { ray.origin().x(), ray.origin().y(), ray.origin().z() };
+            const float dir[3] = { ray.direction().x(), ray.direction().y(), ray.direction().z() };
+
+            for (int i = 0; i < 3; i++)
+            {
+                float o = origin[i];
+                float d = dir[i];
+                float minb = axes[i].min;
+                float maxb = axes[i].max;
+
+                if (std::abs(d) < 1e-8f)
+                {
+                    if (o < minb || o > maxb)
+                        return { false, Point3(0, 0, 0), Point3(0, 0, 0) };
+                }
+                else
+                {
+                    float t1 = (minb - o) / d;
+                    float t2 = (maxb - o) / d;
+
+                    if (t1 > t2) std::swap(t1, t2);
+
+                    tEnter = std::max(tEnter, t1);
+                    tEnd = std::min(tEnd, t2);
+
+                    if (tEnter > tEnd)
+                        return { false, Point3(0, 0, 0), Point3(0, 0, 0) };
+                }
+            }
+
+            if (tEnd < 0)
+                return { false, Point3(0, 0, 0), Point3(0, 0, 0) };
+
+            Point3 entryPoint = ray.origin() + ray.direction() * tEnter;
+            Point3 exitPoint = ray.origin() + ray.direction() * tEnd;
+            return { true, entryPoint, exitPoint };
         }
 };
 

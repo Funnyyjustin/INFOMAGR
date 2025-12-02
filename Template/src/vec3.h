@@ -1,6 +1,8 @@
 #ifndef Vec3_H
 #define Vec3_H
 
+#include "common.h"
+
 class Vec3
 {
 	public:

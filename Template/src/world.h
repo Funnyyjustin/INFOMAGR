@@ -16,6 +16,8 @@ class World : public Primitive
 
 		World(shared_ptr<Primitive> object) { add(object); }
 
+		World(std::vector<shared_ptr<Primitive>> objects) { this->objects = objects; }
+
 		void clear() { objects.clear(); }
 
 		/// <summary>
@@ -58,8 +60,6 @@ class World : public Primitive
 
 			return hit_anything;
 		}
-
-		aabb hitBox() const override { return primContainer; }
 
 	private:
 		aabb primContainer;

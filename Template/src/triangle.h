@@ -22,7 +22,18 @@ class Triangle : public Primitive
             normal = unit_vector(n);
             D = dot(normal, Q);
             w = n / dot(n, n);
+
+            set_bounding_box();
         }
+
+        virtual void set_bounding_box()
+        {
+            auto d1 = aabb(Q, Q + u + v);
+            auto d2 = aabb(Q + u, Q + v);
+            box = aabb(d1, d2);
+        }
+
+        aabb hitBox() const override { return box; }
 
         bool hit(const Ray& r, Interval ray_t, Hit_record& rec) const override
         {
@@ -66,6 +77,8 @@ class Triangle : public Primitive
         shared_ptr<Material> mat;
         Vec3 normal;
         double D;
+
+        aabb box;
 };
 
 
