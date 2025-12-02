@@ -8,7 +8,11 @@
 class Sphere : public Primitive
 {
 	public:
-		Sphere(const Point3& center, double radius, shared_ptr<Material> mat) : center(center), radius(std::fmax(0, radius)),mat(mat) {}
+		Sphere(const Point3& center, double radius, shared_ptr<Material> mat) : center(center), radius(std::fmax(0, radius)),mat(mat)
+		{
+			auto rvec = Vec3(radius, radius, radius);
+			boundingbox = aabb(center - rvec, center + rvec);
+		}
 
 		/// <summary>
 		/// Calculates if a ray hits this primitive.
@@ -56,6 +60,7 @@ class Sphere : public Primitive
 		Point3 center;
 		double radius;
 		shared_ptr<Material> mat;
+		aabb boundingbox;
 };
 
 #endif

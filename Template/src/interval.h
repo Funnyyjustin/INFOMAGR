@@ -11,6 +11,12 @@ public:
 
     Interval(double min, double max) : min(min), max(max) {}
 
+    Interval(const Interval& a, const Interval& b)
+    {
+        min = a.min <= b.min ? a.min : b.min;
+        max = a.max >= b.max ? a.max : b.max;
+    }
+
     /// <summary>
     /// Gets the size of the interval.
     /// </summary>
@@ -52,6 +58,11 @@ public:
         if (x < min) return min;
         if (x > max) return max;
         return x;
+    }
+
+    bool overlap(const Interval i) const
+    {
+        return min <= i.max && i.min <= max;
     }
 
     static const Interval empty, universe;

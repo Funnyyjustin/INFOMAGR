@@ -2,8 +2,10 @@
 #include "events.hpp"
 #include "configuration.hpp"
 
+#include "aabb.h"
 #include "common.h"
 #include "camera.h"
+#include "kdtree.h"
 #include "parseobj.h"
 #include "primitive.h"
 #include "material.h"
