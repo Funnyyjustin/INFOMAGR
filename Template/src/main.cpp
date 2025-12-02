@@ -36,11 +36,11 @@ int main()
     auto material_bubble = make_shared<Dielectric>(1.00 / 1.50);
     auto material_right = make_shared<Metal>(Vec3(0.8, 0.6, 0.2), 1.0);
 
-    world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
-    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
-    world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
+    //world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    //world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
+    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
+    //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
@@ -49,7 +49,7 @@ int main()
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
     // Load all triangles in the mesh
-    /*for (int face_index = 0; face_index < faces.size(); face_index++)
+    for (int face_index = 0; face_index < faces.size(); face_index++)
     {
         Point3 face = faces[face_index];
         double p_index_a = face.x() - 1;
@@ -67,7 +67,7 @@ int main()
         Vec3 normal = cross(A, B);
 
         world.add(make_shared<Triangle>(a, A, B, material_center));
-    }*/
+    }
 
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while

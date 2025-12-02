@@ -43,8 +43,11 @@ class KdTree
 
 		KdNode* buildTreeRec(KdNode* root, int depth)
 		{
+			aabb currentspace = root->boundingbox;
+
 			// Make root node a leaf if we reach max depth of the tree
-			if (depth == maxDepth)
+			// It can also be a leaf if the box contains no primitives
+			if (depth == maxDepth || root->primitives.size() == 0)
 			{
 				root->isLeaf = true;
 				return root;
@@ -52,7 +55,6 @@ class KdTree
 
 			// Divide space --> not done with SAH currently, just midway point
 			// This can also be done with SAH, which could improve performance even more
-			aabb currentspace = root->boundingbox;
 
 			// 1. Get axis along which we should split
 			int axis = depth % 3;

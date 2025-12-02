@@ -4,6 +4,7 @@
 #define CAMERA_H
 
 #include <iomanip>
+#include <chrono>
 
 #include "interval.h"
 #include "kdtree.h"
@@ -33,11 +34,15 @@ class Camera
         {
             initialize();
 
+            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Started render at: " << std::ctime(&start) << "\n";
+
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
 
-            auto tree = KdTree();
+            KdTree tree = KdTree();
             KdNode* root = tree.buildTree(world.objects);
+            this->world = world;
 
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
@@ -74,6 +79,12 @@ class Camera
                 }
             }
 
+            auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Finished render at: " << std::ctime(&end) << "\n";
+
+            float total = end - start;
+            std::cout << "Total elapsed time: " << total << " seconds" << "\n";
+
             return arr;
         }
 
@@ -86,6 +97,8 @@ class Camera
         Vec3 u, v, w; // Cam frame basis vectors
         Vec3 defocus_disk_u;
         Vec3 defocus_disk_v;
+
+        World world;
 
         void initialize()
         {
@@ -127,19 +140,25 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 ray_color(const Ray& r, int depth, const World world) const
+        Vec3 ray_color(const Ray& r, int depth, const World subset) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
 
             Hit_record rec;
-            if (world.hit(r, Interval(0.001, infinity), rec))
+            if (subset.hit(r, Interval(0.001, infinity), rec))
             {
                 Ray scat;
                 Vec3 att;
 
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * ray_color(scat, depth - 1, world);
+                {
+                    //auto tree = KdTree();
+                    //auto root = tree.buildTree(world.objects);
+                    //std::cout << world.objects.size();
+                    //return att * ray_color(scat, depth - 1, tree.traverseTree(scat, root));
+                    return att * ray_color(scat, depth - 1, subset);
+                }
 
                 //Vec3 dir = rec.normal + random_unit_vector(); //random_on_hs(rec.normal);
                 //return 0.5 * ray_color(Ray(rec.p, dir), depth - 1, world);
