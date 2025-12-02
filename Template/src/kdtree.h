@@ -98,11 +98,12 @@ class KdTree
 			int div = int(x / 100);
 			int mod = x % 100;
 
+			float res;
 			if (mod > 0)
-				div++;
-			else div--;
+				res = div + 1;
+			else res = div - 1;
 
-			return div * 100;
+			return res * 100;
 		}
 
 		KdNode* buildTreeRec(KdNode* root, int depth)
