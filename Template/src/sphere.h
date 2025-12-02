@@ -56,6 +56,8 @@ class Sphere : public Primitive
 			return true;
 		}
 
+		aabb hitBox() const override { return boundingbox; }
+
 	private:
 		Point3 center;
 		double radius;
