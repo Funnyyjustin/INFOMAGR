@@ -64,7 +64,7 @@ class aabb {
             bool x_overlap = x.overlap(box.x);
             bool y_overlap = y.overlap(box.y);
             bool z_overlap = z.overlap(box.z);
-            return x_overlap || y_overlap || z_overlap;
+            return x_overlap && y_overlap && z_overlap;
         }
 
         bool contains(Point3 point)

@@ -41,6 +41,9 @@ class Camera
             KdNode* root = tree.buildTree(world.objects);
             this->world = world;
 
+            //std::cout << "Number of leaves in the tree: " << tree.numLeaves(root) << "\n";
+            //std::cout << "Avg prims per leaf: " << tree.numPrims(root) / tree.numLeaves(root) << "\n";
+
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
 
@@ -69,7 +72,7 @@ class Camera
                     {
                         Ray r = get_ray(x, y);
                         World subset = tree.traverseTree(r, root);
-                        color += ray_color(r, conf::max_depth, subset); // Track the ray a certain amount of times
+                        color += ray_color(r, conf::max_depth, subset, tree, root); // Track the ray a certain amount of times
                     }
 
                     // Set color of current pixel on the screen and apply gamma correction
@@ -140,7 +143,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 ray_color(const Ray& r, int depth, const World subset) const
+        Vec3 ray_color(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -156,8 +159,8 @@ class Camera
                     //auto tree = KdTree();
                     //auto root = tree.buildTree(world.objects);
                     //std::cout << world.objects.size();
-                    //return att * ray_color(scat, depth - 1, tree.traverseTree(scat, root));
-                    return att * ray_color(scat, depth - 1, subset);
+                    return att * ray_color(scat, depth - 1, tree.traverseTree(scat, root), tree, root);
+                    //return att * ray_color(scat, depth - 1, subset);
                 }
 
                 //Vec3 dir = rec.normal + random_unit_vector(); //random_on_hs(rec.normal);

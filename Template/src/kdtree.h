@@ -26,8 +26,8 @@ class KdNode
 class KdTree
 {
 	public:
-		int maxDepth = 5;
-		int minLeafSize = 10;
+		int maxDepth = 40;
+		int minLeafSize = 12;
 		std::vector<shared_ptr<Primitive>> primitives;
 
 		KdTree() { }
@@ -37,9 +37,8 @@ class KdTree
 			// Create root node of the entire tree
 			KdNode* root = new KdNode();
 			root->primitives = objects;
-			aabb scene = aabb(Interval::universe, Interval::universe, Interval::universe);
+			aabb scene = aabb(Interval(-500, 500), Interval(-500, 500), Interval(-500, 500));
 			root->boundingbox = scene;
-			maxDepth = 15;
 			return buildTreeRec(root, 0);
 		}
 
@@ -100,6 +99,10 @@ class KdTree
 				return World();
 
 			KdNode* leaf = findLeaf(entry, tree);
+
+			if (leaf == nullptr)
+				return World();
+
 			auto primitives = leaf->primitives;
 			World world = World();
 
@@ -116,8 +119,7 @@ class KdTree
 				return world;
 
 			// Otherwise, if no intersections are found, we traverse the ray through the tree until we hit the next box
-			Point3 offset = Point3(0.001, 0.001, 0.001);
-			Ray ray_new = Ray(exit + offset, ray.direction());
+			Ray ray_new = Ray(exit + ray.direction() * 0.001, ray.direction());
 			return traverseTree(ray_new, tree);
 		}
 
@@ -142,6 +144,22 @@ class KdTree
 			}
 
 			return nullptr;
+		}
+
+		int numLeaves(KdNode* node)
+		{
+			if (node->isLeaf)
+				return 1;
+
+			return numLeaves(node->left) + numLeaves(node->right);
+		}
+
+		int numPrims(KdNode* node)
+		{
+			if (node->isLeaf)
+				return node->primitives.size();
+
+			return numPrims(node->left) + numPrims(node->right);
 		}
 };
 
