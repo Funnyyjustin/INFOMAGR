@@ -12,8 +12,8 @@ namespace conf
 	float const dt = 1.0f / static_cast<float>(max_framerate);
 
 	// RT config
-	int samples_per_pixel = 10;
-	int max_depth = 5;
+	int samples_per_pixel = 50;
+	int max_depth = 25;
 	double vfov = 90;
 	double defocus_angle = 1.0;
 	double focus_dist = 1.0;
