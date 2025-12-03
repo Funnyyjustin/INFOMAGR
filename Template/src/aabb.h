@@ -53,8 +53,8 @@ class aabb {
             auto newMin = min(intersect1, intersect2);
             auto newMax = max(intersect1, intersect2);
 
-            if (newMin < axis.min) axis.min = newMin;
-            if (newMax > axis.max) axis.max = newMax;
+            if (newMin < ray_t.min) ray_t.min = newMin;
+            if (newMax > ray_t.max) ray_t.max = newMax;
 
             return ray_t.max > ray_t.min;
         }
