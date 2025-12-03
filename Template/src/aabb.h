@@ -100,8 +100,34 @@ class aabb {
             }
         }
 
-        std::tuple<bool, Point3, Point3> boxRayIntersection(Ray ray)
+        std::tuple<bool, Point3, Point3> boxRayIntersection(Ray ray, Interval ray_t)
         {
+            const Interval axes[3] = {x, y, z};
+            double entry[3];
+            double exit[3];
+
+            for (int axis = 0; axis < 2; axis++)
+            {
+                auto intersect1 = (axes[axis].min - ray.origin()[axis]) / ray.direction()[axis];
+                auto intersect2 = (axes[axis].max - ray.origin()[axis]) / ray.direction()[axis];
+
+                auto newMin = min(intersect1, intersect2);
+                auto newMax = max(intersect1, intersect2);
+
+                if (newMin < ray_t.min) ray_t.min = newMin;
+                if (newMax > ray_t.max) ray_t.max = newMax;
+
+                entry[axis] = newMin;
+                exit[axis] = newMax;
+
+                if (ray_t.max <= ray_t.min) return {false, Point3(), Point3()};
+            }
+
+            Point3 entryp = {entry[0], entry[1], entry[2]};
+            Point3 exitp = {exit[0], exit[1], exit[2]};
+            return { true, entryp, exitp };
+
+            /*
             float tEnter = -INFINITY;
             float tEnd = INFINITY;
 
@@ -142,6 +168,7 @@ class aabb {
             Point3 entryPoint = ray.origin() + ray.direction() * tEnter;
             Point3 exitPoint = ray.origin() + ray.direction() * tEnd;
             return { true, entryPoint, exitPoint };
+            */
         }
 };
 
