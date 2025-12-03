@@ -170,6 +170,7 @@ class KdTree
 			// 2. Then, create two new (child) bounding boxes
 			// We also get the primitives that overlap into these new bounding boxes, and give them to our children
 			auto [leftnode, rightnode] = currentspace.split(axis);
+			//auto [leftnode, rightnode] = split_median(currentspace, root->primitives, axis);
 			KdNode* left = new KdNode(splitPrimitives(root->primitives, leftnode), leftnode, root);
 			KdNode* right = new KdNode(splitPrimitives(root->primitives, rightnode), rightnode, root);
 
@@ -240,6 +241,10 @@ class KdTree
 			auto primitives = leaf->primitives;
 			World world = World();
 
+			int closest_distance = 9999999;
+			std::shared_ptr<Primitive> closest_primitive;
+			Point3 intersection;
+
 			// For each primitive in the leaf, check if there is an intersection with the ray
 			for (const std::shared_ptr<Primitive> p : primitives)
 			{
@@ -247,12 +252,34 @@ class KdTree
 				if (p.get()->hit(ray, Interval(0.001, infinity), h))
 				{
 					world.objects.push_back(p);
+
+					auto intersection_point = h.p;
+					Vec3 v = intersection_point - ray.origin();
+					float t = dot(v, ray.direction());
+					t = max(t, 0.0f);
+					Point3 e = ray.origin() + ray.direction() * t;
+
+					float side1 = std::pow(e[0] - intersection_point[0], 2);
+					float side2 = std::pow(e[1] - intersection_point[1], 2);
+					float side3 = std::pow(e[2] - intersection_point[2], 2);
+
+					float dist = std::sqrt(side1 + side2 + side3);
+
+					if (dist < closest_distance)
+					{
+						closest_distance = dist;
+						closest_primitive = p;
+						intersection = intersection_point;
+					}
 				}
 			}
 
 			// Intersections within the leaf have been found, we can stop traversing
 			if (world.objects.size() > 0)
-				return world;
+			{
+				if (leaf->boundingbox.contains(intersection))
+					return World({ closest_primitive });
+			}
 
 			// Otherwise, if no intersections are found, we traverse the ray through the tree until we hit the next box
 			Ray ray_new = Ray(exit + ray.direction() * 0.001, ray.direction());

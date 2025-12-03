@@ -24,9 +24,9 @@ int main()
 
 	// Camera
 	Camera cam;
-	cam.cam_pos = Point3(13, 2, 3);
-	cam.cam_dir = Point3(0, 0, 0);
-	cam.v_up = Vec3(0, 1, 0);
+	//cam.cam_pos = Point3(13, 2, 3);
+	//cam.cam_dir = Point3(0, 0, 0);
+	//cam.v_up = Vec3(0, 1, 0);
 
 	// World
 	World world;
@@ -45,7 +45,8 @@ int main()
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
+		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
+        = parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
@@ -67,12 +68,12 @@ int main()
         Vec3 B = c - a;
         Vec3 normal = cross(A, B);
 
-        //world.add(make_shared<Triangle>(a, A, B, material_center));
+        world.add(make_shared<Triangle>(a, A, B, material_center));
     }
 
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
-    auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
+    /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
     world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));
     
     for (int a = -11; a < 11; a++) {
@@ -112,7 +113,7 @@ int main()
     world.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
 
     auto material3 = make_shared<Metal>(Vec3(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+    world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));*/
 
 
 

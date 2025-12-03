@@ -4,7 +4,7 @@ namespace conf
 {
 	// Window configuration
 	auto aspect_ratio = 16.0 / 9.0;
-	unsigned int width = 1280;
+	unsigned int width = 400;
 	unsigned int height = int(width / aspect_ratio);
 	sf::Vector2u const window_size = {width, height};
 	sf::Vector2f const window_size_f = static_cast<sf::Vector2f>(window_size);
@@ -12,9 +12,9 @@ namespace conf
 	float const dt = 1.0f / static_cast<float>(max_framerate);
 
 	// RT config
-	int samples_per_pixel = 250;
-	int max_depth = 50;
-	double vfov = 20;
-	double defocus_angle = 0.6;
-	double focus_dist = 10.0;
+	int samples_per_pixel = 10;
+	int max_depth = 5;
+	double vfov = 90;
+	double defocus_angle = 1.0;
+	double focus_dist = 1.0;
 }

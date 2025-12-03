@@ -1,5 +1,6 @@
 #ifndef RAYTRACER_AABB_H
 #define RAYTRACER_AABB_H
+
 #include <algorithm>
 
 #include "interval.h"
