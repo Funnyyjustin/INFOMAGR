@@ -17,4 +17,6 @@ namespace conf
 	double vfov = 90;
 	double defocus_angle = 1.0;
 	double focus_dist = 1.0;
+
+
 }

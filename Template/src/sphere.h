@@ -8,7 +8,12 @@
 class Sphere : public Primitive
 {
 	public:
-		Sphere(const Point3& center, double radius, shared_ptr<Material> mat) : center(center), radius(std::fmax(0, radius)),mat(mat) {}
+		Sphere(const Point3& center, double radius, shared_ptr<Material> mat) : center(center), radius(std::fmax(0, radius)),mat(mat)
+		{
+			auto rvec = Vec3(radius, radius, radius);
+			auto len = center - rvec;
+			boundingbox = aabb(Interval(-len.x(), len.x()), Interval(-len.y(), len.y()), Interval(-len.z(), len.z()));
+		}
 
 		/// <summary>
 		/// Calculates if a ray hits this primitive.
@@ -52,10 +57,13 @@ class Sphere : public Primitive
 			return true;
 		}
 
+		aabb hitBox() const override { return boundingbox; }
+
 	private:
 		Point3 center;
 		double radius;
 		shared_ptr<Material> mat;
+		aabb boundingbox;
 };
 
 #endif

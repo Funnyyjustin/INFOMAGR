@@ -22,7 +22,31 @@ class Triangle : public Primitive
             normal = unit_vector(n);
             D = dot(normal, Q);
             w = n / dot(n, n);
+
+            set_bounding_box();
         }
+
+        virtual void set_bounding_box()
+        {
+            //auto d1 = aabb(Q, Q + u + v);
+            //auto d2 = aabb(Q + u, Q + v);
+            //box = aabb(d1, d2);
+
+            Vec3 p1 = Q + u;
+            Vec3 p2 = Q + v;
+
+            double minx = std::min({ Q.x(), p1.x(), p2.x() });
+            double miny = std::min({ Q.y(), p1.y(), p2.y() });
+            double minz = std::min({ Q.z(), p1.z(), p2.z() });
+
+            double maxx = std::max({ Q.x(), p1.x(), p2.x() });
+            double maxy = std::max({ Q.y(), p1.y(), p2.y() });
+            double maxz = std::max({ Q.z(), p1.z(), p2.z() });
+
+            box = aabb(Interval(minx, maxx), Interval(miny, maxy), Interval(minz, maxz));
+        }
+
+        aabb hitBox() const override { return box; }
 
         bool hit(const Ray& r, Interval ray_t, Hit_record& rec) const override
         {
@@ -66,6 +90,8 @@ class Triangle : public Primitive
         shared_ptr<Material> mat;
         Vec3 normal;
         double D;
+
+        aabb box;
 };
 
 

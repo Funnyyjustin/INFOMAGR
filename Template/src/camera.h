@@ -4,11 +4,13 @@
 #define CAMERA_H
 
 #include <iomanip>
-#include <chrono> 
+#include <chrono>
 
 #include "interval.h"
+#include "kdtree.h"
 #include "material.h"
 #include "primitive.h"
+#include "world.h"
 
 /// <summary>
 /// Function that writes the progress to the console. The progress is defined as the number of columns of the window that have been rendered so far.
@@ -23,20 +25,37 @@ inline void progress(int x)
 
 class Camera
 {
+
+
     public:
         Point3 cam_pos = Point3(0, 0, 0);
         Point3 cam_dir = Point3(0, 0, -1);
         Vec3 v_up = Vec3(0, 1, 0);
 
-        sf::VertexArray render(const Primitive& world, bool rendered)
+        enum AccelStruct {
+            NONE,
+            BVH,
+            KDtree,
+            GRID
+        };
+
+        sf::VertexArray render(World& world, bool rendered, AccelStruct axl)
         {
             initialize();
 
-            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            std::cout << "Started render at: " << std::ctime(&start) << "\n";
-
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
+
+            KdTree tree = KdTree();
+            KdNode* root = tree.buildTree({});
+            if (axl == KDtree) root = tree.buildTree(world.objects);
+            this->world = world;
+
+            //std::cout << "Number of leaves in the tree: " << tree.numLeaves(root) << "\n";
+            //std::cout << "Avg prims per leaf: " << tree.numPrims(root) / tree.numLeaves(root) << "\n";
+
+            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Started render at: " << std::ctime(&start) << "\n";
 
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
@@ -62,7 +81,15 @@ class Camera
                     for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                     {
                         Ray r = get_ray(x, y);
-                        color += ray_color(r, conf::max_depth, world); // Track the ray a certain amount of times
+                        if (axl == KDtree)
+                        {
+                            World subset = tree.traverseTree(r, root);
+                            color += kdTraverse(r, conf::max_depth, subset, tree, root); // Track the ray a certain amount of times
+                        }
+                        else
+                        {
+                            color += noAccelTraverse(r, conf::max_depth, world);
+                        }
                     }
 
                     // Set color of current pixel on the screen and apply gamma correction
@@ -90,6 +117,8 @@ class Camera
         Vec3 u, v, w; // Cam frame basis vectors
         Vec3 defocus_disk_u;
         Vec3 defocus_disk_v;
+
+        World world;
 
         void initialize()
         {
@@ -131,7 +160,37 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 ray_color(const Ray& r, int depth, const Primitive& world) const
+        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root) const
+        {
+            if (depth <= 0)
+                return Vec3(0, 0, 0);
+
+            Hit_record rec;
+            if (subset.hit(r, Interval(0.001, infinity), rec))
+            {
+                Ray scat;
+                Vec3 att;
+
+                if (rec.mat->scatter(r, rec, att, scat))
+                    return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root);
+
+                return Vec3(0, 0, 0);
+            }
+
+            Vec3 unit_dir = unit_vector(r.direction());
+            auto a = 0.5 * (unit_dir.y() + 1.0);
+            return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
+        }
+
+        /// <summary>
+        /// Gets a 3D vector containing the RGB values of the color.
+        /// This is a recursive function that traces the ray up to a certain amount of bounces.
+        /// </summary>
+        /// <param name="r">= The ray that is being traced.</param>
+        /// <param name="depth">= The current depth.</param>
+        /// <param name="world">= The world of primitives.</param>
+        /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
+        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -143,10 +202,8 @@ class Camera
                 Vec3 att;
 
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * ray_color(scat, depth - 1, world);
+                    return att * noAccelTraverse(scat, depth - 1, world);
 
-                //Vec3 dir = rec.normal + random_unit_vector(); //random_on_hs(rec.normal);
-                //return 0.5 * ray_color(Ray(rec.p, dir), depth - 1, world);
                 return Vec3(0, 0, 0);
             }
 
@@ -154,6 +211,9 @@ class Camera
             auto a = 0.5 * (unit_dir.y() + 1.0);
             return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
         }
+
+
+
 
         /// <summary>
         /// Applies gamma correction to one of the values within a RGB vector.

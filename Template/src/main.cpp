@@ -2,8 +2,10 @@
 #include "events.hpp"
 #include "configuration.hpp"
 
+#include "aabb.h"
 #include "common.h"
 #include "camera.h"
+#include "kdtree.h"
 #include "parseobj.h"
 #include "primitive.h"
 #include "material.h"
@@ -43,6 +45,7 @@ int main()
     Parser parser;
     auto [vertices, vertex_normals, faces]
 		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
+        //= parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
@@ -71,7 +74,7 @@ int main()
     // Nice render but takes a while
     /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
     world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));
-
+    
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = random_double();
@@ -121,7 +124,7 @@ int main()
 
         // Render screen
 		if (!rendered) {
-			res = cam.render(world, rendered);
+			res = cam.render(world, rendered, Camera::KDtree);
 			rendered = true;
 			std::cout << "Render finished. \n";
 		}
