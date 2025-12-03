@@ -45,12 +45,12 @@ class KdTree
 
 			std::vector<int> bounds = getBounds(objects);
 
-			aabb forg = aabb(
+			aabb scee = aabb(
 				Interval(bounds[0], bounds[1]),
 				Interval(bounds[2], bounds[3]),
 				Interval(bounds[4], bounds[5]));
 
-			int num = 1000;
+			int num = 500;
 			aabb scene = aabb(Interval(-num, num), Interval(-num, num), Interval(-num, num));
 			root->boundingbox = scene;
 
@@ -224,7 +224,7 @@ class KdTree
 		World traverseTree(Ray& ray, KdNode* tree)
 		{
 			// Check if we hit the bounding box of the current node of the tree
-			auto [hit, entry, exit] = tree->boundingbox.boxRayIntersection(ray);
+			auto [hit, entry, exit] = tree->boundingbox.boxRayIntersection(ray, Interval(0.001, INFINITY));
 			//auto hit = tree->boundingbox.hit(ray, Interval(0.001, infinity));
 
 			// No hit with the bounding box, so no primitives to check within the box / subtree

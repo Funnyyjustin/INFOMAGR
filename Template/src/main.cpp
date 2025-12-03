@@ -16,6 +16,7 @@
 int main()
 {
     bool rendered = false;
+    bool useKdTree = true;
 
 	std::cout << "Starting render..\n";
 
@@ -23,9 +24,9 @@ int main()
 
 	// Camera
 	Camera cam;
-	//cam.cam_pos = Point3(13, 2, 3);
-	//cam.cam_dir = Point3(0, 0, 0);
-	//cam.v_up = Vec3(0, 1, 0);
+	cam.cam_pos = Point3(13, 2, 3);
+	cam.cam_dir = Point3(0, 0, 0);
+	cam.v_up = Vec3(0, 1, 0);
 
 	// World
 	World world;
@@ -36,11 +37,11 @@ int main()
     auto material_bubble = make_shared<Dielectric>(1.00 / 1.50);
     auto material_right = make_shared<Metal>(Vec3(0.8, 0.6, 0.2), 1.0);
 
-    world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
-    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
-    world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
+    //world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    //world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
+    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
+    //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
@@ -71,9 +72,9 @@ int main()
 
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
-    /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
+    auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
     world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));
-
+    
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = random_double();
@@ -111,7 +112,7 @@ int main()
     world.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
 
     auto material3 = make_shared<Metal>(Vec3(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));*/
+    world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
 
 
@@ -123,7 +124,7 @@ int main()
 
         // Render screen
 		if (!rendered) {
-			res = cam.render(world, rendered);
+			res = cam.render(world, rendered, useKdTree);
 			rendered = true;
 			std::cout << "Render finished. \n";
 		}

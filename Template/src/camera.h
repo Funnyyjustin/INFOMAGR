@@ -30,7 +30,7 @@ class Camera
         Point3 cam_dir = Point3(0, 0, -1);
         Vec3 v_up = Vec3(0, 1, 0);
 
-        sf::VertexArray render(World& world, bool rendered)
+        sf::VertexArray render(World& world, bool rendered, bool useKdTree)
         {
             initialize();
 
@@ -38,7 +38,9 @@ class Camera
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
 
             KdTree tree = KdTree();
-            KdNode* root = tree.buildTree(world.objects);
+            KdNode* root;
+            if (useKdTree) root = tree.buildTree(world.objects);
+            else root = tree.buildTree({});
             this->world = world;
 
             //std::cout << "Number of leaves in the tree: " << tree.numLeaves(root) << "\n";
@@ -71,9 +73,17 @@ class Camera
                     for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                     {
                         Ray r = get_ray(x, y);
-                        World subset = tree.traverseTree(r, root);
-                        color += ray_color(r, conf::max_depth, subset, tree, root); // Track the ray a certain amount of times
+                        if (useKdTree)
+                        {
+                            World subset = tree.traverseTree(r, root);
+                            color += ray_color(r, conf::max_depth, subset, tree, root, useKdTree); // Track the ray a certain amount of times
+                        }
+                        else
+                        {
+                            color += ray_color(r, conf::max_depth, world, tree, root, useKdTree);
+                        }
                     }
+                        
 
                     // Set color of current pixel on the screen and apply gamma correction
                     color *= pixel_samples_scale;
@@ -143,7 +153,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 ray_color(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root) const
+        Vec3 ray_color(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, bool useKdTree) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -159,8 +169,13 @@ class Camera
                     //auto tree = KdTree();
                     //auto root = tree.buildTree(world.objects);
                     //std::cout << world.objects.size();
-                    return att * ray_color(scat, depth - 1, tree.traverseTree(scat, root), tree, root);
+                    //return att * ray_color(scat, depth - 1, tree.traverseTree(scat, root), tree, root);
                     //return att * ray_color(scat, depth - 1, subset);
+
+                    if (useKdTree)
+                        return att * ray_color(scat, depth - 1, tree.traverseTree(scat, root), tree, root, useKdTree);
+
+                    return att * ray_color(scat, depth - 1, subset, tree, root, useKdTree);
                 }
 
                 //Vec3 dir = rec.normal + random_unit_vector(); //random_on_hs(rec.normal);
