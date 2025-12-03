@@ -28,6 +28,13 @@ class aabb {
         else z = Interval(b[2], a[2]);
     }
 
+    aabb(const aabb& box0, const aabb& box1)
+    {
+        x = Interval(box0.x, box1.x);
+        y = Interval(box0.y, box1.y);
+        z = Interval(box0.z, box1.z);
+    }
+
 
     // includes point p in the intervals of the aabb
     void include(Point3& p)
@@ -41,15 +48,21 @@ class aabb {
         z.min = min(p.z(), z.min);
     }
 
-    bool hit(const Ray& ray, Interval ray_t)
+    bool hit(const Ray& ray, Interval& ray_t)
     {
         return
-            single_axis_hit(ray, ray_t, x, 0) &&
-            single_axis_hit(ray, ray_t, y, 1) &&
-            single_axis_hit(ray, ray_t, z, 2);
+            single_axis_hit(ray, x, ray_t, 0) &&
+            single_axis_hit(ray, y, ray_t, 1) &&
+            single_axis_hit(ray, z, ray_t, 2);
     }
 
-    bool single_axis_hit(const Ray& ray, Interval ray_t, Interval axis, int axIndex)
+    Point3 center()
+    {
+        return {(x.min + x.max) * 0.5, (y.min + y.max) * 0.5, (z.min + z.max) * 0.5};
+    }
+
+private:
+    bool single_axis_hit(const Ray& ray, Interval& axis, Interval& ray_t, int axIndex)
     {
         // get intersection with edges of the aabb
         auto intersect1 = (axis.min - ray.origin()[axIndex]) / ray.direction()[axIndex];
@@ -59,12 +72,14 @@ class aabb {
         auto newMin = min(intersect1, intersect2);
         auto newMax = max(intersect1, intersect2);
 
-        if (newMin < axis.min) axis.min = newMin;
-        if (newMax > axis.max) axis.max = newMax;
+        return newMax > newMin;
+        /*
+        if (newMin < ray_t.min) ray_t.min = newMin;
+        if (newMax > ray_t.max) ray_t.max = newMax;
 
         return ray_t.max > ray_t.min;
+        */
     }
-
 
 
 };

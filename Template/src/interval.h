@@ -11,6 +11,12 @@ public:
 
     Interval(double min, double max) : min(min), max(max) {}
 
+    Interval(const Interval& a, const Interval& b)
+    {
+        min = a.min <= b.min ? a.min : b.min;
+        max = a.max >= b.max ? a.max : b.max;
+    }
+
     /// <summary>
     /// Gets the size of the interval.
     /// </summary>

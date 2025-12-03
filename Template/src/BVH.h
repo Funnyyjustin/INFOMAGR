@@ -14,76 +14,47 @@ class Node
 {
 public:
     aabb hitbox;
-    vector<shared_ptr<Triangle>> triangles;
+    bool leaf;
+    vector<shared_ptr<Primitive>> objects;
     Node* child1;
     Node* child2;
+    int depth = 0;
 
-    Node(vector<shared_ptr<Triangle>> triangles)
+    Node() {}
+
+    Node(vector<shared_ptr<Primitive>>& objectsIn, int depth) : depth(depth)
     {
-        hitbox = aabb();
-        for (auto triangle: triangles)
+        MakeNode(objectsIn);
+    }
+
+
+
+    void MakeNode(vector<shared_ptr<Primitive>>& objectsIn)
+    {
+        vector<shared_ptr<Primitive>> forChild1, forChild2;
+        if (depth >= 10 || objectsIn.empty())
         {
-            auto points = triangle->points();
-            hitbox.include(get<0>(points));
-            hitbox.include(get<1>(points));
-            hitbox.include(get<2>(points));
+            leaf = true;
+            objects = objectsIn;
+            return;
         }
 
-        DivideTriangles(triangles, 0);
-    }
-
-    Node(vector<shared_ptr<Triangle>> triangles, int depth)
-    {
-        hitbox = aabb();
-        for (auto triangle: triangles)
+        for (auto object: objectsIn)
         {
-            auto points = triangle->points();
-            hitbox.include(get<0>(points));
-            hitbox.include(get<1>(points));
-            hitbox.include(get<2>(points));
-        }
-
-        if (depth < 6)
-            DivideTriangles(triangles, depth);
-    }
-
-    void add(shared_ptr<Triangle> triangle)
-    {
-        triangles.push_back(triangle);
-
-    }
-
-    tuple<vector<Triangle>, vector<Triangle>> DivideTriangles(vector<shared_ptr<Triangle>> ts, int depth)
-    {
-        vector<shared_ptr<Triangle>> forChild1;
-        vector<shared_ptr<Triangle>> forChild2;
-
-        for (auto triangle: ts)
-        {
-            auto corners = triangle->points();
+            hitbox = aabb(hitbox, object->hitBox());
             if (depth % 2 == 0)
             {
-                auto middleX = (
-                    get<0>(corners).x() +
-                    get<1>(corners).x() +
-                    get<2>(corners).x()) / 3;
-
-                if (middleX < (hitbox.x.max + hitbox.x.min)/2)
-                    forChild1.push_back(triangle);
+                if (object->center().x() < (hitbox.x.max + hitbox.x.min)/2)
+                    forChild1.push_back(object);
                 else
-                    forChild2.push_back(triangle);
+                    forChild2.push_back(object);
             }
             else
             {
-                auto middleY = (
-                    get<0>(corners).y() +
-                    get<1>(corners).y() +
-                    get<2>(corners).y()) / 3;
-
-                if (middleY < (hitbox.y.max + hitbox.y.min)/2)
-                    forChild1.push_back(triangle);
+                if (object->center().y() < (hitbox.y.max + hitbox.y.min)/2)
+                    forChild1.push_back(object);
                 else
-                    forChild2.push_back(triangle);
+                    forChild2.push_back(object);
             }
         }
 
@@ -91,6 +62,51 @@ public:
         child2 = new Node(forChild2, depth + 1);
     }
 
+    void MakeNode() 
+    {
+        MakeNode(objects);
+    }
+
+    vector<shared_ptr<Primitive>> getPrimitives(const Ray& r, Interval ray_t)
+    {
+        if (!hitbox.hit(r, ray_t)) return {};
+        if (leaf) return objects;
+
+
+        vector<shared_ptr<Primitive>> out;
+
+        auto prims1 = child1->getPrimitives(r, ray_t);
+        auto prims2 = child2->getPrimitives(r, ray_t);
+
+        //std::cout << prims1.size() << std::endl;
+        //std::cout << prims2.size() << std::endl;
+
+        for (const shared_ptr<Primitive>& object: prims1) {
+            out.push_back(object);
+            //std::cout << "child1 dive ";
+        }
+
+        //std:cout << std::endl;
+
+        for (const shared_ptr<Primitive>& object: prims2) {
+            out.push_back(object);
+            //std::cout << "child2 dive ";
+        }
+
+        //std::cout << std::endl;
+
+        return out;
+    }
+
+
+
+
+    private:
+        void add(shared_ptr<Primitive> triangle)
+        {
+            objects.push_back(triangle);
+            hitbox = aabb(hitbox, triangle->hitBox());
+        }
 
 };
 

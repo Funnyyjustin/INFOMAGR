@@ -65,6 +65,10 @@ int main()
 
         world.add(make_shared<Triangle>(a, A, B, material_center));
     }
+	world.bvh->MakeNode();
+	std::cout << world.bvh->hitbox.x.min << " " << world.bvh->hitbox.x.max << std::endl;
+	std::cout << world.bvh->hitbox.y.min << " " << world.bvh->hitbox.y.max << std::endl;
+	std::cout << world.bvh->hitbox.z.min << " " << world.bvh->hitbox.z.max << std::endl;
 
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
@@ -122,7 +126,7 @@ int main()
         // Render screen
 		if (!rendered) {
 			auto start = std::chrono::high_resolution_clock::now();
-			res = cam.render(world, rendered);
+			res = cam.render(world, rendered, 1);
 			rendered = true;
 			std::cout << "Render finished. \n";
 			auto end = std::chrono::high_resolution_clock::now();

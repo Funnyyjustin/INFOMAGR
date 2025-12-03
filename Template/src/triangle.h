@@ -23,7 +23,18 @@ class Triangle : public Primitive
             normal = unit_vector(n);
             D = dot(normal, Q);
             w = n / dot(n, n);
+
+            set_bounding_box();
         }
+
+        virtual void set_bounding_box()
+        {
+            auto corners = points();
+            box = aabb(get<0>(corners), get<1>(corners));
+            box.include(get<2>(corners));
+        }
+
+        aabb hitBox() const override {return box;}
 
         bool hit(const Ray& r, Interval ray_t, Hit_record& rec) const override
         {
@@ -58,10 +69,7 @@ class Triangle : public Primitive
             return true;
         }
 
-        tuple<Point3, Point3, Point3> points()
-        {
-            return make_tuple(Q, Q + u, Q + v);
-        }
+        Point3 center() const override {return Q + 0.5 * v + 0.5 * u;}
 
     private:
         Point3 Q;
@@ -70,6 +78,12 @@ class Triangle : public Primitive
         shared_ptr<Material> mat;
         Vec3 normal;
         double D;
+        aabb box;
+
+    tuple<Point3, Point3, Point3> points()
+    {
+        return make_tuple(Q, Q + u, Q + v);
+    }
 };
 
 

@@ -8,6 +8,7 @@
 #include "interval.h"
 #include "material.h"
 #include "primitive.h"
+#include "world.h"
 
 /// <summary>
 /// Function that writes the progress to the console. The progress is defined as the number of columns of the window that have been rendered so far.
@@ -27,24 +28,7 @@ class Camera
         Point3 cam_dir = Point3(0, 0, -1);
         Vec3 v_up = Vec3(0, 1, 0);
 
-
-
-        sf::VertexArray BVHrender(const Primitive& world, bool rendered)
-        {
-            initialize();
-            auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
-
-            for (int y = 0; y < conf::window_size.x; y++)
-                for (int x = 0; x < conf::window_size.x; x++)
-                {
-                    auto currentPixel = y * conf::width + x;
-                    arr[currentPixel].position = sf::Vector2f(x, y);
-
-
-                }
-        }
-
-        sf::VertexArray render(const Primitive& world, bool rendered)
+        sf::VertexArray render(const World& world, bool rendered, int accel_struc)
         {
             initialize();
 
@@ -77,7 +61,7 @@ class Camera
                     for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                     {
                         Ray r = get_ray(x, y);
-                        color += ray_color(r, conf::max_depth, world); // Track the ray a certain amount of times
+                        color += ray_color(r, conf::max_depth, world, accel_struc); // Track the ray a certain amount of times
                     }
 
                     // Set color of current pixel on the screen and apply gamma correction
@@ -140,19 +124,33 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 ray_color(const Ray& r, int depth, const Primitive& world) const
+        Vec3 ray_color(const Ray& r, int depth, const World& world, int accel_struc) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
 
             Hit_record rec;
-            if (world.hit(r, Interval(0.001, infinity), rec))
+
+            World slice = World();
+
+            if (accel_struc == 1)
+            {
+                auto prims = world.bvh->getPrimitives(r, Interval());
+
+                for (auto prim: prims)
+                    slice.add(prim);
+            }
+            else slice = world;
+
+
+
+            if (slice.hit(r, Interval(0.001, infinity), rec))
             {
                 Ray scat;
                 Vec3 att;
 
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * ray_color(scat, depth - 1, world);
+                    return att * ray_color(scat, depth - 1, world, 1);
 
                 //Vec3 dir = rec.normal + random_unit_vector(); //random_on_hs(rec.normal);
                 //return 0.5 * ray_color(Ray(rec.p, dir), depth - 1, world);
