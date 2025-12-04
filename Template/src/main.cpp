@@ -30,7 +30,7 @@ int main()
 
 	// World
 	World world;
-	Camera::AccelStruct accel = Camera::BVH;
+	Camera::AccelStruct accel = Camera::NONE;
 
     auto material_ground = make_shared<Lambertian>(Vec3(0.8, 0.8, 0.0));
     auto material_center = make_shared<Lambertian>(Vec3(0.1, 0.2, 0.5));
@@ -38,16 +38,19 @@ int main()
     auto material_bubble = make_shared<Dielectric>(1.00 / 1.50);
     auto material_right = make_shared<Metal>(Vec3(0.8, 0.6, 0.2), 1.0);
 
+	/*
     world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
     world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
     world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
     world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
+	*/
+
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
-        = parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
+		//= parser.parse("Chicken.obj", Point3(25.0, -75.0, -125.0));
+        = parser.parse("forg.obj", Point3(0.0, 0.0, -0.5));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
