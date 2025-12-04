@@ -3,6 +3,7 @@
 #include "configuration.hpp"
 
 #include "aabb.h"
+#include "bvhnode.h"
 #include "common.h"
 #include "camera.h"
 #include "kdtree.h"
@@ -23,9 +24,9 @@ int main()
 
 	// Camera
 	Camera cam;
-	//cam.cam_pos = Point3(13, 2, 3);
-	//cam.cam_dir = Point3(0, 0, 0);
-	//cam.v_up = Vec3(0, 1, 0);
+	cam.cam_pos = Point3(13, 2, 3);
+	cam.cam_dir = Point3(0, 0, 0);
+	cam.v_up = Vec3(0, 1, 0);
 
 	// World
 	World world;
@@ -44,8 +45,8 @@ int main()
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
-        //= parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
+		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
+        = parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
@@ -124,7 +125,7 @@ int main()
 
         // Render screen
 		if (!rendered) {
-			res = cam.render(world, rendered, Camera::KDtree);
+			res = cam.render(world, rendered, Camera::BVH);
 			rendered = true;
 			std::cout << "Render finished. \n";
 		}

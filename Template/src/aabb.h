@@ -44,6 +44,13 @@ class aabb {
                 single_axis_hit(ray, ray_t, z, 2);
         }
 
+        const Interval& axis_interval(int n) const
+        {
+            if (n == 1) return y;
+            if (n == 2) return z;
+            return x;
+        }
+
         bool single_axis_hit(const Ray& ray, Interval ray_t, Interval axis, int axIndex) const
         {
             // get intersection with edges of the aabb
@@ -51,13 +58,29 @@ class aabb {
             auto intersect2 = (axis.max - ray.origin()[axIndex]) / ray.direction()[axIndex];
 
             // set new mins and maxs for hit interval of ray
-            auto newMin = min(intersect1, intersect2);
+            /*auto newMin = min(intersect1, intersect2);
             auto newMax = max(intersect1, intersect2);
 
             if (newMin < ray_t.min) ray_t.min = newMin;
             if (newMax > ray_t.max) ray_t.max = newMax;
 
-            return ray_t.max > ray_t.min;
+            return ray_t.max > ray_t.min;*/
+
+            if (intersect1 < intersect2)
+            {
+                if (intersect1 > ray_t.min) ray_t.min = intersect1;
+                if (intersect2 < ray_t.max) ray_t.max = intersect2;
+            }
+            else
+            {
+                if (intersect2 > ray_t.min) ray_t.min = intersect2;
+                if (intersect1 < ray_t.max) ray_t.max = intersect1;
+            }
+
+            if (ray_t.max <= ray_t.min)
+                return false;
+
+            return true;
         }
 
         bool boxes_overlap(const aabb& box)
@@ -171,6 +194,21 @@ class aabb {
             return { true, entryPoint, exitPoint };
             
         }
+
+        int longest_axis() const
+        {
+            // Returns the index of the longest axis of the bounding box.
+
+            if (x.size() > y.size())
+                return x.size() > z.size() ? 0 : 2;
+            else
+                return y.size() > z.size() ? 1 : 2;
+        }
+
+        static const aabb empty, universe;
 };
+
+const aabb aabb::empty = aabb(Interval::empty, Interval::empty, Interval::empty);
+const aabb aabb::universe = aabb(Interval::universe, Interval::universe, Interval::universe);
 
 #endif //RAYTRACER_AABB_H

@@ -49,6 +49,7 @@ class Camera
             KdTree tree = KdTree();
             KdNode* root = tree.buildTree({});
             if (axl == KDtree) root = tree.buildTree(world.objects);
+            if (axl == BVH) world = World(make_shared<bvh_node>(world));
             this->world = world;
 
             //std::cout << "Number of leaves in the tree: " << tree.numLeaves(root) << "\n";
