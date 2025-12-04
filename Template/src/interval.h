@@ -17,6 +17,11 @@ public:
         max = a.max >= b.max ? a.max : b.max;
     }
 
+    Interval expand(double d)
+    {
+        return {min - d/2, max + d/2};
+    }
+
     /// <summary>
     /// Gets the size of the interval.
     /// </summary>

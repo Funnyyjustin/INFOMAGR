@@ -3,6 +3,7 @@
 #include "configuration.hpp"
 
 #include "aabb.h"
+#include "bvh_node.h"
 #include "common.h"
 #include "camera.h"
 #include "kdtree.h"
@@ -29,6 +30,7 @@ int main()
 
 	// World
 	World world;
+	Camera::AccelStruct accel = Camera::BVH;
 
     auto material_ground = make_shared<Lambertian>(Vec3(0.8, 0.8, 0.0));
     auto material_center = make_shared<Lambertian>(Vec3(0.1, 0.2, 0.5));
@@ -36,16 +38,16 @@ int main()
     auto material_bubble = make_shared<Dielectric>(1.00 / 1.50);
     auto material_right = make_shared<Metal>(Vec3(0.8, 0.6, 0.2), 1.0);
 
-    //world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    //world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
-    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
-    //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
+    world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
+    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
+    world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
-        //= parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
+		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, -150.0));
+        = parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
@@ -69,7 +71,7 @@ int main()
 
         world.add(make_shared<Triangle>(a, A, B, material_center));
     }
-
+	if (accel == Camera::BVH) world = World(make_shared<bvh_node>(world));
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
     /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
@@ -124,7 +126,7 @@ int main()
 
         // Render screen
 		if (!rendered) {
-			res = cam.render(world, rendered, Camera::KDtree);
+			res = cam.render(world, rendered, accel);
 			rendered = true;
 			std::cout << "Render finished. \n";
 		}

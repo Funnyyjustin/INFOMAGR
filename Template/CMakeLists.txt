@@ -10,7 +10,8 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(${PROJECT_NAME})
+add_executable(${PROJECT_NAME}
+        src/bvh_node.h)
 
 # Add all .cpp files relative to project root
 target_sources(${PROJECT_NAME} PRIVATE

@@ -36,6 +36,13 @@ class aabb {
 
         }
 
+        Interval axis_by_index(int axis)
+        {
+            if (axis == 0) return x;
+            if (axis == 1) return y;
+            return z;
+        }
+
         bool hit(const Ray& ray, Interval ray_t) const
         {
             return
@@ -133,8 +140,8 @@ class aabb {
             float tEnd = INFINITY;
 
             const Interval axes[3] = { x, y, z };
-            const float origin[3] = { ray.origin().x(), ray.origin().y(), ray.origin().z() };
-            const float dir[3] = { ray.direction().x(), ray.direction().y(), ray.direction().z() };
+            const double origin[3] = { ray.origin().x(), ray.origin().y(), ray.origin().z() };
+            const double dir[3] = { ray.direction().x(), ray.direction().y(), ray.direction().z() };
 
             for (int i = 0; i < 3; i++)
             {
@@ -171,6 +178,18 @@ class aabb {
             return { true, entryPoint, exitPoint };
             
         }
+
+        int longest_axis() const
+        {
+            if (x.size() > y.size())
+            {
+                if (x.size() > z.size()) return 0;
+                return 1;
+            }
+            if (y.size() > z.size()) return 1;
+            return 2;
+        }
 };
+
 
 #endif //RAYTRACER_AABB_H

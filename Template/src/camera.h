@@ -212,7 +212,35 @@ class Camera
             return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
         }
 
+        /// <summary>
+        /// Gets a 3D vector containing the RGB values of the color.
+        /// This is a recursive function that traces the ray up to a certain amount of bounces.
+        /// </summary>
+        /// <param name="r">= The ray that is being traced.</param>
+        /// <param name="depth">= The current depth.</param>
+        /// <param name="world">= The world of primitives.</param>
+        /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
+        Vec3 bvhTraverse(const Ray& r, int depth, const World& world) const
+            {
+                if (depth <= 0)
+                    return Vec3(0, 0, 0);
 
+                Hit_record rec;
+                if (world.hit(r, Interval(0.001, infinity), rec))
+                {
+                    Ray scat;
+                    Vec3 att;
+
+                    if (rec.mat->scatter(r, rec, att, scat))
+                        return att * noAccelTraverse(scat, depth - 1, world);
+
+                    return Vec3(0, 0, 0);
+                }
+
+                Vec3 unit_dir = unit_vector(r.direction());
+                auto a = 0.5 * (unit_dir.y() + 1.0);
+                return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
+            }
 
 
         /// <summary>
