@@ -54,6 +54,7 @@ class Grid : public Primitive
             for (int i = 0; i < world.objects.size(); i++)
                 insertPrimitiveIndex(i, world.objects[i]->hitBox());
 
+
             /*
             int boxes_along_x = conf::boxes_along_x;
             int boxes_along_y = boxes_along_x * (int) ceil(world.hitBox().y.size() / world.hitBox().x.size());
@@ -153,7 +154,7 @@ class Grid : public Primitive
                 voxindex.y() < 0 || voxindex.y() >= boxesAlongY ||
                 voxindex.z() < 0 || voxindex.z() >= boxesAlongZ)
             {
-                std::cout << "Bounds check miss" << std::endl;
+                //std::cout << "Bounds check miss" << std::endl;
                 return false;
             }
 
@@ -162,9 +163,11 @@ class Grid : public Primitive
             double closest = exit;
             Hit_record temp;
 
+            clamp(voxindex);
 			auto i = index3(voxindex.x(), voxindex.y(), voxindex.z());
             Voxel v = voxels[i];
-            std::cout << "voxel owns " << v.objects.size() << " objects" << std::endl;
+
+            //std::cout << "voxel owns " << v.objects.size() << " objects" << std::endl;
             for (int index : v.objects)
             {
                 shared_ptr<Primitive> prim = primitives[index];
@@ -268,6 +271,7 @@ class Grid : public Primitive
                         auto v = voxels[i];
                         v.objects.push_back(index);
                     }
+
         }
 
         int index3(int x, int y, int z) const
@@ -278,9 +282,9 @@ class Grid : public Primitive
         void clamp(Point3& p) const
         {
             p = {
-                std::clamp(p.x(), 0.0, double(boxesAlongX)),
-                std::clamp(p.y(), 0.0, double(boxesAlongY)),
-                std::clamp(p.z(), 0.0, double(boxesAlongZ))
+                std::clamp(p.x(), 0.0, double(boxesAlongX) - 1),
+                std::clamp(p.y(), 0.0, double(boxesAlongY) - 1),
+                std::clamp(p.z(), 0.0, double(boxesAlongZ) - 1)
             };
         }
 
