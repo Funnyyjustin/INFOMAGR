@@ -51,20 +51,11 @@ class aabb {
             return x;
         }
 
-        bool single_axis_hit(const Ray& ray, Interval ray_t, Interval axis, int axIndex) const
+        bool single_axis_hit(const Ray& ray, Interval& ray_t, Interval axis, int axIndex) const
         {
             // get intersection with edges of the aabb
             auto intersect1 = (axis.min - ray.origin()[axIndex]) / ray.direction()[axIndex];
             auto intersect2 = (axis.max - ray.origin()[axIndex]) / ray.direction()[axIndex];
-
-            // set new mins and maxs for hit interval of ray
-            /*auto newMin = min(intersect1, intersect2);
-            auto newMax = max(intersect1, intersect2);
-
-            if (newMin < ray_t.min) ray_t.min = newMin;
-            if (newMax > ray_t.max) ray_t.max = newMax;
-
-            return ray_t.max > ray_t.min;*/
 
             if (intersect1 < intersect2)
             {
@@ -156,8 +147,8 @@ class aabb {
             float tEnd = INFINITY;
 
             const Interval axes[3] = { x, y, z };
-            const float origin[3] = { ray.origin().x(), ray.origin().y(), ray.origin().z() };
-            const float dir[3] = { ray.direction().x(), ray.direction().y(), ray.direction().z() };
+            const double origin[3] = { ray.origin().x(), ray.origin().y(), ray.origin().z() };
+            const double dir[3] = { ray.direction().x(), ray.direction().y(), ray.direction().z() };
 
             for (int i = 0; i < 3; i++)
             {

@@ -10,6 +10,7 @@
 #include "kdtree.h"
 #include "material.h"
 #include "primitive.h"
+#include "Grid.h"
 #include "world.h"
 
 /// <summary>
@@ -48,8 +49,10 @@ class Camera
 
             KdTree tree = KdTree();
             KdNode* root = tree.buildTree({});
+            Grid grid = Grid();
             if (axl == KDtree) root = tree.buildTree(world.objects);
             if (axl == BVH) world = World(make_shared<bvh_node>(world));
+            if (axl == GRID) grid = Grid(world);
             this->world = world;
 
             //std::cout << "Number of leaves in the tree: " << tree.numLeaves(root) << "\n";
@@ -86,6 +89,10 @@ class Camera
                         {
                             World subset = tree.traverseTree(r, root);
                             color += kdTraverse(r, conf::max_depth, subset, tree, root); // Track the ray a certain amount of times
+                        }
+                        else if (axl == GRID)
+                        {
+                            color += gridTraverse(r, conf::max_depth, grid);
                         }
                         else
                         {
@@ -213,7 +220,36 @@ class Camera
             return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
         }
 
+        /// <summary>
+        /// Gets a 3D vector containing the RGB values of the color.
+        /// This is a recursive function that traces the ray up to a certain amount of bounces.
+        /// </summary>
+        /// <param name="r">= The ray that is being traced.</param>
+        /// <param name="depth">= The current depth.</param>
+        /// <param name="world">= The world of primitives.</param>
+        /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
+        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid) const
+        {
+            if (depth <= 0)
+                return Vec3(0, 0, 0);
 
+            Hit_record rec;
+            if (grid.hit(r, Interval(0.001, infinity), rec))
+            {
+                std::cout << "Hit found" << std::endl;
+                Ray scat;
+                Vec3 att;
+
+                if (rec.mat->scatter(r, rec, att, scat))
+                    return att * gridTraverse(scat, depth - 1, grid);
+
+                return Vec3(0, 0, 0);
+            }
+
+            Vec3 unit_dir = unit_vector(r.direction());
+            auto a = 0.5 * (unit_dir.y() + 1.0);
+            return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
+        }
 
 
         /// <summary>

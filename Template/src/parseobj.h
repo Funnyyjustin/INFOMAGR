@@ -161,7 +161,7 @@ class Parser
 			while (true)
 			{
 				int index = splits.size() - 1;
-				print(splits[index]);
+				//print(splits[index]);
 				if (splits[index] == "Template") break;
 
 				splits.erase(splits.begin() + index);
