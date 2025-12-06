@@ -177,6 +177,9 @@ class Camera
                 if (rec.mat->scatter(r, rec, att, scat))
                     return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root);
 
+                conf::traversal_step_array.push_back(rec.traversal_steps);
+                conf::intersection_test_array.push_back(rec.intersection_tests);
+
                 return Vec3(0, 0, 0);
             }
 

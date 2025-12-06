@@ -28,6 +28,7 @@ int main()
 	cam.cam_dir = Point3(0, 0, 1);
 	cam.v_up = Vec3(0, 1, 0);
 
+
 	// World
 	World world;
 
@@ -129,6 +130,10 @@ int main()
 			res = cam.render(world, rendered, Camera::GRID);
 			rendered = true;
 			std::cout << "Render finished. \n";
+			//std::cout << "Median traversal steps: " << median(conf::traversal_step_array) << std::endl;
+			//std::cout << "Average traversal steps: " << average(conf::traversal_step_array) << std::endl;
+			//std::cout << "Median intersection tests: " << median(conf::intersection_test_array) << std::endl;
+			//std::cout << "Average intersection tests: " << average(conf::intersection_test_array) << std::endl;
 		}
 
 		// Draw and display

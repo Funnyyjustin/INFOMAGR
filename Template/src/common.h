@@ -41,6 +41,22 @@ inline int random_int(int min, int max)
     return int(random_double(min, max + 1));
 }
 
+inline int median(std::vector<int> v)
+{
+    auto s = v.size();
+    return v[(s-1)/2];
+}
+
+inline int average(std::vector<int> v)
+{
+    int sum = 0;
+
+    for (auto i : v)
+        sum += i;
+
+    return sum / v.size();
+}
+
 // Common Headers
 
 #include "interval.h"
