@@ -48,12 +48,36 @@ class Grid : public Primitive
                 worldDimensions.z() / boxesAlongZ
             };
 
+            std::cout << "Cell dimensions.x: " << cellDimensions.x() << std::endl;
+            std::cout << "Cell dimensions.y: " << cellDimensions.y() << std::endl;
+            std::cout << "Cell dimensions.z: " << cellDimensions.z() << std::endl;
+
 			std::cout << boxesAlongX * boxesAlongY * boxesAlongZ << " voxels to be created." << std::endl;
             voxels.resize(boxesAlongX * boxesAlongY * boxesAlongZ);
 
             for (int i = 0; i < world.objects.size(); i++)
                 insertPrimitiveIndex(i, world.objects[i]->hitBox());
 
+            vector<bool> exists;
+            exists.resize(primitives.size(), false);
+
+            /*for (int z = 0; z < boxesAlongZ; z++)
+                for (int y = 0; y < boxesAlongY; y++)
+                    for (int x = 0; x < boxesAlongX; x++) {
+                        std::cout << "Voxel " << Vec3(x, y, z) << " has primitives: ";
+                        for (auto object: voxels[index3(x, y, z)].objects) {
+                            std::cout << object << " ";
+                        }
+                        std::cout << std::endl;
+                    }*/
+
+            bool acc = true;
+            for (bool exist: exists) {
+                acc &= exist;
+            }
+
+            if (acc) std::cout << "All primitives exist in at least one voxel" << std::endl;
+            else std::cout << "Not all primitives exist in at least one voxel" << std::endl;
 
             /*
             int boxes_along_x = conf::boxes_along_x;
@@ -108,7 +132,6 @@ class Grid : public Primitive
 
             if (entry_t > exit_t)
             {
-                std::cout << "Impossible entry-exit miss" << std::endl;
                 return false;
             }
 
@@ -123,20 +146,19 @@ class Grid : public Primitive
             int stepZ = (r.direction().z() > 0) ? 1 : -1;
             Vec3 stepV = {double(stepX), double(stepY), double(stepZ)};
 
-            double deltaX = abs(cellDimensions.x() / r.direction().x());
-            double deltaY = abs(cellDimensions.y() / r.direction().y());
-            double deltaZ = abs(cellDimensions.z() / r.direction().z());
+            double deltaX = cellDimensions.x() / abs(r.direction().x());
+            double deltaY = cellDimensions.y() / abs(r.direction().y());
+            double deltaZ = cellDimensions.z() / abs(r.direction().z());
             Vec3 deltaV = {deltaX, deltaY, deltaZ};
 
             double maxT_x = nextBoundaryT(entryVoxel.x(), r.origin().x(), r.direction().x(), worldMin.x(), cellDimensions.x(), stepX);
             double maxT_y = nextBoundaryT(entryVoxel.y(), r.origin().y(), r.direction().y(), worldMin.y(), cellDimensions.y(), stepY);
-            double maxT_z = nextBoundaryT(entryVoxel.z(), r.origin().y(), r.direction().z(), worldMin.z(), cellDimensions.z(), stepZ);
+            double maxT_z = nextBoundaryT(entryVoxel.z(), r.origin().z(), r.direction().z(), worldMin.z(), cellDimensions.z(), stepZ);
             Vec3 maxV = {maxT_x, maxT_y, maxT_z};
 
             goTo(maxT_x, deltaX, entry_t);
             goTo(maxT_y, deltaY, entry_t);
             goTo(maxT_z, deltaZ, entry_t);
-
 
             return traverse(r, entryVoxel, stepV, maxV, deltaV, exit_t, rec, ray_t);
         }
@@ -149,7 +171,6 @@ class Grid : public Primitive
 
         bool traverse(const Ray& r, Point3 voxindex, Vec3 stepV, Vec3 maxV, Vec3 deltaV, double exit, Hit_record& rec, Interval ray_t) const
         {
-
             if (voxindex.x() < 0 || voxindex.x() >= boxesAlongX ||
                 voxindex.y() < 0 || voxindex.y() >= boxesAlongY ||
                 voxindex.z() < 0 || voxindex.z() >= boxesAlongZ)
@@ -159,7 +180,79 @@ class Grid : public Primitive
             }
 
 
-            bool hitAnything = false;
+
+            // Create mutable instances
+            int xi = voxindex.x();
+            int yi = voxindex.y();
+            int zi = voxindex.z();
+
+            auto maxX = maxV.x();
+            auto maxY = maxV.y();
+            auto maxZ = maxV.z();
+
+            auto deltaX = deltaV.x();
+            auto deltaY = deltaV.y();
+            auto deltaZ = deltaV.z();
+
+            while (true)
+            {
+                Voxel voxel = voxels[index3(xi, yi, zi)];
+
+                Hit_record temp_rec;
+                bool hit_anything = false;
+                auto closest = ray_t.max;
+
+                for (const auto& object : voxel.objects)
+                {
+                    if (primitives[object]->hit(r, Interval(ray_t.min, closest), temp_rec))
+                    {
+                        hit_anything = true;
+                        closest = temp_rec.t;
+                        rec = temp_rec;
+                    }
+                }
+
+                if (hit_anything)
+                    return true;
+
+
+                if (maxX < maxY)
+                {
+                    if (maxX < maxZ)
+                    {
+                        xi += stepV.x();
+                        maxX += deltaX;
+                    }
+                    else
+                    {
+                        zi += stepV.z();
+                        maxZ += deltaZ;
+                    }
+                }
+                else
+                {
+                    if (maxY < maxZ)
+                    {
+                        yi += stepV.y();
+                        maxY += deltaY;
+                    }
+                    else
+                    {
+                        zi += stepV.z();
+                        maxZ += deltaZ;
+                    }
+                }
+                if (xi < 0 || xi >= boxesAlongX ||
+                    yi < 0 || yi >= boxesAlongY ||
+                    zi < 0 || zi >= boxesAlongZ)
+                {
+
+                    return false;
+                }
+            }
+
+
+            /*bool hitAnything = false;
             double closest = exit;
             Hit_record temp;
 
@@ -170,9 +263,11 @@ class Grid : public Primitive
             //std::cout << "voxel owns " << v.objects.size() << " objects" << std::endl;
             for (int index : v.objects)
             {
+                std::cout << "Checking prim: " << index << std::endl;
                 shared_ptr<Primitive> prim = primitives[index];
                 if (prim->hit(r, Interval(ray_t.min, closest), temp))
                 {
+
                     hitAnything = true;
                     closest = temp.t;
                     rec = temp;
@@ -218,7 +313,7 @@ class Grid : public Primitive
                 {voxindex.x(), voxindex.y(), voxindex.z() + deltaV.z()},
                 stepV,
                 {maxV.x(), maxV.y(), maxV.z() + deltaV.z()},
-                deltaV, exit, rec, ray_t);
+                deltaV, exit, rec, ray_t);*/
         }
 
         void goTo(double& maxT, double delta, double entry_t) const
@@ -252,10 +347,11 @@ class Grid : public Primitive
             Point3 a = {floor(offset.x() / cellDimensions.x()),
                         floor(offset.y() / cellDimensions.y()),
                         floor(offset.z() / cellDimensions.z())};
+            clamp(a);
             return a;
 		}
 
-        void insertPrimitiveIndex(int index, const aabb& box) const
+        void insertPrimitiveIndex(int index, const aabb& box)
         {
             auto min = getVoxelIndex({box.x.min, box.y.min, box.z.min});
             auto max = getVoxelIndex({box.x.max, box.y.max, box.z.max});
@@ -263,12 +359,12 @@ class Grid : public Primitive
             clamp(min);
             clamp(max);
 
-            for (int x = min.x(); x < max.x(); x++)
-                for (int y = min.y(); y < max.y(); y++)
-                    for (int z = min.z(); z < max.z(); z++)
+            for (int x = min.x(); x <= max.x(); x++)
+                for (int y = min.y(); y <= max.y(); y++)
+                    for (int z = min.z(); z <= max.z(); z++)
                     {
                         auto i = index3(x,y,z);
-                        auto v = voxels[i];
+						Voxel& v = voxels[i];
                         v.objects.push_back(index);
                     }
 

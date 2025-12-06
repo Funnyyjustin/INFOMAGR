@@ -74,11 +74,6 @@ class Camera
                     auto currentPixel = y * conf::width + x;
                     arr[currentPixel].position = sf::Vector2f(x, y);
 
-                    // Calculate position and direction of the ray
-                    auto pos = pixel00_loc + (x * pixel_delta_u) + (y * pixel_delta_v);
-                    auto dir = pos - camera_center;
-                    Ray r(camera_center, dir);
-
                     Vec3 color(0, 0, 0); // Starting color is always black; if we hit nothing this is the result
                     
                     // Anti-aliasing
@@ -236,7 +231,7 @@ class Camera
             Hit_record rec;
             if (grid.hit(r, Interval(0.001, infinity), rec))
             {
-                std::cout << "Hit found" << std::endl;
+                //std::cout << "Hit found" << std::endl;
                 Ray scat;
                 Vec3 att;
 

@@ -1,6 +1,5 @@
 #include "events.hpp"
 
-
 void processEvents(sf::Window& window)
 {
     for (auto event = sf::Event{}; window.pollEvent(event);)

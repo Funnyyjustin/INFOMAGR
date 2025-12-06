@@ -46,7 +46,7 @@ int main()
     Parser parser;
     auto [vertices, vertex_normals, faces]
 		= parser.parse("Chicken.obj", Point3(50.0, -100.0, 150.0));
-        //= parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
+        //= parser.parse("forg.obj", Point3(0.0, 0.0, 0.75));
 
 	//std::cout << "Number of vertices: " << vertices.size() << std::endl;
 
@@ -124,7 +124,8 @@ int main()
 		processEvents(window);
 
         // Render screen
-		if (!rendered) {
+		if (!rendered)
+		{
 			res = cam.render(world, rendered, Camera::GRID);
 			rendered = true;
 			std::cout << "Render finished. \n";
@@ -134,6 +135,5 @@ int main()
 		window.clear();
 		window.draw(res);
 		window.display();
-
 	}
 }

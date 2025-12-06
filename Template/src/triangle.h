@@ -50,6 +50,7 @@ class Triangle : public Primitive
 
         bool hit(const Ray& r, Interval ray_t, Hit_record& rec) const override
         {
+            rec.intersection_tests++;
             auto denom = dot(normal, r.direction());
 
             if (std::fabs(denom) < 1e-8) return false;
@@ -69,6 +70,7 @@ class Triangle : public Primitive
             rec.p = intersection;
             rec.mat = mat;
             rec.set_face_normal(r, normal);
+            rec.traversal_steps++;
 
             return true;
         }
