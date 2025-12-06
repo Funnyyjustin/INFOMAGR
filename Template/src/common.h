@@ -41,15 +41,15 @@ inline int random_int(int min, int max)
     return int(random_double(min, max + 1));
 }
 
-inline int median(std::vector<int> v)
+inline float median(std::vector<int> v)
 {
     auto s = v.size();
     return v[(s-1)/2];
 }
 
-inline int average(std::vector<int> v)
+inline float average(std::vector<int> v)
 {
-    int sum = 0;
+    float sum = 0;
 
     for (auto i : v)
         sum += i;

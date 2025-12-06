@@ -119,6 +119,9 @@ int main()
 
 
 	sf::VertexArray res;
+
+	vector<int> traversal_steps;
+	vector<int> intersection_tests;
 	while (window.isOpen())
 	{
         // Process inputs
@@ -127,13 +130,13 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::GRID);
+			res = cam.render(world, rendered, Camera::GRID, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
-			//std::cout << "Median traversal steps: " << median(conf::traversal_step_array) << std::endl;
-			//std::cout << "Average traversal steps: " << average(conf::traversal_step_array) << std::endl;
-			//std::cout << "Median intersection tests: " << median(conf::intersection_test_array) << std::endl;
-			//std::cout << "Average intersection tests: " << average(conf::intersection_test_array) << std::endl;
+			std::cout << "Median traversal steps: " << median(traversal_steps) << std::endl;
+			std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
+			std::cout << "Median intersection tests: " << median(intersection_tests) << std::endl;
+			std::cout << "Average intersection tests: " << average(intersection_tests) << std::endl;
 		}
 
 		// Draw and display

@@ -18,7 +18,4 @@ namespace conf
 	double vfov = 90;
 	double defocus_angle = 1;
 	double focus_dist = 1;
-
-	std::vector<int> traversal_step_array;
-	std::vector<int> intersection_test_array;
 }

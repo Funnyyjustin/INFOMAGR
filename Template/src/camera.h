@@ -40,7 +40,7 @@ class Camera
             GRID
         };
 
-        sf::VertexArray render(World& world, bool rendered, AccelStruct axl)
+        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, vector<int>& traversal_steps, vector<int>& intersection_tests)
         {
             initialize();
 
@@ -83,15 +83,15 @@ class Camera
                         if (axl == KDtree)
                         {
                             World subset = tree.traverseTree(r, root);
-                            color += kdTraverse(r, conf::max_depth, subset, tree, root); // Track the ray a certain amount of times
+                            color += kdTraverse(r, conf::max_depth, subset, tree, root, traversal_steps, intersection_tests); // Track the ray a certain amount of times
                         }
                         else if (axl == GRID)
                         {
-                            color += gridTraverse(r, conf::max_depth, grid);
+                            color += gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests);
                         }
                         else
                         {
-                            color += noAccelTraverse(r, conf::max_depth, world);
+                            color += noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests);
                         }
                     }
 
@@ -163,7 +163,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root) const
+        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, vector<int>& traversal_steps, vector<int>& intersection_tests) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -174,11 +174,12 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                if (rec.mat->scatter(r, rec, att, scat))
-                    return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root);
+                traversal_steps.push_back(rec.traversal_steps);
+                intersection_tests.push_back(rec.intersection_tests);
 
-                conf::traversal_step_array.push_back(rec.traversal_steps);
-                conf::intersection_test_array.push_back(rec.intersection_tests);
+                if (rec.mat->scatter(r, rec, att, scat))
+                    return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root, traversal_steps, intersection_tests);
+
 
                 return Vec3(0, 0, 0);
             }
@@ -196,7 +197,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world) const
+        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world, vector<int>& traversal_steps, vector<int>& intersection_tests) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -207,8 +208,11 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
+                traversal_steps.push_back(rec.traversal_steps);
+                intersection_tests.push_back(rec.intersection_tests);
+
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * noAccelTraverse(scat, depth - 1, world);
+                    return att * noAccelTraverse(scat, depth - 1, world, traversal_steps, intersection_tests);
 
                 return Vec3(0, 0, 0);
             }
@@ -226,7 +230,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid) const
+        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid, vector<int>& traversal_steps, vector<int>& intersection_tests) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -238,8 +242,11 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
+                traversal_steps.push_back(rec.traversal_steps);
+                intersection_tests.push_back(rec.intersection_tests);
+
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * gridTraverse(scat, depth - 1, grid);
+                    return att * gridTraverse(scat, depth - 1, grid, traversal_steps, intersection_tests);
 
                 return Vec3(0, 0, 0);
             }
