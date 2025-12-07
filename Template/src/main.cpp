@@ -18,19 +18,19 @@ int main()
 {
     bool rendered = false;
 
-	std::cout << "Starting render..\n";
+    std::cout << "Starting render..\n";
 
-	auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y }, "RayTracer" };
+    auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y }, "RayTracer" };
 
-	// Camera
-	Camera cam;
-	cam.cam_pos = Point3(0, 0, 0);
-	cam.cam_dir = Point3(0, 0, -1);
-	cam.v_up = Vec3(0, 1, 0);
+    // Camera
+    Camera cam;
+    cam.cam_pos = Point3(0, 0, 0);
+    cam.cam_dir = Point3(0, 0, -1);
+    cam.v_up = Vec3(0, 1, 0);
 
 
-	// World
-	World world;
+    // World
+    World world;
 
     auto material_ground = make_shared<Lambertian>(Vec3(0.8, 0.8, 0.0));
     auto material_center = make_shared<Lambertian>(Vec3(0.1, 0.2, 0.5));
@@ -130,21 +130,19 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::GRID, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::NONE, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
-			for (uint64_t i: intersection_tests) {
+			for (int i: intersection_tests) {
 				//std::cout << i <<  std::endl;
 			}
 
 
-			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());
-			sort(traversal_steps.begin(), traversal_steps.end(), greater<uint64_t>());
+			sort(intersection_tests.begin(), intersection_tests.end(), greater<float>());
 			std::cout << "Number of vertices: " << vertices.size() << std::endl;
-			std::cout << "Min traversal steps: " << traversal_steps[traversal_steps.size() - 1] << std::endl;
-			std::cout << "Peak traversal steps: " << intersection_tests[0] << std::endl;
-			std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
+			//std::cout << "Median traversal steps: " << median(traversal_steps) << std::endl;
+			//std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
 			std::cout << "Min intersection tests: " << intersection_tests[intersection_tests.size() - 1] << std::endl;
 			std::cout << "Peak intersection tests: " << intersection_tests[0] << std::endl;
 			std::cout << "Average intersection tests: " << average(intersection_tests) << std::endl;
