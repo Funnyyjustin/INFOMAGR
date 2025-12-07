@@ -8,6 +8,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <numeric>
 
 // C++ Std Usings
 
@@ -41,20 +42,9 @@ inline int random_int(int min, int max)
     return int(random_double(min, max + 1));
 }
 
-inline float median(std::vector<int> v)
+inline float average(std::vector<float> v)
 {
-    auto s = v.size();
-    return v[(s-1)/2];
-}
-
-inline float average(std::vector<int> v)
-{
-    float sum = 0;
-
-    for (auto i : v)
-        sum += i;
-
-    return sum / v.size();
+    return std::reduce(v.begin(), v.end()) / v.size();
 }
 
 // Common Headers

@@ -40,7 +40,7 @@ class Camera
             GRID
         };
 
-        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, vector<int>& traversal_steps, vector<int>& intersection_tests)
+        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, vector<float>& traversal_steps, vector<float>& intersection_tests)
         {
             initialize();
 
@@ -54,9 +54,6 @@ class Camera
             if (axl == BVH) world = World(make_shared<bvh_node>(world));
             if (axl == GRID) grid = Grid(world);
             this->world = world;
-
-            //std::cout << "Number of leaves in the tree: " << tree.numLeaves(root) << "\n";
-            //std::cout << "Avg prims per leaf: " << tree.numPrims(root) / tree.numLeaves(root) << "\n";
 
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
@@ -163,7 +160,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, vector<int>& traversal_steps, vector<int>& intersection_tests) const
+        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, vector<float>& traversal_steps, vector<float>& intersection_tests) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -174,8 +171,7 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                traversal_steps.push_back(rec.traversal_steps);
-                intersection_tests.push_back(rec.intersection_tests);
+
 
                 if (rec.mat->scatter(r, rec, att, scat))
                     return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root, traversal_steps, intersection_tests);
@@ -197,7 +193,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world, vector<int>& traversal_steps, vector<int>& intersection_tests) const
+        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world, vector<float>& traversal_steps, vector<float>& intersection_tests) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -208,7 +204,6 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                traversal_steps.push_back(rec.traversal_steps);
                 intersection_tests.push_back(rec.intersection_tests);
 
                 if (rec.mat->scatter(r, rec, att, scat))
@@ -230,7 +225,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid, vector<int>& traversal_steps, vector<int>& intersection_tests) const
+        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid, vector<float>& traversal_steps, vector<float>& intersection_tests) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -242,14 +237,14 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                traversal_steps.push_back(rec.traversal_steps);
-                intersection_tests.push_back(rec.intersection_tests);
-
                 if (rec.mat->scatter(r, rec, att, scat))
                     return att * gridTraverse(scat, depth - 1, grid, traversal_steps, intersection_tests);
 
                 return Vec3(0, 0, 0);
             }
+
+            if (depth == conf::max_depth)
+                intersection_tests.push_back(rec.intersection_tests);
 
             Vec3 unit_dir = unit_vector(r.direction());
             auto a = 0.5 * (unit_dir.y() + 1.0);

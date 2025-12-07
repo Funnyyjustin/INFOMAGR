@@ -15,7 +15,7 @@ namespace conf
 	// RT config
 	int samples_per_pixel = 10;
 	int max_depth = 5;
-	double vfov = 90;
+	double vfov = 75;
 	double defocus_angle = 1;
 	double focus_dist = 1;
 }
