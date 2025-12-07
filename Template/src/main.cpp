@@ -45,6 +45,7 @@ int main()
 
 	cam.v_up = Vec3(0, 1, 0);
 
+
     // World
     World world;
 
@@ -149,6 +150,8 @@ int main()
 			res = cam.render(world, rendered, Camera::KDtree, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
+
+
 
 
 			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());

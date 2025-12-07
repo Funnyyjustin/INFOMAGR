@@ -79,8 +79,11 @@ class Camera
                         Ray r = get_ray(x, y);
                         if (axl == KDtree)
                         {
-                            World subset = tree.traverseTree(r, root);
-                            color += kdTraverse(r, conf::max_depth, subset, tree, root, traversal_steps, intersection_tests); // Track the ray a certain amount of times
+                            Hit_record rec;
+                            World subset = tree.traverseTree(r, root, rec);
+                            color += kdTraverse(r, conf::max_depth, subset, tree, root, traversal_steps, intersection_tests, rec); // Track the ray a certain amount of times
+                            //intersection_tests.push_back(rec.intersection_tests);
+                            //traversal_steps.push_back(rec.traversal_steps);
                         }
                         else if (axl == GRID)
                         {
@@ -160,7 +163,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, vector<float>& traversal_steps, vector<float>& intersection_tests) const
+        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, vector<float>& traversal_steps, vector<float>& intersection_tests, Hit_record record) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -171,11 +174,17 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                intersection_tests.push_back(rec.intersection_tests);
-                traversal_steps.push_back(rec.traversal_steps);
+                //intersection_tests.push_back(record.intersection_tests);
+                //traversal_steps.push_back(record.traversal_steps);
 
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root, traversal_steps, intersection_tests);
+                {
+                    Hit_record r;
+                    auto prims = tree.traverseTree(scat, root, r);
+                    intersection_tests.push_back(r.intersection_tests);
+                    traversal_steps.push_back(r.traversal_steps);
+                    return att * kdTraverse(scat, depth - 1, prims, tree, root, traversal_steps, intersection_tests, record);
+                }
 
 
                 return Vec3(0, 0, 0);

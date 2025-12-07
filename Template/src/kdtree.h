@@ -168,8 +168,8 @@ class KdTree
 
 			// 1. Get axis along which we should split
 			// Currently, we just switch between the three different axes, starting with the x-axis
-			//int axis = depth % 3;
-			int axis = getLongestAxis(currentspace);
+			int axis = depth % 3;
+			//int axis = getLongestAxis(currentspace);
 
 			// 2. Then, create two new (child) bounding boxes
 			// We also get the primitives that overlap into these new bounding boxes, and give them to our children
@@ -226,7 +226,7 @@ class KdTree
 		/// <param name="ray"> = The ray that is traversing through the tree</param>
 		/// <param name="tree"> = The tree that is being traversed through; the root node of the tree should be given here</param>
 		/// <returns>A World, containing all primitives that the ray might intersect with</returns>
-		World traverseTree(Ray& ray, KdNode* tree)
+		World traverseTree(Ray& ray, KdNode* tree, Hit_record& rec)
 		{
 			// Check if we hit the bounding box of the current node of the tree
 			auto [hit, entry, exit] = tree->boundingbox.boxRayIntersection(ray, Interval(0.001, INFINITY));
@@ -242,6 +242,8 @@ class KdTree
 			if (leaf == nullptr)
 				return World();
 
+			rec.traversal_steps += 1;
+
 			auto primitives = leaf->primitives;
 			World world = World();
 
@@ -252,6 +254,7 @@ class KdTree
 			// For each primitive in the leaf, check if there is an intersection with the ray
 			for (const std::shared_ptr<Primitive> p : primitives)
 			{
+				rec.intersection_tests += 1;
 				Hit_record h;
 				if (p.get()->hit(ray, Interval(0.001, infinity), h))
 				{
@@ -287,7 +290,7 @@ class KdTree
 
 			// Otherwise, if no intersections are found, we traverse the ray through the tree until we hit the next box
 			Ray ray_new = Ray(exit + ray.direction() * 0.001, ray.direction());
-			return traverseTree(ray_new, tree);
+			return traverseTree(ray_new, tree, rec);
 		}
 
 		/// <summary>
