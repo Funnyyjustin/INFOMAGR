@@ -14,7 +14,8 @@ class Hit_record
 		shared_ptr<Material> mat;
 		double t;
 		bool front_face;
-		uint64_t intersection_tests;
+		uint64_t intersection_tests = 0;
+		uint64_t traversal_steps = 0;
 
 		/// <summary>
 		/// Sets the normal inward or outward.

@@ -54,6 +54,8 @@ public:
 
     bool hit(const Ray& r, Interval ray_t, Hit_record& rec) const override
     {
+        rec.traversal_steps++;
+
         if (!bbox.hit(r, ray_t))
             return false;
 

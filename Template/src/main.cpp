@@ -130,19 +130,21 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::NONE, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::GRID, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
-			for (int i: intersection_tests) {
+			for (uint64_t i: intersection_tests) {
 				//std::cout << i <<  std::endl;
 			}
 
 
-			sort(intersection_tests.begin(), intersection_tests.end(), greater<float>());
+			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());
+			sort(traversal_steps.begin(), traversal_steps.end(), greater<uint64_t>());
 			std::cout << "Number of vertices: " << vertices.size() << std::endl;
-			//std::cout << "Median traversal steps: " << median(traversal_steps) << std::endl;
-			//std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
+			std::cout << "Min traversal steps: " << traversal_steps[traversal_steps.size() - 1] << std::endl;
+			std::cout << "Peak traversal steps: " << intersection_tests[0] << std::endl;
+			std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
 			std::cout << "Min intersection tests: " << intersection_tests[intersection_tests.size() - 1] << std::endl;
 			std::cout << "Peak intersection tests: " << intersection_tests[0] << std::endl;
 			std::cout << "Average intersection tests: " << average(intersection_tests) << std::endl;

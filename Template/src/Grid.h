@@ -194,6 +194,8 @@ class Grid : public Primitive
             auto deltaY = deltaV.y();
             auto deltaZ = deltaV.z();
 
+            int traversal_steps = 0;
+
             while (true)
             {
                 Voxel voxel = voxels[index3(xi, yi, zi)];
@@ -201,6 +203,8 @@ class Grid : public Primitive
                 Hit_record temp_rec;
                 bool hit_anything = false;
                 auto closest = ray_t.max;
+                traversal_steps++;
+
 
                 for (const auto& object : voxel.objects)
                 {
@@ -213,7 +217,11 @@ class Grid : public Primitive
                 }
 
                 if (hit_anything)
+                {
+                    rec.traversal_steps = traversal_steps;
                     return true;
+                }
+
 
 
                 if (maxX < maxY)
