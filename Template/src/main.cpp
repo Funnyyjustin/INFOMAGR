@@ -47,7 +47,8 @@ int main()
     Parser parser;
     auto [vertices, vertex_normals, faces]
 		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, 150.0));
-        = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
+        = parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
+        //= parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
 
 
 
@@ -130,7 +131,7 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::NONE, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::KDtree, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
