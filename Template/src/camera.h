@@ -206,6 +206,7 @@ class Camera
                 Vec3 att;
 
                 intersection_tests.push_back(rec.intersection_tests);
+                traversal_steps.push_back(rec.traversal_steps);
 
                 if (rec.mat->scatter(r, rec, att, scat))
                     return att * noAccelTraverse(scat, depth - 1, world, traversal_steps, intersection_tests);
@@ -238,14 +239,15 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
+                intersection_tests.push_back(rec.intersection_tests);
+                traversal_steps.push_back(rec.traversal_steps);
+
                 if (rec.mat->scatter(r, rec, att, scat))
                     return att * gridTraverse(scat, depth - 1, grid, traversal_steps, intersection_tests);
 
                 return Vec3(0, 0, 0);
             }
 
-            if (depth == conf::max_depth)
-                intersection_tests.push_back(rec.intersection_tests);
 
             Vec3 unit_dir = unit_vector(r.direction());
             auto a = 0.5 * (unit_dir.y() + 1.0);
