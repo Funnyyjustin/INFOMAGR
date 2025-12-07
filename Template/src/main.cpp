@@ -24,10 +24,26 @@ int main()
 
     // Camera
     Camera cam;
-    cam.cam_pos = Point3(0, 0, 0);
-    cam.cam_dir = Point3(0, 0, -1);
-    cam.v_up = Vec3(0, 1, 0);
 
+	int test = 3;
+
+	// test setups
+	if (test == 1) {
+		cam.cam_pos = Point3(0, 0, 0);
+		cam.cam_dir = Point3(0, 0, -1);
+	}
+
+	if (test == 2) {
+		cam.cam_pos = Point3(0, 0, 0);
+		cam.cam_dir = Point3(-1, 0, 0);
+	}
+
+	if (test == 3) {
+		cam.cam_pos = Point3(0, 0, 0);
+		cam.cam_dir = Point3(1, 0, 0);
+	}
+
+	cam.v_up = Vec3(0, 1, 0);
 
     // World
     World world;
@@ -46,9 +62,9 @@ int main()
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, 150.0));
-        = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
-
+        //= parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
+		//= parser.parse("bunny.obj", Point3(-2.75, -0.75, 0));
+		= parser.parse("bunny.obj", Point3(2.75, -0.75, 0));
 
 
     // Load all triangles in the mesh
@@ -130,11 +146,9 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::NONE, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::KDtree, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
-
-
 
 
 			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());
