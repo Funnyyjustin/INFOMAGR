@@ -26,8 +26,8 @@ class KdNode
 class KdTree
 {
 	public:
-		int maxDepth = 10;
-		int minLeafSize = 1;
+		int maxDepth = 24;
+		int minLeafSize = 4;
 		std::vector<shared_ptr<Primitive>> primitives;
 
 		KdTree() { }
@@ -43,15 +43,19 @@ class KdTree
 			KdNode* root = new KdNode();
 			root->primitives = objects;
 
-			std::vector<int> bounds = getBounds(objects);
+			std::vector<double> bounds = getBounds(objects);
 
-			aabb scee = aabb(
+			aabb scene = aabb(
 				Interval(bounds[0], bounds[1]),
 				Interval(bounds[2], bounds[3]),
 				Interval(bounds[4], bounds[5]));
 
-			int num = 500;
-			aabb scene = aabb(Interval(-num, num), Interval(-num, num), Interval(-num, num));
+			//std::cout << scene.x.min << " " << scee.x.max << "\n";
+			//std::cout << scene.y.min << " " << scee.y.max << "\n";
+			//std::cout << scene.z.min << " " << scee.z.max << "\n";
+
+			//double num = 2;
+			//aabb scene = aabb(Interval(-num, num), Interval(-num, num), Interval(-num, num));
 			root->boundingbox = scene;
 
 			return buildTreeRec(root, 0);
@@ -62,14 +66,14 @@ class KdTree
 		/// </summary>
 		/// <param name="objects"> = the objects in the scene</param>
 		/// <returns>A 1x6 vector with the min and max bounds of the three axes.</returns>
-		std::vector<int> getBounds(std::vector<shared_ptr<Primitive>> objects)
+		std::vector<double> getBounds(std::vector<shared_ptr<Primitive>> objects)
 		{
-			int min_x = 9999999999;
-			int min_y = 9999999999;
-			int min_z = 9999999999;
-			int max_x = -9999999999;
-			int max_y = -9999999999;
-			int max_z = -9999999999;
+			double min_x = 9999999;
+			double min_y = 9999999;
+			double min_z = 9999999;
+			double max_x = -9999999;
+			double max_y = -9999999;
+			double max_z = -9999999;
 
 			for (const auto& obj : objects)
 			{
@@ -79,21 +83,21 @@ class KdTree
 				auto y = box.y;
 				auto z = box.z;
 
-				min_x = std::min(min_x, round(x.min));
-				max_x = std::max(max_x, round(x.max));
+				min_x = std::min(min_x, x.min);
+				max_x = std::max(max_x, x.max);
 
-				min_y = std::min(min_y, round(y.min));
-				max_y = std::max(max_y, round(y.max));
+				min_y = std::min(min_y, y.min);
+				max_y = std::max(max_y, y.max);
 
-				min_z = std::min(min_z, round(z.min));
-				max_z = std::max(max_z, round(z.max));
+				min_z = std::min(min_z, z.min);
+				max_z = std::max(max_z, z.max);
 			}
 
 			// We clamp the values to the biggest nearest 100-value
 			// So, 101 --> 200, -101 --> -200
 			// Otherwise, bounding boxes get goofy for some reason
-			//return std::vector<int> { min_x, max_x, min_y, max_y, min_z, max_z };
-			return std::vector<int> { clamp(min_x), clamp(max_x), clamp(min_y), clamp(max_y), clamp(min_z), clamp(max_z) };
+			return std::vector<double> { min_x, max_x, min_y, max_y, min_z, max_z };
+			//return std::vector<int> { clamp(min_x), clamp(max_x), clamp(min_y), clamp(max_y), clamp(min_z), clamp(max_z) };
 		}
 
 		/// <summary>

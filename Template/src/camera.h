@@ -171,7 +171,7 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-
+                intersection_tests.push_back(rec.intersection_tests);
 
                 if (rec.mat->scatter(r, rec, att, scat))
                     return att * kdTraverse(scat, depth - 1, tree.traverseTree(scat, root), tree, root, traversal_steps, intersection_tests);

@@ -18,19 +18,19 @@ int main()
 {
     bool rendered = false;
 
-	std::cout << "Starting render..\n";
+    std::cout << "Starting render..\n";
 
-	auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y }, "RayTracer" };
+    auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y }, "RayTracer" };
 
-	// Camera
-	Camera cam;
-	cam.cam_pos = Point3(0, 0, 0);
-	cam.cam_dir = Point3(0, 0, -1);
-	cam.v_up = Vec3(0, 1, 0);
+    // Camera
+    Camera cam;
+    cam.cam_pos = Point3(0, 0, 0);
+    cam.cam_dir = Point3(0, 0, -1);
+    cam.v_up = Vec3(0, 1, 0);
 
 
-	// World
-	World world;
+    // World
+    World world;
 
     auto material_ground = make_shared<Lambertian>(Vec3(0.8, 0.8, 0.0));
     auto material_center = make_shared<Lambertian>(Vec3(0.1, 0.2, 0.5));
@@ -46,10 +46,9 @@ int main()
 
     Parser parser;
     auto [vertices, vertex_normals, faces]
-		//= parser.parse("Chicken.obj", Point3(50.0, -100.0, 150.0));
+        //= parser.parse("Chicken.obj", Point3(50.0, -100.0, 150.0));
+        //= parser.parse("forg.obj", Point3(0.0, 0.0, -0.75));
         = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
-
-
 
     // Load all triangles in the mesh
     for (int face_index = 0; face_index < faces.size(); face_index++)
@@ -130,7 +129,7 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::NONE, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::KDtree, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
@@ -146,6 +145,7 @@ int main()
 			std::cout << "Min intersection tests: " << intersection_tests[intersection_tests.size() - 1] << std::endl;
 			std::cout << "Peak intersection tests: " << intersection_tests[0] << std::endl;
 			std::cout << "Average intersection tests: " << average(intersection_tests) << std::endl;
+            std::cout << "Average intersection tests per pixel: " << uint64_t(average(intersection_tests) / (conf::width * conf::height * conf::samples_per_pixel)) << std::endl;
 		}
 
 		// Draw and display
