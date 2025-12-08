@@ -32,6 +32,9 @@ Then, you can hit "Run" at the top of the screen, and both the console (outputti
 - Depth of field
 - Field of view
 - Positionable camera
+- Acceleration structures: grid, k-d tree, BVH
+
+Configuration settings (such as field of view, screen size, max bouncing depth, etc.) can be found in `configuration.hpp`.
 
 ## Renders
 
