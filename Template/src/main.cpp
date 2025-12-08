@@ -147,7 +147,7 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::KDtree, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::GRID, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 

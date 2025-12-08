@@ -10,7 +10,7 @@ namespace conf
 	sf::Vector2f const window_size_f = static_cast<sf::Vector2f>(window_size);
 	uint32_t const max_framerate = 144;
 	float const dt = 1.0f / static_cast<float>(max_framerate);
-	double voxels_on_x = 10;
+	double voxels_on_x = 50;
 
 	// RT config
 	int samples_per_pixel = 50;
