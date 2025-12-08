@@ -196,6 +196,8 @@ class Grid : public Primitive
 
             int traversal_steps = 0;
 
+
+            // while loop from Amanatides and Woo paper with hit detection from ray tracing in one weekend
             while (true)
             {
                 Voxel voxel = voxels[index3(xi, yi, zi)];
@@ -359,11 +361,14 @@ class Grid : public Primitive
             return a;
 		}
 
+
+        // calculates location of primitive in the grid same way it calculates voxel position
         void insertPrimitiveIndex(int index, const aabb& box)
         {
             auto min = getVoxelIndex({box.x.min, box.y.min, box.z.min});
             auto max = getVoxelIndex({box.x.max, box.y.max, box.z.max});
 
+            // prevent out of bounds
             clamp(min);
             clamp(max);
 
