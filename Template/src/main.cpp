@@ -25,7 +25,7 @@ int main()
     // Camera
     Camera cam;
 
-	int test = 3;
+	int test = 2;
 
 	// test setups
 	if (test == 1) {
@@ -64,8 +64,8 @@ int main()
     Parser parser;
     auto [vertices, vertex_normals, faces]
         //= parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
-		//= parser.parse("bunny.obj", Point3(-2.75, -0.75, 0));
-		= parser.parse("bunny.obj", Point3(2.75, -0.75, 0));
+		= parser.parse("bunny.obj", Point3(-2.75, -0.75, 0));
+		//= parser.parse("bunny.obj", Point3(2.75, -0.75, 0));
 
 
     // Load all triangles in the mesh
@@ -133,8 +133,6 @@ int main()
     auto material3 = make_shared<Metal>(Vec3(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));*/
 
-
-
 	sf::VertexArray res;
 
 	vector<float> traversal_steps;
@@ -147,18 +145,15 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::GRID, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, Camera::KDtree, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
-
-
-
 
 			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());
 			sort(traversal_steps.begin(), traversal_steps.end(), greater<uint64_t>());
 			std::cout << "Number of vertices: " << vertices.size() << std::endl;
 			std::cout << "Min traversal steps: " << traversal_steps[traversal_steps.size() - 1] << std::endl;
-			std::cout << "Peak traversal steps: " << intersection_tests[0] << std::endl;
+			std::cout << "Peak traversal steps: " << traversal_steps[0] << std::endl;
 			std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
 			std::cout << "Min intersection tests: " << intersection_tests[intersection_tests.size() - 1] << std::endl;
 			std::cout << "Peak intersection tests: " << intersection_tests[0] << std::endl;
