@@ -40,7 +40,12 @@ class Camera
             GRID
         };
 
-        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, vector<float>& traversal_steps, vector<float>& intersection_tests)
+        enum AntiAliasing {
+            FIXED,
+            ADAPTIVE
+        };
+
+        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, AntiAliasing aa, vector<float>& traversal_steps, vector<float>& intersection_tests)
         {
             initialize();
 
@@ -74,31 +79,123 @@ class Camera
                     Vec3 color(0, 0, 0); // Starting color is always black; if we hit nothing this is the result
                     
                     // Anti-aliasing
-                    for (int sample = 0; sample < conf::samples_per_pixel; sample++)
+                    if (aa == FIXED)
                     {
-                        Ray r = get_ray(x, y);
-                        if (axl == KDtree)
+                        for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                         {
-                            Hit_record rec;
-                            World subset = tree.traverseTree(r, root, rec);
-                            color += kdTraverse(r, conf::max_depth, subset, tree, root, traversal_steps, intersection_tests, rec); // Track the ray a certain amount of times
-                            //intersection_tests.push_back(rec.intersection_tests);
-                            //traversal_steps.push_back(rec.traversal_steps);
+                            Ray r = get_ray(x, y);
+                            if (axl == KDtree)
+                            {
+                                Hit_record rec;
+                                World subset = tree.traverseTree(r, root, rec);
+                                color += kdTraverse(r, conf::max_depth, subset, tree, root, traversal_steps, intersection_tests, rec); // Track the ray a certain amount of times
+                                //intersection_tests.push_back(rec.intersection_tests);
+                                //traversal_steps.push_back(rec.traversal_steps);
+                            }
+                            else if (axl == GRID)
+                            {
+                                color += gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests);
+                            }
+                            else
+                            {
+                                color += noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests);
+                            }
                         }
-                        else if (axl == GRID)
+
+                        // Set color of current pixel on the screen and apply gamma correction
+                        color *= pixel_samples_scale;
+                        color = to_gamma(color);
+                        arr[currentPixel].color = convert_to_color(color);
+                    }
+                    else if (aa == ADAPTIVE)
+                    {
+                        int num_samples = 0;
+
+                        vector<Vec3> colors;
+                        for (int sample = 0; sample < conf::first_samples; sample++)
                         {
-                            color += gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests);
+                            Ray r = get_ray(x, y);
+                            colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+                        }
+
+                        Vec3 mean = Vec3(0, 0, 0);
+                        Vec3 M2 = Vec3(0, 0, 0);
+                        for (Vec3 sample : colors)
+                        {
+                            num_samples++;
+                            Vec3 delta = sample - mean;
+                            mean += delta / num_samples;
+                            Vec3 delta2 = sample - mean;
+                            M2 += delta * delta2;
+                        }
+
+                        Vec3 variance = M2 / (num_samples - 1);
+
+                        // Calculate error
+                        float error_sq =
+                            0.2126 * 0.2126 * variance.x() +
+                            0.7152 * 0.7152 * variance.y() +
+                            0.0722 * 0.0722 * variance.z();
+
+                        float error = sqrt(error_sq / num_samples);
+
+                        bool satisfies = error <= conf::threshold;
+
+                        if (satisfies)
+                        {
+                            for (Vec3 sample : colors)
+                                color += sample;
+
+                            // Set color of current pixel on the screen and apply gamma correction
+                            color *= (1.0 / num_samples);
+                            color = to_gamma(color);
+                            arr[currentPixel].color = convert_to_color(color);
                         }
                         else
                         {
-                            color += noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests);
+                            while (!satisfies && num_samples <= conf::num_samples)
+                            {
+                                int new_num_samples = 0;
+                                for (int samples_new = 0; samples_new < conf::second_samples; samples_new++)
+                                {
+                                    Ray r = get_ray(x, y);
+                                    colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+                                    num_samples++;
+                                }
+
+                                Vec3 mean = Vec3(0, 0, 0);
+                                Vec3 M2 = Vec3(0, 0, 0);
+                                for (Vec3 sample : colors)
+                                {
+                                    new_num_samples++;
+                                    Vec3 delta = sample - mean;
+                                    mean += delta / num_samples;
+                                    Vec3 delta2 = sample - mean;
+                                    M2 += delta * delta2;
+                                }
+
+                                Vec3 variance = M2 / (num_samples - 1);
+
+                                // Calculate error
+                                float error_sq =
+                                    0.2126 * 0.2126 * variance.x() +
+                                    0.7152 * 0.7152 * variance.y() +
+                                    0.0722 * 0.0722 * variance.z();
+
+                                float error = sqrt(error_sq / num_samples);
+
+                                satisfies = error <= conf::threshold;
+                            }
+
+                            for (Vec3 sample : colors)
+                                color += sample;
+
+                            // Set color of current pixel on the screen and apply gamma correction
+                            color *= (1.0 / num_samples);
+                            color = to_gamma(color);
+                            arr[currentPixel].color = convert_to_color(color);
                         }
                     }
-
-                    // Set color of current pixel on the screen and apply gamma correction
-                    color *= pixel_samples_scale;
-                    color = to_gamma(color);
-                    arr[currentPixel].color = convert_to_color(color);
                 }
             }
 

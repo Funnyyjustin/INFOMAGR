@@ -43,6 +43,13 @@ int main()
 			<< "\n" << endl;
 		cin >> accelstruct;
 
+		int aa = 0;
+		cout << "\n Select anti-aliasing method:"
+			<< "\n 1: Fixed number of samples"
+			<< "\n 2: Adaptive sampling"
+			<< "\n" << endl;
+		cin >> aa;
+
 
 	// test setups
 	if (test == 1) {
@@ -117,6 +124,14 @@ int main()
 			case 3: struc = Camera::KDtree; break;
 			case 4: struc = Camera::GRID; break;
 			default: struc = Camera::NONE; break;
+		}
+
+		Camera::AntiAliasing aa_method;
+		switch (aa)
+		{
+			case 1: aa_method = Camera::FIXED; break;
+			case 2: aa_method = Camera::ADAPTIVE; break;
+			default: aa_method = Camera::FIXED; break;
 		}
 
 		auto [vertices, _, faces] = parsed;
@@ -201,7 +216,7 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, struc, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, struc, aa_method, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
