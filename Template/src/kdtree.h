@@ -157,7 +157,7 @@ class KdTree
 			// Make root node a leaf if we reach max depth of the tree
 			// It can also be a leaf if the box contains no primitives
 			// It can also be a leaf if the box contains a minimum number of primitives
-			if (depth == maxDepth || root->primitives.size() == 0 || root->primitives.size() <= minLeafSize)
+			if ((depth >= maxDepth || root->primitives.size() <= minLeafSize) || root->primitives.size() == 0)
 			{
 				root->isLeaf = true;
 				return root;
@@ -182,6 +182,9 @@ class KdTree
 			// We assign the results of the recursion to the left and right nodes of the root
 			root->left = buildTreeRec(left, depth + 1);
 			root->right = buildTreeRec(right, depth + 1);
+
+			root->primitives.clear();
+			root->primitives.shrink_to_fit();
 
 			// 4. Return values is the original root, now assigned with children
 			// This one node contains the entire tree, which can be traversed through recursively
@@ -334,7 +337,13 @@ class KdTree
 		int numLeaves(KdNode* node)
 		{
 			if (node->isLeaf)
+			{
+				if (node->primitives.size() > 0)
+					std::cout << "Node is a leaf - number of primitives: " << node->primitives.size() << "\n";
 				return 1;
+			}
+
+			//std::cout << "Node is not a leaf - number of primitives: " << node->primitives.size() << "\n";
 
 			return numLeaves(node->left) + numLeaves(node->right);
 		}
