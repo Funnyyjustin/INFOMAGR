@@ -25,7 +25,24 @@ int main()
     // Camera
     Camera cam;
 
-	int test = 3;
+		int test = 0;
+		cout << "Select render:"
+			<< "\n -Test 1: Bunny1"
+			<< "\n -Test 2: Bunny2"
+			<< "\n -Test 3: Bunny3"
+			<< "\n -Test 4: Stack"
+			<< "\n" << endl;
+		cin >> test;
+
+		int accelstruct = 0;
+		cout << "\n Select acceleration structure:"
+			<< "\n 1: No acceleration structure"
+			<< "\n 2: BVH"
+			<< "\n 3: KdTree"
+			<< "\n 4: Grid"
+			<< "\n" << endl;
+		cin >> accelstruct;
+
 
 	// test setups
 	if (test == 1) {
@@ -40,7 +57,13 @@ int main()
 
 	if (test == 3) {
 		cam.cam_pos = Point3(0, 0, 0);
-		cam.cam_dir = Point3(1, 0, 0);
+		cam.cam_dir = Point3(0, 0, 0);
+	}
+
+	if (test == 4)
+	{
+		cam.cam_pos = Point3(0, 3, 10);
+		cam.cam_dir = Point3(-1, 0, -1);
 	}
 
 	cam.v_up = Vec3(0, 1, 0);
@@ -62,10 +85,41 @@ int main()
     //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
-    auto [vertices, vertex_normals, faces]
-        //= parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
-		//= parser.parse("bunny.obj", Point3(-2.75, -0.75, 0));
-		= parser.parse("bunny.obj", Point3(2.75, -0.75, 0));
+		tuple<vector<Point3>, vector<Vec3>, vector<Point3>> parsed;
+
+		switch (test)
+		{
+			case 1:
+				parsed = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
+				break;
+
+			case 2:
+				parsed = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
+				break;
+
+			case 3:
+				parsed = parser.parse("bunny.obj", Point3(2.75, -0.75, 0));
+				break;
+
+			case 4:
+				parsed = parser.parse("stack.obj", Point3(0, 0, 0));
+				break;
+
+			default: break;
+		}
+
+
+		Camera::AccelStruct struc;
+		switch (accelstruct)
+		{
+			case 1: struc = Camera::NONE; break;
+			case 2: struc = Camera::BVH; break;
+			case 3: struc = Camera::KDtree; break;
+			case 4: struc = Camera::GRID; break;
+			default: struc = Camera::NONE; break;
+		}
+
+		auto [vertices, _, faces] = parsed;
 
 
     // Load all triangles in the mesh
@@ -147,18 +201,16 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, Camera::GRID, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, struc, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
 
-
-
 			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());
 			sort(traversal_steps.begin(), traversal_steps.end(), greater<uint64_t>());
-			std::cout << "Number of vertices: " << vertices.size() << std::endl;
+			std::cout << "Number of primitives: " << world.objects.size() << std::endl;
 			std::cout << "Min traversal steps: " << traversal_steps[traversal_steps.size() - 1] << std::endl;
-			std::cout << "Peak traversal steps: " << intersection_tests[0] << std::endl;
+			std::cout << "Peak traversal steps: " << traversal_steps[0] << std::endl;
 			std::cout << "Average traversal steps: " << average(traversal_steps) << std::endl;
 			std::cout << "Min intersection tests: " << intersection_tests[intersection_tests.size() - 1] << std::endl;
 			std::cout << "Peak intersection tests: " << intersection_tests[0] << std::endl;

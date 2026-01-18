@@ -26,7 +26,7 @@ class KdNode
 class KdTree
 {
 	public:
-		int maxDepth = 24;
+		int maxDepth = 60;
 		int minLeafSize = 4;
 		std::vector<shared_ptr<Primitive>> primitives;
 
