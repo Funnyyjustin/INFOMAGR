@@ -18,33 +18,38 @@ int main()
 {
     bool rendered = false;
 
-		int test = 0;
-		cout << "Select render:"
-			<< "\n -Test 1: Bunny1"
-			<< "\n -Test 2: Bunny2"
-			<< "\n -Test 3: Bunny3"
-			<< "\n -Test 4: Stack"
-			<< "\n -Test 5: Colored stack"
-			<< endl;
-		cin >> test;
+	int test = 0;
+	cout << "Select render:"
+		<< "\n -Test 1: Bunny1"
+		<< "\n -Test 2: Bunny2"
+		<< "\n -Test 3: Bunny3"
+		<< "\n -Test 4: Stack"
+		<< "\n -Test 5: Colored stack"
+		<< endl;
+	cin >> test;
 
-		int accelstruct = 0;
-		cout << "\n Select acceleration structure:"
-			<< "\n 1: No acceleration structure"
-			<< "\n 2: BVH"
-			<< "\n 3: KdTree"
-			<< "\n 4: Grid"
-			<< endl;
-		cin >> accelstruct;
+	int accelstruct = 0;
+	cout << "\n Select acceleration structure:"
+		<< "\n 1: No acceleration structure"
+		<< "\n 2: BVH"
+		<< "\n 3: KdTree"
+		<< "\n 4: Grid"
+		<< endl;
+	cin >> accelstruct;
 
-		int aa = 0;
-		cout << "\n Select anti-aliasing method:"
-			<< "\n 1: Fixed number of samples"
-			<< "\n 2: Adaptive sampling"
-			<< "\n" << endl;
-		cin >> aa;
+	int aa = 0;
+	cout << "\n Select anti-aliasing method:"
+		<< "\n 1: Fixed number of samples"
+		<< "\n 2: Adaptive sampling"
+		<< "\n" << endl;
+	cin >> aa;
 
+	std::cout << "Starting render..\n";
 
+	auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y}, "RayTracer" };
+
+	// Camera
+	Camera cam;
 
 	// test setups
 	if (test == 1) {
@@ -138,7 +143,7 @@ int main()
 			default: aa_method = Camera::FIXED; break;
 		}
 
-		auto [vertices, _, faces] = parsed;
+		auto [vertices, _, faces, materials] = parsed;
 
 
     // Load all triangles in the mesh
