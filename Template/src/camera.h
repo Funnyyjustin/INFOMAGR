@@ -406,7 +406,8 @@ class Camera
             auto offset = sample_square();
             auto pixel_sample = pixel00_loc + ((x + offset.x()) * pixel_delta_u) + ((y + offset.y()) * pixel_delta_v);
 
-            auto r_org = (conf::defocus_angle <= 0) ? camera_center : defocus_disk_sample();
+            //auto r_org = (conf::defocus_angle <= 0) ? camera_center : defocus_disk_sample();
+            auto r_org = camera_center;
             auto r_dir = pixel_sample - r_org;
 
             return Ray(r_org, r_dir);

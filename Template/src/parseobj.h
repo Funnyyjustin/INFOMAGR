@@ -22,7 +22,20 @@ class Parser
 	public:
 		string filename;
 
-		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>> parse(string filename, Point3 pos)
+		// colored materials
+		
+		shared_ptr<Lambertian> red = make_shared<Lambertian>(Vec3(0.8, 0, 0));
+		shared_ptr<Lambertian> green = make_shared<Lambertian>(Vec3(0, 0.8, 0));
+		shared_ptr<Lambertian> blue = make_shared<Lambertian>(Vec3(0, 0, 0.8));
+		shared_ptr<Lambertian> yellow = make_shared<Lambertian>(Vec3(1, 0.7, 0));
+		shared_ptr<Lambertian> brown = make_shared<Lambertian>(Vec3(0.075, 0.02, 0));
+		shared_ptr<Lambertian> cyan = make_shared<Lambertian>(Vec3(0.085, 0.3, 0.25));
+		shared_ptr<Lambertian> pink = make_shared<Lambertian>(Vec3(0.8, 0, 0.3));
+		shared_ptr<Lambertian> purple = make_shared<Lambertian>(Vec3(0.3, 0, 0.8));
+		
+
+		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>, std::vector<shared_ptr<Lambertian>>>
+		parse(string filename, Point3 pos)
 		{
 			string dir = lookUpDir();
 			ifstream obj(dir + filename);
@@ -35,8 +48,12 @@ class Parser
 			// of the points in the "vertices" vector that make up a face at index i
 			std::vector<Point3> faces;
 
+			// material of each face
+			std::vector<shared_ptr<Lambertian>> materials;
+
 			if (obj.is_open())
 			{
+				shared_ptr<Lambertian> current_color;
 				while (obj)
 				{
 					string line = " ";
@@ -58,6 +75,21 @@ class Parser
 
 						auto vec = toPoint3(res);
 						vertices.push_back(vec);
+					}
+					else if (line.substr(0, 6) == "usemtl") // Line contains material info
+					{
+						cout << "found usemtl" << endl;
+						std::istringstream s(line);
+						std::vector<string> res;
+						string word;
+
+						// Skip the first word, which is "usemtl"
+						string skip;
+						s >> skip;
+						s >> word;
+
+						current_color = getMaterial(word);
+						cout << "got color" << endl;
 					}
 					else if (line.substr(0, 2) == "vn") // Line contains vertex normal info
 					{
@@ -103,6 +135,7 @@ class Parser
 
 						auto vec = toPoint3(res);
 						faces.push_back(vec);
+						materials.push_back(current_color);
 					}
 					else continue; // Other lines can be skipped
 				}
@@ -117,7 +150,7 @@ class Parser
 
 			//print_vectors(vertices, vertex_normals, faces);
 
-			return { vertices, vertex_normals, faces };
+			return { vertices, vertex_normals, faces, materials };
 		}
 
 		void print(string out)
@@ -197,6 +230,20 @@ class Parser
 			}
 			elems.push_back(temp);
 			return elems;
+		}
+
+		shared_ptr<Lambertian> getMaterial(string name)
+		{
+			shared_ptr<Lambertian> material;
+			if (name == "Red") material = red;
+			if (name == "Green") material = green;
+			if (name == "Blue") material = blue;
+			if (name == "Yellow") material = yellow;
+			if (name == "Brown") material = brown;
+			if (name == "Cyan") material = cyan;
+			if (name == "Pink") material = pink;
+			if (name == "Purple") material = purple;
+			return material;
 		}
 };
 

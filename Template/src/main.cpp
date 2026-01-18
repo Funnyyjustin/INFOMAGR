@@ -18,20 +18,14 @@ int main()
 {
     bool rendered = false;
 
-    std::cout << "Starting render..\n";
-
-    auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y }, "RayTracer" };
-
-    // Camera
-    Camera cam;
-
 		int test = 0;
 		cout << "Select render:"
 			<< "\n -Test 1: Bunny1"
 			<< "\n -Test 2: Bunny2"
 			<< "\n -Test 3: Bunny3"
 			<< "\n -Test 4: Stack"
-			<< "\n" << endl;
+			<< "\n -Test 5: Colored stack"
+			<< endl;
 		cin >> test;
 
 		int accelstruct = 0;
@@ -40,7 +34,7 @@ int main()
 			<< "\n 2: BVH"
 			<< "\n 3: KdTree"
 			<< "\n 4: Grid"
-			<< "\n" << endl;
+			<< endl;
 		cin >> accelstruct;
 
 		int aa = 0;
@@ -49,6 +43,7 @@ int main()
 			<< "\n 2: Adaptive sampling"
 			<< "\n" << endl;
 		cin >> aa;
+
 
 
 	// test setups
@@ -73,6 +68,12 @@ int main()
 		cam.cam_dir = Point3(-1, 0, -1);
 	}
 
+	if (test == 5)
+	{
+		cam.cam_pos = Point3(0, 4, 20);
+		cam.cam_dir = Point3(-1, 0, -1);
+	}
+
 	cam.v_up = Vec3(0, 1, 0);
 
 
@@ -92,7 +93,7 @@ int main()
     //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Parser parser;
-		tuple<vector<Point3>, vector<Vec3>, vector<Point3>> parsed;
+		tuple<vector<Point3>, vector<Vec3>, vector<Point3>, vector<shared_ptr<Lambertian>>> parsed;
 
 		switch (test)
 		{
@@ -112,6 +113,9 @@ int main()
 				parsed = parser.parse("stack.obj", Point3(0, 0, 0));
 				break;
 
+			case 5:
+				parsed = parser.parse("stackcolor.obj", Point3(0, 0, 0));
+				break;
 			default: break;
 		}
 
@@ -155,7 +159,7 @@ int main()
         Vec3 B = c - a;
         Vec3 normal = cross(A, B);
 
-        world.add(make_shared<Triangle>(a, A, B, material_center));
+        world.add(make_shared<Triangle>(a, A, B, materials[face_index]));
     }
 
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
@@ -220,7 +224,7 @@ int main()
 			rendered = true;
 			std::cout << "Render finished. \n";
 
-
+			/*
 			sort(intersection_tests.begin(), intersection_tests.end(), greater<uint64_t>());
 			sort(traversal_steps.begin(), traversal_steps.end(), greater<uint64_t>());
 			std::cout << "Number of primitives: " << world.objects.size() << std::endl;
@@ -230,6 +234,7 @@ int main()
 			std::cout << "Min intersection tests: " << intersection_tests[intersection_tests.size() - 1] << std::endl;
 			std::cout << "Peak intersection tests: " << intersection_tests[0] << std::endl;
 			std::cout << "Average intersection tests: " << average(intersection_tests) << std::endl;
+			*/
 		}
 
 		// Draw and display
