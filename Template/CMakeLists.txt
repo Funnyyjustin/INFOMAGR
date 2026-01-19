@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(RayTracer)
+project(RayTracer LANGUAGES CXX CUDA)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -16,8 +16,12 @@ add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/main.cpp>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/events.cpp>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/gpu.cu>
     # Add more source files manually
 )
+
+set_source_files_properties(src/gpu.cu PROPERTIES LANGUAGE CUDA)
+set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src

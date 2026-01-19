@@ -7,6 +7,7 @@
 #include <chrono>
 
 #include "interval.h"
+#include "gpu.h"
 #include "kdtree.h"
 #include "material.h"
 #include "primitive.h"
@@ -26,8 +27,6 @@ inline void progress(int x)
 
 class Camera
 {
-
-
     public:
         Point3 cam_pos = Point3(0, 0, 0);
         Point3 cam_dir = Point3(0, 0, -1);
@@ -45,8 +44,11 @@ class Camera
             ADAPTIVE
         };
 
-        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, AntiAliasing aa, vector<float>& traversal_steps, vector<float>& intersection_tests)
+        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, AntiAliasing aa, vector<float>& traversal_steps, vector<float>& intersection_tests, bool gpu)
         {
+            if (gpu)
+                return render_gpu(world, rendered);
+
             initialize();
 
             // Array of pixels
@@ -198,6 +200,29 @@ class Camera
                     }
                 }
             }
+
+            auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Finished render at: " << std::ctime(&end) << "\n";
+
+            float total = end - start;
+            std::cout << "Total elapsed time: " << total << " seconds" << "\n";
+
+            return arr;
+        }
+
+        sf::VertexArray render_gpu(World& world, bool rendered)
+        {
+            initialize();
+
+            // Array of pixels
+            auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
+
+            this->world = world;
+
+            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Started render at: " << std::ctime(&start) << "\n";
+
+            launch_kernels(conf::width, conf::height);
 
             auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Finished render at: " << std::ctime(&end) << "\n";

@@ -225,7 +225,7 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, struc, aa_method, traversal_steps, intersection_tests);
+			res = cam.render(world, rendered, struc, aa_method, traversal_steps, intersection_tests, true);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
