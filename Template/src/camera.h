@@ -115,7 +115,16 @@ class Camera
                         for (int sample = 0; sample < conf::first_samples; sample++)
                         {
                             Ray r = get_ray(x, y);
-                            colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+
+                            if (axl == NONE || axl == BVH)
+                                colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+                            else if (axl == GRID)
+                                colors.push_back(gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests));
+                            else if (axl == KDtree)
+                            {
+                                std::cout << "KDtree not implemented for adaptive sampling. Please try another structure!\n";
+                                break;
+                            }
                         }
 
                         Vec3 mean = Vec3(0, 0, 0);
@@ -159,7 +168,17 @@ class Camera
                                 for (int samples_new = 0; samples_new < conf::second_samples; samples_new++)
                                 {
                                     Ray r = get_ray(x, y);
-                                    colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+
+                                    if (axl == NONE || axl == BVH)
+                                        colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+                                    else if (axl == GRID)
+                                        colors.push_back(gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests));
+                                    else if (axl == KDtree)
+                                    {
+                                        std::cout << "KDtree not implemented for adaptive sampling. Please try another structure!\n";
+                                        break;
+                                    }
+
                                     num_samples++;
                                 }
 
