@@ -32,6 +32,8 @@ class Parser
 		shared_ptr<Lambertian> cyan = make_shared<Lambertian>(Vec3(0.085, 0.3, 0.25));
 		shared_ptr<Lambertian> pink = make_shared<Lambertian>(Vec3(0.8, 0, 0.3));
 		shared_ptr<Lambertian> purple = make_shared<Lambertian>(Vec3(0.3, 0, 0.8));
+		shared_ptr<Lambertian> white = make_shared<Lambertian>(Vec3(0.9, 0.9, 0.9));
+		shared_ptr<Lambertian> black = make_shared<Lambertian>(Vec3(0.1, 0.1, 0.1));
 		
 
 		std::tuple<std::vector<Point3>, std::vector<Vec3>, std::vector<Point3>, std::vector<shared_ptr<Lambertian>>>
@@ -234,15 +236,18 @@ class Parser
 
 		shared_ptr<Lambertian> getMaterial(string name)
 		{
+			// no switch-case with string in c++ :(
 			shared_ptr<Lambertian> material;
-			if (name == "Red") material = red;
-			if (name == "Green") material = green;
-			if (name == "Blue") material = blue;
-			if (name == "Yellow") material = yellow;
-			if (name == "Brown") material = brown;
-			if (name == "Cyan") material = cyan;
-			if (name == "Pink") material = pink;
-			if (name == "Purple") material = purple;
+			if (name == "Red") return red;
+			if (name == "Green") return green;
+			if (name == "Blue") return blue;
+			if (name == "Yellow") return yellow;
+			if (name == "Brown") return brown;
+			if (name == "Cyan") return cyan;
+			if (name == "Pink") return pink;
+			if (name == "Purple") return purple;
+			if (name == "White") return white;
+			if (name == "Black") return black;
 			return material;
 		}
 };
