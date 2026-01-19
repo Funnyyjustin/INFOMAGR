@@ -220,7 +220,7 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, struc, aa_method, traversal_steps, intersection_tests, true);
+			res = cam.render(world, rendered, struc, aa_method, traversal_steps, intersection_tests);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
