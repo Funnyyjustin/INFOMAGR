@@ -45,12 +45,12 @@ int main()
 		<< endl;
 	cin >> aa;
 
-	std::cout << "Starting render..\n";
+		std::cout << "Starting render..\n";
 
-	auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y}, "RayTracer" };
+		auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y}, "RayTracer" };
 
-	// Camera
-	Camera cam;
+		// Camera
+		Camera cam;
 
 	cam.v_up = Vec3(0, 1, 0);
 
