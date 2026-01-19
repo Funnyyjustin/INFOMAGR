@@ -53,7 +53,7 @@ class Parser
 
 			if (obj.is_open())
 			{
-				shared_ptr<Lambertian> current_color = cyan;
+				shared_ptr<Lambertian> current_color;
 				while (obj)
 				{
 					string line = " ";
