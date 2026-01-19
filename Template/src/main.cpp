@@ -44,7 +44,12 @@ int main()
 			<< "\n" << endl;
 		cin >> aa;
 
+		std::cout << "Starting render..\n";
 
+		auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y}, "RayTracer" };
+
+		// Camera
+		Camera cam;
 
 	// test setups
 	if (test == 1) {
@@ -138,7 +143,7 @@ int main()
 			default: aa_method = Camera::FIXED; break;
 		}
 
-		auto [vertices, _, faces] = parsed;
+		auto [vertices, _, faces, materials] = parsed;
 
 
     // Load all triangles in the mesh
