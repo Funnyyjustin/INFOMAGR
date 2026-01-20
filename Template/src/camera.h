@@ -63,6 +63,8 @@ class Camera
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
 
+            int num_rays_shot = 0;
+
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
             {
@@ -83,6 +85,7 @@ class Camera
                     {
                         for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                         {
+                            num_rays_shot++;
                             Ray r = get_ray(x, y);
                             if (axl == KDtree)
                             {
@@ -114,6 +117,7 @@ class Camera
                         vector<Vec3> colors;
                         for (int sample = 0; sample < conf::first_samples; sample++)
                         {
+                            num_rays_shot++;
                             Ray r = get_ray(x, y);
 
                             if (axl == NONE || axl == BVH)
@@ -167,6 +171,7 @@ class Camera
                                 int new_num_samples = 0;
                                 for (int samples_new = 0; samples_new < conf::second_samples; samples_new++)
                                 {
+                                    num_rays_shot++;
                                     Ray r = get_ray(x, y);
 
                                     if (axl == NONE || axl == BVH)
@@ -223,6 +228,8 @@ class Camera
 
             float total = end - start;
             std::cout << "Total elapsed time: " << total << " seconds" << "\n";
+
+            std::cout << "Total number of rays shot through the scene: " << num_rays_shot << "\n";
 
             return arr;
         }
