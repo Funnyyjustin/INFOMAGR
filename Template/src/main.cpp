@@ -18,31 +18,32 @@ int main()
 {
     bool rendered = false;
 
-		int test = 0;
-		cout << "Select render:"
-			<< "\n -Test 1: Bunny1"
-			<< "\n -Test 2: Bunny2"
-			<< "\n -Test 3: Bunny3"
-			<< "\n -Test 4: Stack"
-			<< "\n -Test 5: Colored stack"
-			<< endl;
-		cin >> test;
+	int test = 0;
+	cout << "Select render:"
+		<< "\n 1: Bunny1"
+		<< "\n 2: Bunny2"
+		<< "\n 3: Bunny3"
+		<< "\n 4: Stack"
+		<< "\n 5: Colored stack"
+		<< "\n 6: UU"
+		<< endl;
+	cin >> test;
 
-		int accelstruct = 0;
-		cout << "\n Select acceleration structure:"
-			<< "\n 1: No acceleration structure"
-			<< "\n 2: BVH"
-			<< "\n 3: KdTree"
-			<< "\n 4: Grid"
-			<< endl;
-		cin >> accelstruct;
+	int accelstruct = 0;
+	cout << "\nSelect acceleration structure:"
+		<< "\n 1: No acceleration structure"
+		<< "\n 2: BVH"
+		<< "\n 3: KdTree"
+		<< "\n 4: Grid"
+		<< endl;
+	cin >> accelstruct;
 
-		int aa = 0;
-		cout << "\n Select anti-aliasing method:"
-			<< "\n 1: Fixed number of samples"
-			<< "\n 2: Adaptive sampling"
-			<< "\n" << endl;
-		cin >> aa;
+	int aa = 0;
+	cout << "\nSelect anti-aliasing method:"
+		<< "\n 1: Fixed number of samples"
+		<< "\n 2: Adaptive sampling"
+		<< endl;
+	cin >> aa;
 
 		std::cout << "Starting render..\n";
 
@@ -50,34 +51,6 @@ int main()
 
 		// Camera
 		Camera cam;
-
-	// test setups
-	if (test == 1) {
-		cam.cam_pos = Point3(0, 0, 0);
-		cam.cam_dir = Point3(0, 0, -1);
-	}
-
-	if (test == 2) {
-		cam.cam_pos = Point3(0, 0, 0);
-		cam.cam_dir = Point3(-1, 0, 0);
-	}
-
-	if (test == 3) {
-		cam.cam_pos = Point3(0, 0, 0);
-		cam.cam_dir = Point3(0, 0, 0);
-	}
-
-	if (test == 4)
-	{
-		cam.cam_pos = Point3(0, 3, 10);
-		cam.cam_dir = Point3(-1, 0, -1);
-	}
-
-	if (test == 5)
-	{
-		cam.cam_pos = Point3(0, 4, 20);
-		cam.cam_dir = Point3(-1, 0, -1);
-	}
 
 	cam.v_up = Vec3(0, 1, 0);
 
@@ -104,23 +77,38 @@ int main()
 		{
 			case 1:
 				parsed = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
+				cam.cam_pos = Point3(0, 0, 0);
+				cam.cam_dir = Point3(0, 0, -1);
 				break;
 
 			case 2:
 				parsed = parser.parse("bunny.obj", Point3(0.4, -0.75, -2.75));
+				cam.cam_pos = Point3(0, 0, 0);
+				cam.cam_dir = Point3(-1, 0, 0);
 				break;
 
 			case 3:
 				parsed = parser.parse("bunny.obj", Point3(2.75, -0.75, 0));
+				cam.cam_pos = Point3(0, 0, 0);
+				cam.cam_dir = Point3(0, 0, 0);
 				break;
 
 			case 4:
 				parsed = parser.parse("stack.obj", Point3(0, 0, 0));
+				cam.cam_pos = Point3(0, 3, 10);
+				cam.cam_dir = Point3(-1, 0, -1);
 				break;
 
 			case 5:
 				parsed = parser.parse("stackcolor.obj", Point3(0, 0, 0));
+				cam.cam_pos = Point3(0, 4, 20);
+				cam.cam_dir = Point3(-1, 0, -1);
 				break;
+
+			case 6:
+				parsed = parser.parse("UU.obj", Point3(0, 0, 0));
+				cam.cam_pos = Point3(40, 0, 0);
+				cam.cam_dir = Point3(-1, 0, 0);
 			default: break;
 		}
 
