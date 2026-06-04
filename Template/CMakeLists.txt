@@ -23,6 +23,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src
 )
 
+find_package(OpenCL REQUIRED)
+include_directories(${OpenCL_INCLUDE_DIRS})
+link_directories(${OpenCL_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 

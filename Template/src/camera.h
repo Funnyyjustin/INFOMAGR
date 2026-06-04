@@ -13,6 +13,12 @@
 #include "Grid.h"
 #include "world.h"
 
+#include <CL/cl.h>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <filesystem>
+
 /// <summary>
 /// Function that writes the progress to the console. The progress is defined as the number of columns of the window that have been rendered so far.
 /// </summary>
@@ -24,10 +30,13 @@ inline void progress(int x)
     std::cout << "Rendering: " << std::fixed << std::setprecision(1) << progress_percentage << "%   (" << x << "/" << conf::width << " columns rendered) \n";
 }
 
+struct alignas(16) Vec4
+{
+    float x, y, z, w;
+};
+
 class Camera
 {
-
-
     public:
         Point3 cam_pos = Point3(0, 0, 0);
         Point3 cam_dir = Point3(0, 0, -1);
@@ -45,7 +54,7 @@ class Camera
             ADAPTIVE
         };
 
-        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, AntiAliasing aa, vector<float>& traversal_steps, vector<float>& intersection_tests)
+        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, AntiAliasing aa)
         {
             initialize();
 
@@ -91,17 +100,17 @@ class Camera
                             {
                                 Hit_record rec;
                                 World subset = tree.traverseTree(r, root, rec);
-                                color += kdTraverse(r, conf::max_depth, subset, tree, root, traversal_steps, intersection_tests, rec); // Track the ray a certain amount of times
+                                //color += kdTraverse(r, conf::max_depth, subset, tree, root, rec); // Track the ray a certain amount of times
                                 //intersection_tests.push_back(rec.intersection_tests);
                                 //traversal_steps.push_back(rec.traversal_steps);
                             }
                             else if (axl == GRID)
                             {
-                                color += gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests);
+                                //color += gridTraverse(r, conf::max_depth, grid);
                             }
                             else
                             {
-                                color += noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests);
+                                color += noAccelTraverse(r, conf::max_depth, world);
                             }
                         }
 
@@ -121,9 +130,9 @@ class Camera
                             Ray r = get_ray(x, y);
 
                             if (axl == NONE || axl == BVH)
-                                colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+                                colors.push_back(noAccelTraverse(r, conf::max_depth, world));
                             else if (axl == GRID)
-                                colors.push_back(gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests));
+                                colors.push_back(gridTraverse(r, conf::max_depth, grid));
                             else if (axl == KDtree)
                             {
                                 std::cout << "KDtree not implemented for adaptive sampling. Please try another structure!\n";
@@ -175,9 +184,9 @@ class Camera
                                     Ray r = get_ray(x, y);
 
                                     if (axl == NONE || axl == BVH)
-                                        colors.push_back(noAccelTraverse(r, conf::max_depth, world, traversal_steps, intersection_tests));
+                                        colors.push_back(noAccelTraverse(r, conf::max_depth, world));
                                     else if (axl == GRID)
-                                        colors.push_back(gridTraverse(r, conf::max_depth, grid, traversal_steps, intersection_tests));
+                                        colors.push_back(gridTraverse(r, conf::max_depth, grid));
                                     else if (axl == KDtree)
                                     {
                                         std::cout << "KDtree not implemented for adaptive sampling. Please try another structure!\n";
@@ -234,6 +243,127 @@ class Camera
             return arr;
         }
 
+        sf::VertexArray render_gpu(World& world, bool rendered, AccelStruct axl, AntiAliasing aa)
+        {
+            initialize();
+
+            // Array of pixels
+            int size = conf::window_size.x * conf::window_size.y;
+            auto arr = sf::VertexArray(sf::PrimitiveType::Points, size);
+            Vec4* arr_temp = new Vec4[size];
+            this->world = world;
+
+            for (int i = 0; i < size; i++)
+            {
+                arr_temp[i].x = 0;
+                arr_temp[i].y = 0;
+                arr_temp[i].z = 0;
+                arr_temp[i].w = 0;
+            }
+
+            auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Started render at: " << std::ctime(&start) << "\n";
+
+            // Rendering with OpenCL
+
+            cl_int err;
+
+            // Get platforms
+            cl_platform_id platform;
+            err = clGetPlatformIDs(1, &platform, nullptr);
+            std::cout << "Get platform ID: " << err << "\n";
+
+            // Get devices
+            cl_device_id device;
+            err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, nullptr);
+            std::cout << "Get device ID: " << err << "\n";
+
+            // Create context
+            cl_context context = clCreateContext(nullptr, 1, &device, nullptr, nullptr, &err);
+            std::cout << "Create context: " << err << "\n";
+
+            // Create command queue
+            cl_command_queue queue = clCreateCommandQueue(context, device, 0, &err);
+            std::cout << "Create queue: " << err << "\n";
+
+            // Create memory buffer
+            cl_mem buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(Vec4) * size, arr_temp, &err);
+            std::cout << "Create buffer: " << err << "\n";
+
+            // Write buffer to GPU
+            err = clEnqueueWriteBuffer(queue, buffer, CL_TRUE, 0, sizeof(Vec4) * size, arr_temp, 0, nullptr, nullptr);
+            std::cout << "Write buffer: " << err << "\n";
+
+            // Read kernel source
+            std::string sourcecode = loadKernel(lookUpDir() + "shader.cl");
+            const char* source = sourcecode.c_str();
+
+            // Create program
+            cl_program program = clCreateProgramWithSource(context, 1, &source, nullptr, &err);
+            std::cout << "Create program: " << err << "\n";
+
+            // Build program
+            err = clBuildProgram(program, 1, &device, nullptr, nullptr, nullptr);
+            std::cout << "Build program: " << err << "\n";
+
+            // Create kernel
+            cl_kernel kernel = clCreateKernel(program, "color", &err);
+            std::cout << "Create kernel: " << err << "\n";
+
+            // Set kernel arguments
+            err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer);
+            std::cout << "Set kernel arguments: " << err << "\n";
+
+            // Run kernel
+            size_t globalsize = size;
+            size_t localsize = 1;
+            err = clEnqueueNDRangeKernel(queue, kernel, 1, 0, &globalsize, &localsize, 0, nullptr, nullptr);
+            std::cout << "Kernel enqueue: " << err << "\n";
+
+            // Write back from GPU
+            err = clEnqueueReadBuffer(queue, buffer, CL_TRUE, 0, sizeof(Vec4) * size, arr_temp, 0, nullptr, nullptr);
+            std::cout << "Read buffer: " << err << "\n";
+
+            clFinish(queue);
+
+            // Clean up
+            clReleaseKernel(kernel);
+            clReleaseProgram(program);
+            clReleaseMemObject(buffer);
+            clReleaseCommandQueue(queue);
+            clReleaseContext(context);
+
+            // Write from temp array to actual array
+            for (int id = 0; id < size; id++)
+            {
+                Vec4 color_temp = arr_temp[id];
+                Vec3 color_vec3 = Vec3(0, 0, 0);
+                color_vec3 += Vec3(color_temp.x, color_temp.y, color_temp.z);
+                sf::Color color = convert_to_color(color_vec3);
+                arr[id].position = sf::Vector2f(id % conf::window_size.x, id / conf::window_size.x);
+                arr[id].color = color;
+            }
+
+            auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::cout << "Finished render at: " << std::ctime(&end) << "\n";
+
+            float total = end - start;
+            std::cout << "Total elapsed time: " << total << " seconds" << "\n";
+
+            return arr;
+        }
+
+        std::string loadKernel(const std::string& path) {
+            std::ifstream file(path);
+            if (!file.is_open()) {
+                throw std::runtime_error("Failed to open kernel file: " + path);
+            }
+
+            std::ostringstream ss;
+            ss << file.rdbuf();
+            return ss.str();
+        }
+
     private:
         Point3 camera_center;
         Point3 pixel00_loc;
@@ -286,7 +416,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, vector<float>& traversal_steps, vector<float>& intersection_tests, Hit_record record) const
+        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, Hit_record record) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -304,9 +434,9 @@ class Camera
                 {
                     Hit_record r;
                     auto prims = tree.traverseTree(scat, root, r);
-                    intersection_tests.push_back(r.intersection_tests);
-                    traversal_steps.push_back(r.traversal_steps);
-                    return att * kdTraverse(scat, depth - 1, prims, tree, root, traversal_steps, intersection_tests, record);
+                    //intersection_tests.push_back(r.intersection_tests);
+                    //traversal_steps.push_back(r.traversal_steps);
+                    return att * kdTraverse(scat, depth - 1, prims, tree, root, record);
                 }
 
 
@@ -326,7 +456,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world, vector<float>& traversal_steps, vector<float>& intersection_tests) const
+        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -337,11 +467,11 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                intersection_tests.push_back(rec.intersection_tests);
-                traversal_steps.push_back(rec.traversal_steps);
+                //intersection_tests.push_back(rec.intersection_tests);
+                //traversal_steps.push_back(rec.traversal_steps);
 
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * noAccelTraverse(scat, depth - 1, world, traversal_steps, intersection_tests);
+                    return att * noAccelTraverse(scat, depth - 1, world);
 
                 return Vec3(0, 0, 0);
             }
@@ -359,7 +489,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid, vector<float>& traversal_steps, vector<float>& intersection_tests) const
+        Vec3 gridTraverse(const Ray& r, int depth, const Grid& grid) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -371,11 +501,11 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                intersection_tests.push_back(rec.intersection_tests);
-                traversal_steps.push_back(rec.traversal_steps);
+                //intersection_tests.push_back(rec.intersection_tests);
+                //traversal_steps.push_back(rec.traversal_steps);
 
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * gridTraverse(scat, depth - 1, grid, traversal_steps, intersection_tests);
+                    return att * gridTraverse(scat, depth - 1, grid);
 
                 return Vec3(0, 0, 0);
             }
@@ -418,7 +548,8 @@ class Camera
         sf::Color convert_to_color(const Vec3 color)
         {
             static const Interval intensity(0.000, 0.999);
-            return sf::Color(256 * intensity.clamp(color.x()), 256 * intensity.clamp(color.y()), 256 * intensity.clamp(color.z()));
+            //return sf::Color(256 * intensity.clamp(color.x()), 256 * intensity.clamp(color.y()), 256 * intensity.clamp(color.z()));
+            return sf::Color(255 * color.x(), 255 * color.y(), 255 * color.z());
         }
 
         /// <summary>
@@ -456,6 +587,53 @@ class Camera
         {
             auto p = random_in_unit_disk();
             return camera_center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
+        }
+
+        string lookUpDir()
+        {
+            string curr = std::filesystem::current_path().generic_string();
+
+            auto splits = split(curr, "/");
+
+            while (true)
+            {
+                int index = splits.size() - 1;
+                //print(splits[index]);
+                if (splits[index] == "Template") break;
+
+                splits.erase(splits.begin() + index);
+            }
+
+            std::vector<string> newpathloose;
+            for (int i = 0; i < splits.size() - 1; i++)
+            {
+                newpathloose.push_back(splits[i]);
+                newpathloose.push_back("/");
+            }
+
+            string newpath;
+            for (string elem : newpathloose)
+                newpath += elem;
+            newpath += "Template/src/";
+            return newpath;
+        }
+
+        std::vector<string> split(const string& s, string delimiter)
+        {
+            std::vector<string> elems;
+            size_t pos = s.find(delimiter);
+            string word;
+
+            string temp = s;
+            while (pos != string::npos)
+            {
+                word = temp.substr(0, pos);
+                elems.push_back(word);
+                temp.erase(0, pos + delimiter.length());
+                pos = temp.find(delimiter);
+            }
+            elems.push_back(temp);
+            return elems;
         }
 };
 

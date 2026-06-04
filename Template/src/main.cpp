@@ -18,7 +18,7 @@ int main()
 {
     bool rendered = false;
 
-	int test = 0;
+	/*int test = 0;
 	cout << "Select render:"
 		<< "\n 1: Bunny1"
 		<< "\n 2: Bunny2"
@@ -43,17 +43,15 @@ int main()
 		<< "\n 1: Fixed number of samples"
 		<< "\n 2: Adaptive sampling"
 		<< endl;
-	cin >> aa;
+	cin >> aa;*/
 
-		std::cout << "Starting render..\n";
+	std::cout << "Starting render..\n";
 
-		auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y}, "RayTracer" };
+	auto window = sf::RenderWindow{ { conf::window_size.x, conf::window_size.y}, "RayTracer" };
 
-		// Camera
-		Camera cam;
-
+	// Camera
+	Camera cam;
 	cam.v_up = Vec3(0, 1, 0);
-
 
     // World
     World world;
@@ -64,13 +62,13 @@ int main()
     auto material_bubble = make_shared<Dielectric>(1.00 / 1.50);
     auto material_right = make_shared<Metal>(Vec3(0.8, 0.6, 0.2), 1.0);
 
-    //world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    //world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
-    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    //world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
-    //world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
+    world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, material_center));
+    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, material_bubble));
+    world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
-    Parser parser;
+    /*Parser parser;
 		tuple<vector<Point3>, vector<Vec3>, vector<Point3>, vector<shared_ptr<Lambertian>>> parsed;
 
 		switch (test)
@@ -153,7 +151,7 @@ int main()
         Vec3 normal = cross(A, B);
 
         world.add(make_shared<Triangle>(a, A, B, materials[face_index]));
-    }
+    }*/
 
 	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
@@ -199,12 +197,8 @@ int main()
     auto material3 = make_shared<Metal>(Vec3(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));*/
 
-
-
 	sf::VertexArray res;
 
-	vector<float> traversal_steps;
-	vector<float> intersection_tests;
 	while (window.isOpen())
 	{
         // Process inputs
@@ -213,7 +207,8 @@ int main()
         // Render screen
 		if (!rendered)
 		{
-			res = cam.render(world, rendered, struc, aa_method, traversal_steps, intersection_tests);
+			//res = cam.render(world, rendered, Camera::NONE, Camera::FIXED);
+			res = cam.render_gpu(world, rendered, Camera::NONE, Camera::FIXED);
 			rendered = true;
 			std::cout << "Render finished. \n";
 
