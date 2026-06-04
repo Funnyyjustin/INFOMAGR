@@ -336,12 +336,8 @@ class Camera
             // Write from temp array to actual array
             for (int id = 0; id < size; id++)
             {
-                Vec4 color_temp = arr_temp[id];
-                Vec3 color_vec3 = Vec3(0, 0, 0);
-                color_vec3 += Vec3(color_temp.x, color_temp.y, color_temp.z);
-                sf::Color color = convert_to_color(color_vec3);
                 arr[id].position = sf::Vector2f(id % conf::window_size.x, id / conf::window_size.x);
-                arr[id].color = color;
+                arr[id].color = convert_to_color(Vec3(arr_temp[id].x, arr_temp[id].y, arr_temp[id].z));
             }
 
             auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
