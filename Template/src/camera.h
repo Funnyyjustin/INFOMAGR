@@ -349,17 +349,6 @@ class Camera
             return arr;
         }
 
-        std::string loadKernel(const std::string& path) {
-            std::ifstream file(path);
-            if (!file.is_open()) {
-                throw std::runtime_error("Failed to open kernel file: " + path);
-            }
-
-            std::ostringstream ss;
-            ss << file.rdbuf();
-            return ss.str();
-        }
-
     private:
         Point3 camera_center;
         Point3 pixel00_loc;
@@ -630,6 +619,17 @@ class Camera
             }
             elems.push_back(temp);
             return elems;
+        }
+
+        std::string loadKernel(const std::string& path) {
+            std::ifstream file(path);
+            if (!file.is_open()) {
+                throw std::runtime_error("Failed to open kernel file: " + path);
+            }
+
+            std::ostringstream ss;
+            ss << file.rdbuf();
+            return ss.str();
         }
 };
 
