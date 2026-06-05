@@ -13,7 +13,9 @@
 #include "Grid.h"
 #include "world.h"
 
+// Include various GPU-related libraries/files/etc.
 #include <CL/cl.h>
+#include "gpu_structs.h"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -29,19 +31,6 @@ inline void progress(int x)
     auto progress_percentage = (double(x) / width) * 100.0;
     std::cout << "Rendering: " << std::fixed << std::setprecision(1) << progress_percentage << "%   (" << x << "/" << conf::width << " columns rendered) \n";
 }
-
-struct alignas(64) SphereNew
-{
-    cl_float4 center;
-    cl_float4 color;
-    float radius;
-};
-
-struct alignas(16) RayNew
-{
-    cl_float4 origin;
-    cl_float4 direction;
-};
 
 class Camera
 {
