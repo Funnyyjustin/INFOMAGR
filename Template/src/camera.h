@@ -30,9 +30,17 @@ inline void progress(int x)
     std::cout << "Rendering: " << std::fixed << std::setprecision(1) << progress_percentage << "%   (" << x << "/" << conf::width << " columns rendered) \n";
 }
 
-struct alignas(16) Vec4
+struct alignas(64) SphereNew
 {
-    float x, y, z, w;
+    cl_float4 center;
+    cl_float4 color;
+    float radius;
+};
+
+struct alignas(16) RayNew
+{
+    cl_float4 origin;
+    cl_float4 direction;
 };
 
 class Camera
@@ -249,17 +257,27 @@ class Camera
 
             // Array of pixels
             int size = conf::window_size.x * conf::window_size.y;
+            int sphere_count = 1;
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, size);
-            Vec4* arr_temp = new Vec4[size];
-            this->world = world;
 
+            cl_float4* arr_temp = new cl_float4[size];
+            SphereNew* spheres = new SphereNew[sphere_count];
+            RayNew* rays = new RayNew[size];
+
+            // Initialize image and ray arrays
             for (int i = 0; i < size; i++)
             {
-                arr_temp[i].x = 0;
-                arr_temp[i].y = 0;
-                arr_temp[i].z = 0;
-                arr_temp[i].w = 0;
+                arr_temp[i] = { 0, 0, 0, 0 };
+
+                Ray r = get_ray(i % conf::window_size.x, i / conf::window_size.x);
+
+                rays[i].origin = Point3toFloat4(r.origin());
+                rays[i].direction = Vec3toFloat4(r.direction());
             }
+
+            spheres[0].center = { 0, 0, -2.0f, 0 };
+            spheres[0].radius = 1.0f;
+            spheres[0].color = { 1.0f, 0, 0, 0 };
 
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
@@ -286,13 +304,25 @@ class Camera
             cl_command_queue queue = clCreateCommandQueue(context, device, 0, &err);
             std::cout << "Create queue: " << err << "\n";
 
-            // Create memory buffer
-            cl_mem buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(Vec4) * size, arr_temp, &err);
-            std::cout << "Create buffer: " << err << "\n";
+            // Create memory buffers
+            cl_mem image_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(cl_float4) * size, arr_temp, &err);
+            std::cout << "Create image buffer: " << err << "\n";
 
-            // Write buffer to GPU
-            err = clEnqueueWriteBuffer(queue, buffer, CL_TRUE, 0, sizeof(Vec4) * size, arr_temp, 0, nullptr, nullptr);
-            std::cout << "Write buffer: " << err << "\n";
+            cl_mem ray_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(RayNew) * size, rays, &err);
+            std::cout << "Create rays buffer: " << err << "\n";
+
+            cl_mem spheres_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(SphereNew) * sphere_count, spheres, &err);
+            std::cout << "Create sphere buffer: " << err << "\n";
+
+            // Write buffers to GPU
+            err = clEnqueueWriteBuffer(queue, image_buffer, CL_TRUE, 0, sizeof(cl_float4) * size, arr_temp, 0, nullptr, nullptr);
+            std::cout << "Write image buffer: " << err << "\n";
+
+            err = clEnqueueWriteBuffer(queue, ray_buffer, CL_TRUE, 0, sizeof(RayNew) * size, rays, 0, nullptr, nullptr);
+            std::cout << "Write ray buffer: " << err << "\n";
+
+            err = clEnqueueWriteBuffer(queue, spheres_buffer, CL_TRUE, 0, sizeof(SphereNew) * sphere_count, spheres, 0, nullptr, nullptr);
+            std::cout << "Write sphere buffer: " << err << "\n";
 
             // Read kernel source
             std::string sourcecode = loadKernel(lookUpDir() + "shader.cl");
@@ -307,12 +337,21 @@ class Camera
             std::cout << "Build program: " << err << "\n";
 
             // Create kernel
-            cl_kernel kernel = clCreateKernel(program, "color", &err);
+            cl_kernel kernel = clCreateKernel(program, "get_color", &err);
             std::cout << "Create kernel: " << err << "\n";
 
             // Set kernel arguments
-            err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer);
-            std::cout << "Set kernel arguments: " << err << "\n";
+            err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &image_buffer);
+            std::cout << "Set kernel argument 0: " << err << "\n";
+
+            err = clSetKernelArg(kernel, 1, sizeof(cl_mem), &ray_buffer);
+            std::cout << "Set kernel argument 0: " << err << "\n";
+
+            err = clSetKernelArg(kernel, 2, sizeof(cl_mem), &spheres_buffer);
+            std::cout << "Set kernel argument 2: " << err << "\n";
+
+            err = clSetKernelArg(kernel, 3, sizeof(int), &sphere_count);
+            std::cout << "Set kernel argument 3: " << err << "\n";
 
             // Run kernel
             size_t globalsize = size;
@@ -321,15 +360,15 @@ class Camera
             std::cout << "Kernel enqueue: " << err << "\n";
 
             // Write back from GPU
-            err = clEnqueueReadBuffer(queue, buffer, CL_TRUE, 0, sizeof(Vec4) * size, arr_temp, 0, nullptr, nullptr);
-            std::cout << "Read buffer: " << err << "\n";
+            err = clEnqueueReadBuffer(queue, image_buffer, CL_TRUE, 0, sizeof(cl_float4) * size, arr_temp, 0, nullptr, nullptr);
+            std::cout << "Read image buffer: " << err << "\n";
 
             clFinish(queue);
 
             // Clean up
             clReleaseKernel(kernel);
             clReleaseProgram(program);
-            clReleaseMemObject(buffer);
+            clReleaseMemObject(image_buffer);
             clReleaseCommandQueue(queue);
             clReleaseContext(context);
 
@@ -501,7 +540,6 @@ class Camera
             return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
         }
 
-
         /// <summary>
         /// Applies gamma correction to one of the values within a RGB vector.
         /// </summary>
@@ -533,8 +571,8 @@ class Camera
         sf::Color convert_to_color(const Vec3 color)
         {
             static const Interval intensity(0.000, 0.999);
-            //return sf::Color(256 * intensity.clamp(color.x()), 256 * intensity.clamp(color.y()), 256 * intensity.clamp(color.z()));
-            return sf::Color(255 * color.x(), 255 * color.y(), 255 * color.z());
+            return sf::Color(256 * intensity.clamp(color.x()), 256 * intensity.clamp(color.y()), 256 * intensity.clamp(color.z()));
+            //return sf::Color(255 * color.x(), 255 * color.y(), 255 * color.z());
         }
 
         /// <summary>
@@ -630,6 +668,26 @@ class Camera
             std::ostringstream ss;
             ss << file.rdbuf();
             return ss.str();
+        }
+
+        cl_float4 Point3toFloat4(Point3 p)
+        {
+            cl_float4 v = cl_float4();
+            v.s[0] = (float)p.e[0];
+            v.s[1] = (float)p.e[1];
+            v.s[2] = (float)p.e[2];
+            v.s[3] = 0.0f;
+            return v;
+        }
+
+        cl_float4 Vec3toFloat4(Vec3 vec)
+        {
+            cl_float4 v = cl_float4();
+            v.s[0] = (float)vec.e[0];
+            v.s[1] = (float)vec.e[1];
+            v.s[2] = (float)vec.e[2];
+            v.s[3] = 0.0f;
+            return v;
         }
 };
 
