@@ -153,7 +153,7 @@ int main()
         world.add(make_shared<Triangle>(a, A, B, materials[face_index]));
     }*/
 
-	std::cout << "Number of primitives: " << world.objects.size() << std::endl;
+	//std::cout << "Number of primitives: " << world.objects.size() << std::endl;
     // Nice render but takes a while
     /*auto ground_material = make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
     world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));

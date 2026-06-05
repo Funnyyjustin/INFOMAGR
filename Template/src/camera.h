@@ -358,6 +358,8 @@ class Camera
             clReleaseKernel(kernel);
             clReleaseProgram(program);
             clReleaseMemObject(image_buffer);
+            clReleaseMemObject(ray_buffer);
+            clReleaseMemObject(spheres_buffer);
             clReleaseCommandQueue(queue);
             clReleaseContext(context);
 
