@@ -1,9 +1,4 @@
-typedef struct
-{
-	float4 center;
-	float4 color;
-	float radius;
-} Sphere;
+// Ray struct and functions
 
 typedef struct
 {
@@ -23,6 +18,15 @@ float dot_product(float4 v1, float4 v2)
 	return res;
 }
 
+// Sphere struct and functions
+
+typedef struct
+{
+	float4 center;
+	float4 color;
+	float radius;
+} Sphere;
+
 int hit(Ray r, Sphere s)
 {
 	float4 oc = s.center - r.origin;
@@ -36,6 +40,8 @@ int hit(Ray r, Sphere s)
 
 	return 1;
 }
+
+// General functions
 
 void set_color(__global float4* img, int index, float4 color)
 {
