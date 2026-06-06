@@ -242,26 +242,31 @@ class Camera
 
         sf::VertexArray render_gpu(World& world, bool rendered, AccelStruct axl, AntiAliasing aa)
         {
+            // Initialize camera + configuration for GPU
             initialize();
 
-            // Array of pixels
-            int size = conf::window_size.x * conf::window_size.y;
+            int width = conf::window_size.x;
+            int size = width * conf::window_size.y;
             int sphere_count = 1;
+
+            Configuration* conf = new Configuration();
+            conf->camera_center = Point3toFloat4(this->camera_center);
+            conf->pixel00_loc = Point3toFloat4(this->pixel00_loc);
+            conf->pixel_delta_u = Vec3toFloat4(this->pixel_delta_u);
+            conf->pixel_delta_v = Vec3toFloat4(this->pixel_delta_v);
+            conf->sphere_count = sphere_count;
+            conf->screen_width = width;
+
+            // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, size);
 
             cl_float4* arr_temp = new cl_float4[size];
             SphereNew* spheres = new SphereNew[sphere_count];
-            RayNew* rays = new RayNew[size];
 
-            // Initialize image and ray arrays
+            // Initialize image array
             for (int i = 0; i < size; i++)
             {
                 arr_temp[i] = { 0, 0, 0, 0 };
-
-                Ray r = get_ray(i % conf::window_size.x, i / conf::window_size.x);
-
-                rays[i].origin = Point3toFloat4(r.origin());
-                rays[i].direction = Vec3toFloat4(r.direction());
             }
 
             spheres[0].center = { 0, 0, -2.0f, 0 };
@@ -297,8 +302,8 @@ class Camera
             cl_mem image_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(cl_float4) * size, arr_temp, &err);
             std::cout << "Create image buffer: " << err << "\n";
 
-            cl_mem ray_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(RayNew) * size, rays, &err);
-            std::cout << "Create rays buffer: " << err << "\n";
+            cl_mem conf_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(Configuration), conf, &err);
+            std::cout << "Create camera configuration buffer: " << err << "\n";
 
             cl_mem spheres_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(SphereNew) * sphere_count, spheres, &err);
             std::cout << "Create sphere buffer: " << err << "\n";
@@ -307,8 +312,8 @@ class Camera
             err = clEnqueueWriteBuffer(queue, image_buffer, CL_TRUE, 0, sizeof(cl_float4) * size, arr_temp, 0, nullptr, nullptr);
             std::cout << "Write image buffer: " << err << "\n";
 
-            err = clEnqueueWriteBuffer(queue, ray_buffer, CL_TRUE, 0, sizeof(RayNew) * size, rays, 0, nullptr, nullptr);
-            std::cout << "Write ray buffer: " << err << "\n";
+            err = clEnqueueWriteBuffer(queue, conf_buffer, CL_TRUE, 0, sizeof(Configuration) * size, conf, 0, nullptr, nullptr);
+            std::cout << "Write camera configuration buffer: " << err << "\n";
 
             err = clEnqueueWriteBuffer(queue, spheres_buffer, CL_TRUE, 0, sizeof(SphereNew) * sphere_count, spheres, 0, nullptr, nullptr);
             std::cout << "Write sphere buffer: " << err << "\n";
@@ -333,14 +338,11 @@ class Camera
             err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &image_buffer);
             std::cout << "Set kernel argument 0: " << err << "\n";
 
-            err = clSetKernelArg(kernel, 1, sizeof(cl_mem), &ray_buffer);
+            err = clSetKernelArg(kernel, 1, sizeof(cl_mem), &conf_buffer);
             std::cout << "Set kernel argument 0: " << err << "\n";
 
             err = clSetKernelArg(kernel, 2, sizeof(cl_mem), &spheres_buffer);
             std::cout << "Set kernel argument 2: " << err << "\n";
-
-            err = clSetKernelArg(kernel, 3, sizeof(int), &sphere_count);
-            std::cout << "Set kernel argument 3: " << err << "\n";
 
             // Run kernel
             size_t globalsize = size;
@@ -358,7 +360,7 @@ class Camera
             clReleaseKernel(kernel);
             clReleaseProgram(program);
             clReleaseMemObject(image_buffer);
-            clReleaseMemObject(ray_buffer);
+            clReleaseMemObject(conf_buffer);
             clReleaseMemObject(spheres_buffer);
             clReleaseCommandQueue(queue);
             clReleaseContext(context);
