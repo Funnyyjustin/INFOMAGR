@@ -247,7 +247,7 @@ class Camera
 
             int width = conf::window_size.x;
             int size = width * conf::window_size.y;
-            int sphere_count = 1;
+            int sphere_count = 2;
 
             Configuration* conf = new Configuration();
             conf->camera_center = Point3toFloat4(this->camera_center);
@@ -262,6 +262,7 @@ class Camera
 
             cl_float4* arr_temp = new cl_float4[size];
             SphereNew* spheres = new SphereNew[sphere_count];
+            MaterialNew* materials = new MaterialNew[sphere_count];
 
             // Initialize image array
             for (int i = 0; i < size; i++)
@@ -269,9 +270,17 @@ class Camera
                 arr_temp[i] = { 0, 0, 0, 0 };
             }
 
-            spheres[0].center = { 0, 0, -2.0f, 0 };
-            spheres[0].radius = 1.0f;
-            spheres[0].color = { 1.0f, 0, 0, 0 };
+            // Small sphere
+            spheres[0].center = { 0, 0, -1.0f, 0 };
+            spheres[0].radius = { 0.5f, 0, 0, 0 };
+            materials[0].type = { 0, 0, 0, 0 };
+            materials[0].info = { 0.0f, 0.0f, 0.8f, 0 };
+
+            // Big sphere
+            spheres[1].center = { 0, -100.5f, -1.0f, 0 };
+            spheres[1].radius = { 100.0f, 0, 0, 0 };
+            materials[1].type = { 0, 0, 0, 0 };
+            materials[1].info = { 0.0f, 0.8f, 0.0f, 0 };
 
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
@@ -303,20 +312,26 @@ class Camera
             std::cout << "Create image buffer: " << err << "\n";
 
             cl_mem conf_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(Configuration), conf, &err);
-            std::cout << "Create camera configuration buffer: " << err << "\n";
+            std::cout << "Create configuration buffer: " << err << "\n";
 
             cl_mem spheres_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(SphereNew) * sphere_count, spheres, &err);
             std::cout << "Create sphere buffer: " << err << "\n";
+
+            cl_mem materials_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(MaterialNew) * sphere_count, materials, &err);
+            std::cout << "Create material buffer: " << err << "\n";
 
             // Write buffers to GPU
             err = clEnqueueWriteBuffer(queue, image_buffer, CL_TRUE, 0, sizeof(cl_float4) * size, arr_temp, 0, nullptr, nullptr);
             std::cout << "Write image buffer: " << err << "\n";
 
-            err = clEnqueueWriteBuffer(queue, conf_buffer, CL_TRUE, 0, sizeof(Configuration) * size, conf, 0, nullptr, nullptr);
-            std::cout << "Write camera configuration buffer: " << err << "\n";
+            err = clEnqueueWriteBuffer(queue, conf_buffer, CL_TRUE, 0, sizeof(Configuration), conf, 0, nullptr, nullptr);
+            std::cout << "Write configuration buffer: " << err << "\n";
 
             err = clEnqueueWriteBuffer(queue, spheres_buffer, CL_TRUE, 0, sizeof(SphereNew) * sphere_count, spheres, 0, nullptr, nullptr);
             std::cout << "Write sphere buffer: " << err << "\n";
+
+            err = clEnqueueWriteBuffer(queue, materials_buffer, CL_TRUE, 0, sizeof(MaterialNew) * sphere_count, materials, 0, nullptr, nullptr);
+            std::cout << "Write material buffer: " << err << "\n";
 
             // Read kernel source
             std::string sourcecode = loadKernel(lookUpDir() + "shader.cl");
@@ -339,10 +354,13 @@ class Camera
             std::cout << "Set kernel argument 0: " << err << "\n";
 
             err = clSetKernelArg(kernel, 1, sizeof(cl_mem), &conf_buffer);
-            std::cout << "Set kernel argument 0: " << err << "\n";
+            std::cout << "Set kernel argument 1: " << err << "\n";
 
             err = clSetKernelArg(kernel, 2, sizeof(cl_mem), &spheres_buffer);
             std::cout << "Set kernel argument 2: " << err << "\n";
+
+            err = clSetKernelArg(kernel, 3, sizeof(cl_mem), &materials_buffer);
+            std::cout << "Set kernel argument 3: " << err << "\n";
 
             // Run kernel
             size_t globalsize = size;
@@ -362,6 +380,7 @@ class Camera
             clReleaseMemObject(image_buffer);
             clReleaseMemObject(conf_buffer);
             clReleaseMemObject(spheres_buffer);
+            clReleaseMemObject(materials_buffer);
             clReleaseCommandQueue(queue);
             clReleaseContext(context);
 
@@ -369,7 +388,7 @@ class Camera
             for (int id = 0; id < size; id++)
             {
                 arr[id].position = sf::Vector2f(id % conf::window_size.x, id / conf::window_size.x);
-                arr[id].color = convert_to_color(Vec3(arr_temp[id].x, arr_temp[id].y, arr_temp[id].z));
+                arr[id].color = convert_to_color(to_gamma(Vec3(arr_temp[id].x, arr_temp[id].y, arr_temp[id].z)));
             }
 
             auto end = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

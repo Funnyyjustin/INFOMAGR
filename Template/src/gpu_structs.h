@@ -1,25 +1,18 @@
 #include <CL/cl.h>
 
-struct alignas(16) MaterialNew
+struct MaterialNew
 {
-    cl_int type; // 0 = diffuse, 1 = metal, 2 = dielectic
     cl_float4 info; // albedo, fuzz, refractive index
+    cl_float4 type; // 0 = diffuse, 1 = metal, 2 = dielectic
 };
 
-struct alignas(128) SphereNew
+struct SphereNew
 {
     cl_float4 center;
-    cl_float4 color;
-    cl_float radius;
+    cl_float4 radius;
 };
 
-struct alignas(16) RayNew
-{
-    cl_float4 origin;
-    cl_float4 direction;
-};
-
-struct alignas(256) Configuration
+struct Configuration
 {
     cl_float4 pixel00_loc;
     cl_float4 camera_center;

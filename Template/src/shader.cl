@@ -40,25 +40,58 @@ float dot_product(float4 v1, float4 v2)
 
 int near_zero(float4 v)
 {
+	float eps = 1e-6f;
+	if (fabs(v.x) < eps && fabs(v.y) < eps && fabs(v.z) < eps)
+		return 1;
 	return 0;
 }
 
-float4 sample_square(int index)
+int contains(float x, float min, float max)
 {
-	uint seed = WangHash((index + 1) * 17);
-	float r1 = RandomFloat(&seed);
-	float r2 = RandomFloat(&seed);
+	if (x >= min && x <= max)
+		return 1;
+
+	return 0;
+}
+
+float4 set_normal(Ray r, float4 normal)
+{
+	float dotproduct = dot_product(r.dir, normal);
+
+	if (dotproduct < 0)
+		return normal;
+
+	return -normal;
+}
+
+float4 sample_square(uint *seed)
+{
+	float r1 = RandomFloat(seed);
+	float r2 = RandomFloat(seed);
 	return (float4)(r1 - 0.5f, r2 - 0.5f, 0, 0);
 }
 
-Ray get_ray(__global Configuration* conf, int x, int y, int index)
+float4 random_unit_vector(uint *seed)
+{
+	while (1)
+	{
+		float r1 = RandomFloat(seed);
+		float r2 = RandomFloat(seed);
+		float r3 = RandomFloat(seed);
+		float4 v = (float4)(r1 * 2.0f - 1.0f, r2 * 2.0f - 1.0f, r3 * 2.0f - 1.0f, 0);
+		if (dot_product(v, v) < 1.0f)
+			return v;
+	}
+}
+
+Ray get_ray(__global Configuration* conf, int x, int y, uint *seed)
 {
 	Ray r;
 
-	float4 offset = sample_square(index);
+	float4 offset = sample_square(seed);
 	float4 pixel_sample = conf->pixel00_loc + ((x + offset.x) * conf->pixel_delta_u) + ((y + offset.y) * conf->pixel_delta_v);
 	r.origin = conf->camera_center;
-	r.dir = pixel_sample - conf->camera_center;
+	r.dir = normalize(pixel_sample - conf->camera_center);
 
 	return r;
 }
@@ -67,36 +100,37 @@ Ray get_ray(__global Configuration* conf, int x, int y, int index)
 
 typedef struct
 {
-	int type; // 0 = diffuse, 1 = metal, 2 = dielectic
 	float4 info; // albedo, fuzz, refractive index
+	float4 type; // 0 = diffuse, 1 = metal, 2 = dielectic
 } Material;
 
 typedef struct
 {
 	float4 att;
 	Ray scat;
-	bool success;
+	int success;
 } ScatReturn;
 
-ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal)
+ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, uint *seed)
 {
 	ScatReturn sr;
+	sr.success = 0;
 
 	// Scatter diffuse material
-	if (m.type == 0)
+	if (m.type.x == 0)
 	{
-		float4 scat_dir = normal + (float4)(0, 0, 0, 0); // TODO: get random unit vector
+		float4 scat_dir = normalize(normal + random_unit_vector(seed));
 
-		if (near_zero(scat_dir))
+		if (near_zero(scat_dir) == 1)
 			scat_dir = normal;
 
 		Ray r;
-		r.origin = p;
+		r.origin = p + normal * 0.001f;
 		r.dir = scat_dir;
 
 		sr.att = m.info;
 		sr.scat = r;
-		success = true;
+		sr.success = 1;
 	}
 
 	return sr;
@@ -107,22 +141,54 @@ ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal)
 typedef struct
 {
 	float4 center;
-	float4 color;
-	float radius;
+	float4 radius;
 } Sphere;
 
-int hit(Ray r, Sphere s)
+typedef struct
 {
+	float4 p; // location of intersection
+	float4 normal; // normal of intersection
+	int hit; // 0 is no hit, 1 is hit
+	float t;
+} HitRecord;
+
+HitRecord hit(Ray r, Sphere s)
+{
+	HitRecord hr;
+	hr.hit = 0;
+	hr.p = (float4)(0, 0, 0, 0);
+	hr.normal = (float4)(0, 0, 0, 0);
+
 	float4 oc = s.center - r.origin;
 	float a = length_squared(r.dir);
 	float h = dot_product(r.dir, oc);
-	float c = length_squared(oc) - (s.radius * s.radius);
+	float c = length_squared(oc) - (s.radius.x * s.radius.x);
 	float d = h * h - a * c;
 
-	if (d < 0)
-		return 0;
+	if (d < 0.0f)
+	{
+		hr.hit = 0;
+		hr.p = (float4)(0, 0, 0, 0);
+		hr.normal = (float4)(0, 0, 0, 0);
+		return hr;
+	}
 
-	return 1;
+	float sd = sqrt(d);
+
+	float t = (h - sd) / a;
+	if (t <= 0.001f)
+	{
+		t = (h + sd) / a;
+		if (t <= 0.001f)
+			return hr;
+	}
+
+	hr.hit = 1;
+	hr.t = t;
+	hr.p = r.origin + t * r.dir;
+	float4 outward_normal = (hr.p - s.center) / s.radius.x;
+	hr.normal = set_normal(r, outward_normal);
+	return hr;
 }
 
 // General functions
@@ -135,65 +201,88 @@ void set_color(__global float4* img, int index, float4 color)
 	img[index].w = 0;
 }
 
-float4 traverse(Ray r, __global Sphere* spheres, int sphere_count, int depth)
+float4 traverse(Ray r, __global Sphere* spheres, __global Material* materials, int sphere_count, int depth, uint *seed)
 {
 	Ray ray = r;
-	float4 color = (float4)(1, 1, 1, 0);
+	float4 throughput = (float4)(1, 1, 1, 0);
 
-	for (int i = depth; i > 0; i--)
+	for (int i = 0; i <= depth; i++)
 	{
-		// Max depth reached
-		if (depth <= 0)
-			return color * float4(0, 0, 0, 0);
+		int hit_anything = 0;
 
-		// Check all objects in scene
+		float closest = 1e30f;
+		int id = -1;
+		HitRecord best;
+
+		// Check all objects in scene for hit
 		for (int i = 0; i < sphere_count; i++)
 		{
 			Sphere s = spheres[i];
+			
+			HitRecord hr = hit(ray, s);
 
-			// There is a hit; bounce/scatter it based on the material
-			if (hit(r, s) == 1)
+			// There is a hit; save closest info
+			if (hr.hit == 1)
 			{
-				// TODO: get intersection point and normal
-				float4 p;
-				float4 normal;
+				hit_anything = 1;
 
-				// TODO: get material
-				Material m;
-
-				ScatReturn sr = scatter(r, m, p, normal);
-
-				if (sr.success)
+				if (hr.t < closest)
 				{
-					color *= sr.att;
-					ray = sr.scat;
+					closest = hr.t;
+					best = hr;
+					id = i;
 				}
 			}
 		}
-	}
 
-	// No hit has been found; return background gradient
-	float4 unit_dir = normalize(r.dir);
-	float a = 0.5f * (unit_dir.y + 1.0f);
-	color = (1.0f - a) * (float4)(1.0f, 1.0f, 1.0f, 0) + a * (float4)(0.5f, 0.7f, 1.0f, 0);
-	return color;
+		// Hit has been found
+		if (id >= 0)
+		{
+			Material m = materials[id];
+			ScatReturn sr = scatter(ray, m, best.p, best.normal, seed);
+
+			if (sr.success == 1)
+			{
+				throughput *= sr.att;
+				ray = sr.scat;
+			}
+			else
+			{
+				throughput *= (float4)(0, 0, 0, 0);
+				return throughput;
+			}
+		}
+		// No hit has been found; return background gradient
+		else
+		{
+			float4 unit_dir = normalize(ray.dir);
+			float a = 0.5f * (unit_dir.y + 1.0f);
+			float4 sky = (1.0f - a) * (float4)(1.0f, 1.0f, 1.0f, 0) + a * (float4)(0.5f, 0.7f, 1.0f, 0);
+			return throughput * sky;
+		}
+	}
+		
+	return throughput;
 }
 
-__kernel void get_color(__global float4* img, __global Configuration* conf, __global Sphere* spheres)
+__kernel void get_color(__global float4* img, __global Configuration* conf, __global Sphere* spheres, __global Material* materials)
 {
 	int index = get_global_id(0);
+	uint seed = WangHash((index + 1) * 17);
+
 	int x = index % conf->screen_width;
 	int y = index / conf->screen_width;
 
 	float4 color = (float4)(0, 0, 0, 0);
-	int num_samples = 10;
+	int num_samples = 500;
 
 	for (int i = 0; i < num_samples; i++)
 	{
-		Ray r = get_ray(conf, x, y, index);
-		color += traverse(r, spheres, conf->sphere_count, 1);
+		Ray r = get_ray(conf, x, y, &seed);
+		color += traverse(r, spheres, materials, conf->sphere_count, 50, &seed);
 	}
 
 	color *= (float)(1.0 / (float)num_samples);
+	//color = sqrt(color / num_samples);
 	set_color(img, index, color);
 }
