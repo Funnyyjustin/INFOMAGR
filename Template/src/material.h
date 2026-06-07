@@ -21,6 +21,8 @@ class Material
 class Lambertian : public Material
 {
 	public:
+		Vec3 albedo;
+
 		Lambertian(const Vec3& albedo) : albedo(albedo) {}
 
 		bool scatter(const Ray& r_in, const Hit_record& rec, Vec3& attentuation, Ray& scat) const override
@@ -34,15 +36,15 @@ class Lambertian : public Material
 			attentuation = albedo;
 			return true;
 		}
-
-	private:
-		Vec3 albedo;
 };
 
 // Metal (reflective) material
 class Metal : public Material
 {
 	public:
+		Vec3 albedo;
+		double fuzz;
+
 		Metal(const Vec3& albedo, double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
 
 		bool scatter(const Ray& r_in, const Hit_record& rec, Vec3& attenuation, Ray& scat) const override
@@ -53,16 +55,14 @@ class Metal : public Material
 			attenuation = albedo;
 			return (dot(scat.direction(), rec.normal) > 0);
 		}
-
-	private:
-		Vec3 albedo;
-		double fuzz;
 };
 
 // Refractive material (such as glass or water)
 class Dielectric : public Material
 {
 	public:
+		double index;
+
 		Dielectric(double index) : index(index) {}
 
 		bool scatter(const Ray& r, const Hit_record& rec, Vec3& attenuation, Ray& scat) const override
@@ -87,8 +87,6 @@ class Dielectric : public Material
 		}
 
 	private:
-		double index;
-
 		static double reflectance(double cos, double index)
 		{
 			auto r0 = (1 - index) / (1 + index);

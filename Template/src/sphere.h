@@ -8,6 +8,10 @@
 class Sphere : public Primitive
 {
 	public:
+		Point3 center;
+		double radius;
+		shared_ptr<Material> mat;
+
 		Sphere(const Point3& center, double radius, shared_ptr<Material> mat) : center(center), radius(std::fmax(0, radius)),mat(mat)
 		{
 			auto rvec = Vec3(radius, radius, radius);
@@ -61,9 +65,6 @@ class Sphere : public Primitive
 		aabb hitBox() const override { return boundingbox; }
 
 	private:
-		Point3 center;
-		double radius;
-		shared_ptr<Material> mat;
 		aabb boundingbox;
 };
 

@@ -7,9 +7,9 @@
 #include <chrono>
 
 #include "interval.h"
-#include "kdtree.h"
 #include "material.h"
 #include "primitive.h"
+#include "sphere.h"
 #include "Grid.h"
 #include "world.h"
 
@@ -35,41 +35,29 @@ inline void progress(int x)
 class Camera
 {
     public:
-        Point3 cam_pos = Point3(13, 2, 3);
-        Point3 cam_dir = Point3(0, 0, 0);
+        Point3 cam_pos = Point3(0, 0, 0);
+        Point3 cam_dir = Point3(0, 0, -1);
         Vec3 v_up = Vec3(0, 1, 0);
 
-        enum AccelStruct {
+        enum AccelerationStructure {
             NONE,
-            BVH,
-            KDtree,
             GRID
         };
 
-        enum AntiAliasing {
-            FIXED,
-            ADAPTIVE
-        };
-
-        sf::VertexArray render(World& world, bool rendered, AccelStruct axl, AntiAliasing aa)
+        sf::VertexArray render(World& world, bool rendered, AccelerationStructure axl)
         {
             initialize();
 
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, conf::window_size.x * conf::window_size.y);
 
-            KdTree tree = KdTree();
-            KdNode* root = tree.buildTree({});
+            // Set grid acceleration structure if chosen
             Grid grid = Grid();
-            if (axl == KDtree) root = tree.buildTree(world.objects);
-            if (axl == BVH) world = World(make_shared<bvh_node>(world));
             if (axl == GRID) grid = Grid(world);
             this->world = world;
 
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
-
-            int num_rays_shot = 0;
 
             // Draw function
             for (int x = 0; x < conf::window_size.x; x++)
@@ -86,146 +74,17 @@ class Camera
 
                     Vec3 color(0, 0, 0); // Starting color is always black; if we hit nothing this is the result
                     
-                    // Anti-aliasing
-                    if (aa == FIXED)
+                    for (int sample = 0; sample < conf::samples_per_pixel; sample++)
                     {
-                        for (int sample = 0; sample < conf::samples_per_pixel; sample++)
-                        {
-                            num_rays_shot++;
-                            Ray r = get_ray(x, y);
-                            if (axl == KDtree)
-                            {
-                                Hit_record rec;
-                                World subset = tree.traverseTree(r, root, rec);
-                                //color += kdTraverse(r, conf::max_depth, subset, tree, root, rec); // Track the ray a certain amount of times
-                                //intersection_tests.push_back(rec.intersection_tests);
-                                //traversal_steps.push_back(rec.traversal_steps);
-                            }
-                            else if (axl == GRID)
-                            {
-                                //color += gridTraverse(r, conf::max_depth, grid);
-                            }
-                            else
-                            {
-                                color += noAccelTraverse(r, conf::max_depth, world);
-                            }
-                        }
-
-                        // Set color of current pixel on the screen and apply gamma correction
-                        color *= pixel_samples_scale;
-                        color = to_gamma(color);
-                        arr[currentPixel].color = convert_to_color(color);
+                        Ray r = get_ray(x, y);
+                        if (axl == GRID) color += gridTraverse(r, conf::max_depth, grid);
+                        else color += traverse(r, conf::max_depth, world);
                     }
-                    else if (aa == ADAPTIVE)
-                    {
-                        int num_samples = 0;
 
-                        vector<Vec3> colors;
-                        for (int sample = 0; sample < conf::first_samples; sample++)
-                        {
-                            num_rays_shot++;
-                            Ray r = get_ray(x, y);
-
-                            if (axl == NONE || axl == BVH)
-                                colors.push_back(noAccelTraverse(r, conf::max_depth, world));
-                            else if (axl == GRID)
-                                colors.push_back(gridTraverse(r, conf::max_depth, grid));
-                            else if (axl == KDtree)
-                            {
-                                std::cout << "KDtree not implemented for adaptive sampling. Please try another structure!\n";
-                                break;
-                            }
-                        }
-
-                        Vec3 mean = Vec3(0, 0, 0);
-                        Vec3 M2 = Vec3(0, 0, 0);
-                        for (Vec3 sample : colors)
-                        {
-                            num_samples++;
-                            Vec3 delta = sample - mean;
-                            mean += delta / num_samples;
-                            Vec3 delta2 = sample - mean;
-                            M2 += delta * delta2;
-                        }
-
-                        Vec3 variance = M2 / (num_samples - 1);
-
-                        // Calculate error
-                        float error_sq =
-                            0.2126 * 0.2126 * variance.x() +
-                            0.7152 * 0.7152 * variance.y() +
-                            0.0722 * 0.0722 * variance.z();
-
-                        float error = sqrt(error_sq / num_samples);
-
-                        bool satisfies = error <= conf::threshold;
-
-                        if (satisfies)
-                        {
-                            for (Vec3 sample : colors)
-                                color += sample;
-
-                            // Set color of current pixel on the screen and apply gamma correction
-                            color *= (1.0 / num_samples);
-                            color = to_gamma(color);
-                            arr[currentPixel].color = convert_to_color(color);
-                        }
-                        else
-                        {
-                            while (!satisfies && num_samples <= conf::num_samples)
-                            {
-                                int new_num_samples = 0;
-                                for (int samples_new = 0; samples_new < conf::second_samples; samples_new++)
-                                {
-                                    num_rays_shot++;
-                                    Ray r = get_ray(x, y);
-
-                                    if (axl == NONE || axl == BVH)
-                                        colors.push_back(noAccelTraverse(r, conf::max_depth, world));
-                                    else if (axl == GRID)
-                                        colors.push_back(gridTraverse(r, conf::max_depth, grid));
-                                    else if (axl == KDtree)
-                                    {
-                                        std::cout << "KDtree not implemented for adaptive sampling. Please try another structure!\n";
-                                        break;
-                                    }
-
-                                    num_samples++;
-                                }
-
-                                Vec3 mean = Vec3(0, 0, 0);
-                                Vec3 M2 = Vec3(0, 0, 0);
-                                for (Vec3 sample : colors)
-                                {
-                                    new_num_samples++;
-                                    Vec3 delta = sample - mean;
-                                    mean += delta / num_samples;
-                                    Vec3 delta2 = sample - mean;
-                                    M2 += delta * delta2;
-                                }
-
-                                Vec3 variance = M2 / (num_samples - 1);
-
-                                // Calculate error
-                                float error_sq =
-                                    0.2126 * 0.2126 * variance.x() +
-                                    0.7152 * 0.7152 * variance.y() +
-                                    0.0722 * 0.0722 * variance.z();
-
-                                float error = sqrt(error_sq / num_samples);
-
-                                satisfies = error <= conf::threshold;
-                            }
-
-                            for (Vec3 sample : colors)
-                                color += sample;
-
-                            // Set color of current pixel on the screen and apply gamma correction
-                            color *= (1.0 / num_samples);
-                            color = to_gamma(color);
-                            arr[currentPixel].color = convert_to_color(color);
-                        }
-                    }
+                    // Set color of current pixel on the screen and apply gamma correction
+                    color *= pixel_samples_scale;
+                    color = to_gamma(color);
+                    arr[currentPixel].color = convert_to_color(color);
                 }
             }
 
@@ -235,19 +94,17 @@ class Camera
             float total = end - start;
             std::cout << "Total elapsed time: " << total << " seconds" << "\n";
 
-            std::cout << "Total number of rays shot through the scene: " << num_rays_shot << "\n";
-
             return arr;
         }
 
-        sf::VertexArray render_gpu(World& world, bool rendered, AccelStruct axl, AntiAliasing aa)
+        sf::VertexArray render_gpu(World& world, bool rendered, AccelerationStructure axl)
         {
             // Initialize camera + configuration for GPU
             initialize();
 
             int width = conf::window_size.x;
             int size = width * conf::window_size.y;
-            int sphere_count = 250;
+            int sphere_count = world.objects.size();
 
             Configuration* conf = new Configuration();
             conf->camera_center = Point3toFloat4(this->camera_center);
@@ -272,71 +129,8 @@ class Camera
                 arr_temp[i] = { 0, 0, 0, 0 };
             }
 
-            // Small sphere
-            //spheres[0].center = { 0, 0, -1.2f, 0 };
-            //spheres[0].radius = { 0.5f, 0, 0, 0 };
-            //materials[0].type = { 2, 0, 0, 0 };
-            //materials[0].info = { 1.0f/1.33f, 0.8f, 0.8f, 0.3f };
-
-            // Big sphere
-            //spheres[1].center = { 0, -100.5f, -1.0f, 0 };
-            //spheres[1].radius = { 100.0f, 0, 0, 0 };
-            //materials[1].type = { 0, 0, 0, 0 };
-            //materials[1].info = { 0.8f, 0.8f, 0.0f, 0 };
-
-            // Let's make a cool big render with lots of random spheres!
-
-            spheres[0].center = { 0, 1.0f, 0, 0 };
-            spheres[0].radius = { 1.0f, 0, 0, 0 };
-            materials[0].type = { 2, 0, 0, 0 };
-            materials[0].info = { 1.5f, 0, 0, 0 };
-
-            spheres[1].center = { -4.0f, 1.0f, 0, 0 };
-            spheres[1].radius = { 1.0f, 0, 0, 0 };
-            materials[1].type = { 0, 0, 0, 0 };
-            materials[1].info = { 0.4f, 0.2f, 0.1f, 0 };
-
-            spheres[2].center = { 4.0f, 1.0f, 0, 0 };
-            spheres[2].radius = { 1.0f, 0, 0, 0 };
-            materials[2].type = { 1.0f, 0, 0, 0 };
-            materials[2].info = { 0.7f, 0.6f, 0.5f, 0 };
-
-            spheres[3].center = { 0, -1000.0f, 0,0 };
-            spheres[3].radius = { 1000.0f, 0, 0, 0 };
-            materials[3].type = { 0, 0, 0, 0 };
-            materials[3].info = { 0.5f, 0.5f, 0.5f, 0 };
-
-            for (int i = 4; i < sphere_count; i++)
-            {
-                spheres[i].center = { (float)random_double(-11, 11), 0.2f, (float)random_double(-11, 11), 0 };
-                spheres[i].radius = { 0.2f, 0, 0, 0 };
-
-                double choose_mat = random_double();
-
-                
-                if (choose_mat < 0.8)
-                {
-                    // Diffuse
-                    Vec3 albedo = Vec3::random() * Vec3::random();
-                    materials[i].type = { 0, 0, 0, 0 };
-                    materials[i].info = Vec3toFloat4(albedo);
-                }
-                else if (choose_mat < 0.95)
-                {
-                    // Metal
-                    Vec3 albedo = Vec3::random(0.5, 1);
-                    double fuzz = random_double(0, 0.5);
-                    materials[i].type = { 1, 0, 0, 0 };
-                    materials[i].info = Vec3toFloat4(albedo);
-                    materials[i].info.w = (float)fuzz;
-                }
-                else
-                {
-                    // Glass
-                    materials[i].type = { 2, 0, 0, 0 };
-                    materials[i].info = { 1.5, 0, 0, 0 };
-                }
-            }
+            // Convert from CPU-friendly data to GPU-friendly data
+            convertData(world, spheres, materials);
 
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
@@ -508,47 +302,7 @@ class Camera
         /// <param name="depth">= The current depth.</param>
         /// <param name="world">= The world of primitives.</param>
         /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 kdTraverse(const Ray& r, int depth, const World subset, KdTree tree, KdNode* root, Hit_record record) const
-        {
-            if (depth <= 0)
-                return Vec3(0, 0, 0);
-
-            Hit_record rec;
-            if (subset.hit(r, Interval(0.001, infinity), rec))
-            {
-                Ray scat;
-                Vec3 att;
-
-                //intersection_tests.push_back(record.intersection_tests);
-                //traversal_steps.push_back(record.traversal_steps);
-
-                if (rec.mat->scatter(r, rec, att, scat))
-                {
-                    Hit_record r;
-                    auto prims = tree.traverseTree(scat, root, r);
-                    //intersection_tests.push_back(r.intersection_tests);
-                    //traversal_steps.push_back(r.traversal_steps);
-                    return att * kdTraverse(scat, depth - 1, prims, tree, root, record);
-                }
-
-
-                return Vec3(0, 0, 0);
-            }
-
-            Vec3 unit_dir = unit_vector(r.direction());
-            auto a = 0.5 * (unit_dir.y() + 1.0);
-            return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
-        }
-
-        /// <summary>
-        /// Gets a 3D vector containing the RGB values of the color.
-        /// This is a recursive function that traces the ray up to a certain amount of bounces.
-        /// </summary>
-        /// <param name="r">= The ray that is being traced.</param>
-        /// <param name="depth">= The current depth.</param>
-        /// <param name="world">= The world of primitives.</param>
-        /// <returns>A 3D vector containing the RGB values of the resulting color.</returns>
-        Vec3 noAccelTraverse(const Ray& r, int depth, const World& world) const
+        Vec3 traverse(const Ray& r, int depth, const World& world) const
         {
             if (depth <= 0)
                 return Vec3(0, 0, 0);
@@ -559,11 +313,8 @@ class Camera
                 Ray scat;
                 Vec3 att;
 
-                //intersection_tests.push_back(rec.intersection_tests);
-                //traversal_steps.push_back(rec.traversal_steps);
-
                 if (rec.mat->scatter(r, rec, att, scat))
-                    return att * noAccelTraverse(scat, depth - 1, world);
+                    return att * traverse(scat, depth - 1, world);
 
                 return Vec3(0, 0, 0);
             }
@@ -756,6 +507,39 @@ class Camera
             v.s[2] = (float)vec.e[2];
             v.s[3] = 0.0f;
             return v;
+        }
+
+        void convertData(World world, SphereNew* spheres, MaterialNew* materials)
+        {
+            int i = 0;
+            for (const auto& prim : world.objects)
+            {
+                auto sphere_ptr = std::dynamic_pointer_cast<Sphere>(prim);
+                Sphere* sphere = sphere_ptr.get();
+                Material* mat = sphere->mat.get();
+
+                spheres[i].center = Point3toFloat4(sphere->center);
+                spheres[i].radius = { (float)sphere->radius, 0, 0, 0 };
+
+                if (auto lam = dynamic_cast<Lambertian*>(mat))
+                {
+                    materials[i].type = { 0, 0, 0, 0 };
+                    materials[i].info = Vec3toFloat4(lam->albedo);
+                }
+                else if (auto met = dynamic_cast<Metal*>(mat))
+                {
+                    materials[i].type = { 1, 0, 0, 0 };
+                    materials[i].info = Vec3toFloat4(met->albedo);
+                    materials[i].info.w = (float)met->fuzz;
+                }
+                else if (auto die = dynamic_cast<Dielectric*>(mat))
+                {
+                    materials[i].type = { 2, 0, 0, 0 };
+                    materials[i].info = { (float)die->index, 0, 0, 0 };
+                }
+                    
+                i++;
+            }
         }
 };
 
