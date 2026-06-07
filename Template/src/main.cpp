@@ -3,7 +3,6 @@
 #include "configuration.hpp"
 
 #include "aabb.h"
-#include "bvhnode.h"
 #include "common.h"
 #include "camera.h"
 #include "parseobj.h"
@@ -37,6 +36,15 @@ int main()
 		<< "\n 2: GPU"
 		<< endl;
 	cin >> device;
+
+	int settings = 1;
+	cout << "Select ray tracing settings: "
+		<< "\n 1: Low"
+		<< "\n 2: Medium"
+		<< "\n 3: High"
+		<< "\n 4: Extreme"
+		<< endl;
+	cin >> settings;
 
 	std::cout << "Starting render..\n";
 
@@ -120,6 +128,28 @@ int main()
 
 		auto material3 = make_shared<Metal>(Vec3(0.7, 0.6, 0.5), 0.0);
 		world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+	}
+
+	// Set correct settings
+	if (settings == 1)
+	{
+		conf::max_depth = 5;
+		conf::num_samples = 5;
+	}
+	else if (settings == 2)
+	{
+		conf::max_depth = 10;
+		conf::num_samples = 25;
+	}
+	else if (settings == 3)
+	{
+		conf::max_depth = 25;
+		conf::num_samples = 100;
+	}
+	else if (settings == 4)
+	{
+		conf::max_depth = 50;
+		conf::num_samples = 500;
 	}
 
 	sf::VertexArray res;
