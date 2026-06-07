@@ -111,6 +111,11 @@ typedef struct
 	int success;
 } ScatReturn;
 
+float4 reflect(float4 v, float4 n)
+{
+	return v - 2 * dot_product(v, n) * n;
+}
+
 ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, uint *seed)
 {
 	ScatReturn sr;
@@ -131,6 +136,27 @@ ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, uint *seed)
 		sr.att = m.info;
 		sr.scat = r;
 		sr.success = 1;
+	}
+	// Scatter metal material
+	else if (m.type.x == 1)
+	{
+		float4 reflected = normalize(reflect(r_in.dir, normal)) + (m.info.w * random_unit_vector(seed));
+		
+		Ray r;
+		r.origin = p;
+		r.dir = reflected;
+
+		sr.att = (float4)(m.info.x, m.info.y, m.info.z, 0);
+		sr.scat = r;
+
+		if (dot_product(sr.scat.dir, normal) > 0)
+			sr.success = 1;
+		else sr.success = 0;
+	}
+	// Scatter dieletric material
+	else if (m.type.x == 2)
+	{
+
 	}
 
 	return sr;

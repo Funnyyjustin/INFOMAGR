@@ -273,8 +273,8 @@ class Camera
             // Small sphere
             spheres[0].center = { 0, 0, -1.2f, 0 };
             spheres[0].radius = { 0.5f, 0, 0, 0 };
-            materials[0].type = { 0, 0, 0, 0 };
-            materials[0].info = { 0.1f, 0.2f, 0.5f, 0 };
+            materials[0].type = { 1, 0, 0, 0 };
+            materials[0].info = { 0.8f, 0.8f, 0.8f, 0.3f };
 
             // Big sphere
             spheres[1].center = { 0, -100.5f, -1.0f, 0 };
