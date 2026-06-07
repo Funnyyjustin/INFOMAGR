@@ -15,8 +15,8 @@ namespace conf
 	// RT config
 	int samples_per_pixel = 500;
 	int max_depth = 50;
-	double vfov = 90;
-	double defocus_angle = 1;
+	double vfov = 20;
+	double defocus_angle = 0.6;
 	double focus_dist = 10;
 
 	// Adaptive sampling config

@@ -35,8 +35,8 @@ inline void progress(int x)
 class Camera
 {
     public:
-        Point3 cam_pos = Point3(0, 0, 0);
-        Point3 cam_dir = Point3(0, 0, -1);
+        Point3 cam_pos = Point3(13, 2, 3);
+        Point3 cam_dir = Point3(0, 0, 0);
         Vec3 v_up = Vec3(0, 1, 0);
 
         enum AccelStruct {
@@ -247,7 +247,7 @@ class Camera
 
             int width = conf::window_size.x;
             int size = width * conf::window_size.y;
-            int sphere_count = 2;
+            int sphere_count = 500;
 
             Configuration* conf = new Configuration();
             conf->camera_center = Point3toFloat4(this->camera_center);
@@ -271,16 +271,70 @@ class Camera
             }
 
             // Small sphere
-            spheres[0].center = { 0, 0, -1.2f, 0 };
-            spheres[0].radius = { 0.5f, 0, 0, 0 };
-            materials[0].type = { 2, 0, 0, 0 };
-            materials[0].info = { 1.0f/1.33f, 0.8f, 0.8f, 0.3f };
+            //spheres[0].center = { 0, 0, -1.2f, 0 };
+            //spheres[0].radius = { 0.5f, 0, 0, 0 };
+            //materials[0].type = { 2, 0, 0, 0 };
+            //materials[0].info = { 1.0f/1.33f, 0.8f, 0.8f, 0.3f };
 
             // Big sphere
-            spheres[1].center = { 0, -100.5f, -1.0f, 0 };
-            spheres[1].radius = { 100.0f, 0, 0, 0 };
+            //spheres[1].center = { 0, -100.5f, -1.0f, 0 };
+            //spheres[1].radius = { 100.0f, 0, 0, 0 };
+            //materials[1].type = { 0, 0, 0, 0 };
+            //materials[1].info = { 0.8f, 0.8f, 0.0f, 0 };
+
+            // Let's make a cool big render with lots of random spheres!
+
+            spheres[0].center = { 0, 1.0f, 0, 0 };
+            spheres[0].radius = { 1.0f, 0, 0, 0 };
+            materials[0].type = { 2, 0, 0, 0 };
+            materials[0].info = { 1.5f, 0, 0, 0 };
+
+            spheres[1].center = { -4.0f, 1.0f, 0, 0 };
+            spheres[1].radius = { 1.0f, 0, 0, 0 };
             materials[1].type = { 0, 0, 0, 0 };
-            materials[1].info = { 0.8f, 0.8f, 0.0f, 0 };
+            materials[1].info = { 0.4f, 0.2f, 0.1f, 0 };
+
+            spheres[2].center = { 4.0f, 1.0f, 0, 0 };
+            spheres[2].radius = { 1.0f, 0, 0, 0 };
+            materials[2].type = { 1.0f, 0, 0, 0 };
+            materials[2].info = { 0.7f, 0.6f, 0.5f, 0 };
+
+            spheres[3].center = { 0, -1000.0f, 0,0 };
+            spheres[3].radius = { 1000.0f, 0, 0, 0 };
+            materials[3].type = { 0, 0, 0, 0 };
+            materials[3].info = { 0.5f, 0.5f, 0.5f, 0 };
+
+            for (int i = 4; i < sphere_count; i++)
+            {
+                spheres[i].center = { (float)random_double(-11, 11), 0.2f, (float)random_double(-11, 11), 0 };
+                spheres[i].radius = { 0.2f, 0, 0, 0 };
+
+                double choose_mat = random_double();
+
+                
+                if (choose_mat < 0.8)
+                {
+                    // Diffuse
+                    Vec3 albedo = Vec3::random() * Vec3::random();
+                    materials[i].type = { 0, 0, 0, 0 };
+                    materials[i].info = Vec3toFloat4(albedo);
+                }
+                else if (choose_mat < 0.95)
+                {
+                    // Metal
+                    Vec3 albedo = Vec3::random(0.5, 1);
+                    double fuzz = random_double(0, 0.5);
+                    materials[i].type = { 1, 0, 0, 0 };
+                    materials[i].info = Vec3toFloat4(albedo);
+                    materials[i].info.w = (float)fuzz;
+                }
+                else
+                {
+                    // Glass
+                    materials[i].type = { 2, 0, 0, 0 };
+                    materials[i].info = { 1.5, 0, 0, 0 };
+                }
+            }
 
             auto start = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::cout << "Started render at: " << std::ctime(&start) << "\n";
