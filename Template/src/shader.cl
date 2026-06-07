@@ -16,6 +16,8 @@ typedef struct
 	float4 pixel_delta_v;
 	int sphere_count;
 	int screen_width;
+	int num_samples;
+	int max_depth;
 } Configuration;
 
 // Ray struct and functions
@@ -351,15 +353,14 @@ __kernel void get_color(__global float4* img, __global Configuration* conf, __gl
 	int y = index / conf->screen_width;
 
 	float4 color = (float4)(0, 0, 0, 0);
-	int num_samples = 500;
+	int samples = conf->num_samples;
 
-	for (int i = 0; i < num_samples; i++)
+	for (int i = 0; i < samples; i++)
 	{
 		Ray r = get_ray(conf, x, y, &seed);
-		color += traverse(r, spheres, materials, conf->sphere_count, 50, &seed);
+		color += traverse(r, spheres, materials, conf->sphere_count, conf->max_depth, &seed);
 	}
 
-	color *= (float)(1.0 / (float)num_samples);
-	//color = sqrt(color / num_samples);
+	color *= (float)(1.0 / (float)samples);
 	set_color(img, index, color);
 }

@@ -20,4 +20,6 @@ struct Configuration
     cl_float4 pixel_delta_v;
     cl_int sphere_count;
     cl_int screen_width;
+    cl_int max_depth;
+    cl_int num_samples;
 };

@@ -247,7 +247,7 @@ class Camera
 
             int width = conf::window_size.x;
             int size = width * conf::window_size.y;
-            int sphere_count = 500;
+            int sphere_count = 250;
 
             Configuration* conf = new Configuration();
             conf->camera_center = Point3toFloat4(this->camera_center);
@@ -256,6 +256,8 @@ class Camera
             conf->pixel_delta_v = Vec3toFloat4(this->pixel_delta_v);
             conf->sphere_count = sphere_count;
             conf->screen_width = width;
+            conf->max_depth = conf::max_depth;
+            conf->num_samples = conf::samples_per_pixel;
 
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, size);
