@@ -16,8 +16,8 @@ typedef struct
 	float4 pixel_delta_v;
 	int sphere_count;
 	int screen_width;
-	int num_samples;
 	int max_depth;
+	int num_samples;
 } Configuration;
 
 // Ray struct and functions
