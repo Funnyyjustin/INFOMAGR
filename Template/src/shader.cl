@@ -116,7 +116,22 @@ float4 reflect(float4 v, float4 n)
 	return v - 2 * dot_product(v, n) * n;
 }
 
-ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, uint *seed)
+float4 refract(float4 v, float4 n, float eps)
+{
+	float cos_theta = fmin(dot_product(-v, n), 1.0f);
+	float4 r_out_perp = eps * (v + cos_theta * n);
+	float4 r_out_par = -sqrt(fabs(1.0f - length_squared(r_out_perp))) * n;
+	return r_out_perp + r_out_par;
+}
+
+float reflectance(float cosine, float ri)
+{
+	float r0 = (1 - ri) / (1 + ri);
+	r0 = r0 * r0;
+	return r0 + (1 - r0) * pow((1 - cosine), 5);
+}
+
+ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, int front_face, uint *seed)
 {
 	ScatReturn sr;
 	sr.success = 0;
@@ -156,7 +171,33 @@ ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, uint *seed)
 	// Scatter dieletric material
 	else if (m.type.x == 2)
 	{
+		sr.att = (float4)(1.0f, 1.0f, 1.0f, 0);
 
+		float ri;
+
+		if (front_face == 1)
+			ri = 1.0f / m.info.x;
+		else ri = m.info.x;
+
+		float4 unit_dir = normalize(r_in.dir);
+		
+		float cos_theta = fmin(dot_product(-unit_dir, normal), 1.0f);
+		float sin_theta = sqrt(1.0f - cos_theta * cos_theta);
+
+		bool cannot_refract = ri * sin_theta > 1.0f;
+		float4 dir;
+
+		if (cannot_refract || reflectance(cos_theta, ri) > RandomFloat(seed))
+			dir = reflect(unit_dir, normal);
+		else
+			dir = refract(unit_dir, normal, ri);
+
+		Ray r;
+		r.origin = p;
+		r.dir = dir;
+
+		sr.scat = r;
+		sr.success = 1;
 	}
 
 	return sr;
@@ -176,6 +217,7 @@ typedef struct
 	float4 normal; // normal of intersection
 	int hit; // 0 is no hit, 1 is hit
 	float t;
+	int front_face;
 } HitRecord;
 
 HitRecord hit(Ray r, Sphere s)
@@ -184,6 +226,7 @@ HitRecord hit(Ray r, Sphere s)
 	hr.hit = 0;
 	hr.p = (float4)(0, 0, 0, 0);
 	hr.normal = (float4)(0, 0, 0, 0);
+	hr.front_face = 0;
 
 	float4 oc = s.center - r.origin;
 	float a = length_squared(r.dir);
@@ -192,10 +235,11 @@ HitRecord hit(Ray r, Sphere s)
 	float d = h * h - a * c;
 
 	if (d < 0.0f)
-	{
+	{	
 		hr.hit = 0;
 		hr.p = (float4)(0, 0, 0, 0);
 		hr.normal = (float4)(0, 0, 0, 0);
+		hr.front_face = 0;
 		return hr;
 	}
 
@@ -213,7 +257,14 @@ HitRecord hit(Ray r, Sphere s)
 	hr.t = t;
 	hr.p = r.origin + t * r.dir;
 	float4 outward_normal = (hr.p - s.center) / s.radius.x;
-	hr.normal = set_normal(r, outward_normal);
+	float4 new_normal = set_normal(r, outward_normal);
+
+	if (all(fabs(new_normal - outward_normal) < 0.001f))
+		hr.front_face = 1;
+	else hr.front_face = 0;
+
+	hr.normal = new_normal;
+
 	return hr;
 }
 
@@ -265,7 +316,7 @@ float4 traverse(Ray r, __global Sphere* spheres, __global Material* materials, i
 		if (id >= 0)
 		{
 			Material m = materials[id];
-			ScatReturn sr = scatter(ray, m, best.p, best.normal, seed);
+			ScatReturn sr = scatter(ray, m, best.p, best.normal, best.front_face, seed);
 
 			if (sr.success == 1)
 			{
