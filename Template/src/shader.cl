@@ -39,14 +39,16 @@ typedef struct
 
 float length_squared(float4 v)
 {
-	float res = v.x * v.x + v.y * v.y + v.z * v.z;
-	return res;
+	//float res = v.x * v.x + v.y * v.y + v.z * v.z;
+	//return res;
+	return dot(v.xyz, v.xyz);
 }
 
 float dot_product(float4 v1, float4 v2)
 {
-	float res = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-	return res;
+	//float res = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	//return res;
+	return dot(v1.xyz, v2.xyz);
 }
 
 int near_zero(float4 v)
@@ -131,7 +133,7 @@ float4 refract(float4 v, float4 n, float eps)
 {
 	float cos_theta = fmin(dot_product(-v, n), 1.0f);
 	float4 r_out_perp = eps * (v + cos_theta * n);
-	float4 r_out_par = -sqrt(fabs(1.0f - length_squared(r_out_perp))) * n;
+	float4 r_out_par = -native_sqrt(fabs(1.0f - length_squared(r_out_perp))) * n;
 	return r_out_perp + r_out_par;
 }
 
@@ -193,7 +195,7 @@ ScatReturn scatter(Ray r_in, Material m, float4 p, float4 normal, int front_face
 		float4 unit_dir = normalize(r_in.dir);
 		
 		float cos_theta = fmin(dot_product(-unit_dir, normal), 1.0f);
-		float sin_theta = sqrt(1.0f - cos_theta * cos_theta);
+		float sin_theta = native_sqrt(1.0f - cos_theta * cos_theta);
 
 		bool cannot_refract = ri * sin_theta > 1.0f;
 		float4 dir;
@@ -254,7 +256,7 @@ HitRecord hit(Ray r, Sphere s)
 		return hr;
 	}
 
-	float sd = sqrt(d);
+	float sd = native_sqrt(d);
 
 	float t = (h - sd) / a;
 	if (t <= 0.001f)
@@ -307,9 +309,9 @@ int3 getVoxelIndex(float4 p, float4 worldMin, float4 cellDims, int boxesAlongX, 
 {
 	float4 offset = p - worldMin;
 	int3 idx;
-	idx.x = (int)floor(offset.x / cellDims.x);
-	idx.y = (int)floor(offset.y / cellDims.y);
-	idx.z = (int)floor(offset.z / cellDims.z);
+	idx.x = (int)floor(offset.x * (1.0 / cellDims.x));
+	idx.y = (int)floor(offset.y * (1.0 / cellDims.y));
+	idx.z = (int)floor(offset.z * (1.0 / cellDims.z));
 
 	idx.x = clamp(idx.x, 0, boxesAlongX - 1);
 	idx.y = clamp(idx.y, 0, boxesAlongY - 1);
@@ -345,8 +347,9 @@ float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* material
         float entry_t = 0.001f;
         float exit_t = 1e30f;
 
-        // Check if ray hits the grid bounding box at all (bug preserved: uses max instead of min for exit_t)
-        float4 invDir = (float4)(1.0f / ray.dir.x, 1.0f / ray.dir.y, 1.0f / ray.dir.z, 0);
+        // Check if ray hits the grid bounding box at all
+        //float4 invDir = (float4)(1.0f / ray.dir.x, 1.0f / ray.dir.y, 1.0f / ray.dir.z, 0);
+		float4 invDir = 1.0f / ray.dir;
         float4 t0 = (conf->worldMin - ray.origin) * invDir;
         float4 t1 = (conf->worldMax - ray.origin) * invDir;
         float4 tmin4 = fmin(t0, t1);
@@ -356,7 +359,7 @@ float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* material
 
         if (tenter > texit || texit < 0.001f)
         {
-            // Ray misses grid — return sky
+            // Ray misses grid, return sky
             float4 unit_dir = normalize(ray.dir);
             float a = 0.5f * (unit_dir.y + 1.0f);
             float4 sky = (1.0f - a) * (float4)(1.0f, 1.0f, 1.0f, 0) + a * (float4)(0.5f, 0.7f, 1.0f, 0);
@@ -364,7 +367,7 @@ float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* material
         }
 
         entry_t = max(0.001f, tenter);
-        exit_t  = max(1e30f,  exit_t);  // bug preserved from C++
+        exit_t = max(1e30f,  exit_t);
 
         float4 entryPoint = ray.origin + entry_t * ray.dir;
 
@@ -405,7 +408,7 @@ float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* material
             int voxelIdx = index3(xi, yi, zi, conf->boxesAlongX, conf->boxesAlongY);
             int2 voxel = voxels[voxelIdx];
             int offset = voxel.x;
-            int count  = voxel.y;
+            int count = voxel.y;
 
             for (int k = 0; k < count; k++)
             {
@@ -413,9 +416,9 @@ float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* material
                 HitRecord hr = hit(ray, spheres[sphereIdx]);
                 if (hr.hit == 1 && hr.t < closest)
                 {
-                    closest   = hr.t;
-                    best      = hr;
-                    best_id   = sphereIdx;
+                    closest = hr.t;
+                    best = hr;
+                    best_id = sphereIdx;
                     hit_anything = true;
                 }
             }
@@ -424,7 +427,7 @@ float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* material
 			{
 				float nextBoundary = min(maxT_x, min(maxT_y, maxT_z));
 				// break if hit is closer than the next voxel boundary
-				if(closest <= nextBoundary)
+				if (closest <= nextBoundary)
 					break;
 			}
                 

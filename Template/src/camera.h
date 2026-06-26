@@ -44,6 +44,7 @@ class Camera
             GRID
         };
 
+        // Unoptimized CPU render function
         sf::VertexArray render(World& world, bool rendered, AccelerationStructure axl)
         {
             initialize();
@@ -97,6 +98,7 @@ class Camera
             return arr;
         }
 
+        // Optimized GPU render function
         sf::VertexArray render_gpu(World& world, bool rendered, AccelerationStructure axl)
         {
             // Initialize camera + configuration for GPU
@@ -157,12 +159,6 @@ class Camera
             cl_float4* arr_temp = new cl_float4[size];
             SphereNew* spheres = new SphereNew[sphere_count];
             MaterialNew* materials = new MaterialNew[sphere_count];
-
-            // Initialize image array
-            for (int i = 0; i < size; i++)
-            {
-                arr_temp[i] = { 0, 0, 0, 0 };
-            }
 
             // Convert from CPU-friendly data to GPU-friendly data
             convertData(world, spheres, materials);
@@ -430,7 +426,8 @@ class Camera
         /// <returns></returns>
         Vec3 to_gamma(Vec3 v)
         {
-            double x, y, z;
+            // Old unoptimized code
+            /*double x, y, z;
             if (v.x() > 0)
                 x = std::sqrt(v.x());
             else x = 0;
@@ -443,7 +440,10 @@ class Camera
                 z = std::sqrt(v.z());
             else z = 0;
 
-            return Vec3(x, y, z);
+            return Vec3(x, y, z);*/
+
+            // New optimized code
+            return Vec3(std::max(0.0, std::sqrt(v.x())), std::max(0.0, std::sqrt(v.y())), std::max(0.0, std::sqrt(v.z())));
         }
 
         /// <summary>
@@ -455,7 +455,6 @@ class Camera
         {
             static const Interval intensity(0.000, 0.999);
             return sf::Color(256 * intensity.clamp(color.x()), 256 * intensity.clamp(color.y()), 256 * intensity.clamp(color.z()));
-            //return sf::Color(255 * color.x(), 255 * color.y(), 255 * color.z());
         }
 
         /// <summary>

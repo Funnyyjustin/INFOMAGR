@@ -39,23 +39,24 @@ class Grid : public Primitive
 
             boxesAlongX = conf::voxels_on_x;
             auto voxel_size = worldDimensions.x() / boxesAlongX;
-            boxesAlongY = ceil(worldDimensions.y() / voxel_size);
-            boxesAlongZ = ceil(worldDimensions.z() / voxel_size);
-			std::cout << boxesAlongX << " boxes along X." << std::endl;
-			std::cout << boxesAlongY << " boxes along Y." << std::endl;
-			std::cout << boxesAlongZ << " boxes along Z." << std::endl;
+            auto div = 1 / voxel_size;
+            boxesAlongY = ceil(worldDimensions.y() * div);
+            boxesAlongZ = ceil(worldDimensions.z() * div);
+			//std::cout << boxesAlongX << " boxes along X." << std::endl;
+			//std::cout << boxesAlongY << " boxes along Y." << std::endl;
+			//std::cout << boxesAlongZ << " boxes along Z." << std::endl;
 
             cellDimensions = {
-                worldDimensions.x() / boxesAlongX,
-                worldDimensions.y() / boxesAlongY,
-                worldDimensions.z() / boxesAlongZ
+                worldDimensions.x() * (1.0 / boxesAlongX),
+                worldDimensions.y() * (1.0 / boxesAlongY),
+                worldDimensions.z() * (1.0 / boxesAlongZ)
             };
 
-            std::cout << "Cell dimensions.x: " << cellDimensions.x() << std::endl;
-            std::cout << "Cell dimensions.y: " << cellDimensions.y() << std::endl;
-            std::cout << "Cell dimensions.z: " << cellDimensions.z() << std::endl;
+            //std::cout << "Cell dimensions.x: " << cellDimensions.x() << std::endl;
+            //std::cout << "Cell dimensions.y: " << cellDimensions.y() << std::endl;
+            //std::cout << "Cell dimensions.z: " << cellDimensions.z() << std::endl;
 
-			std::cout << boxesAlongX * boxesAlongY * boxesAlongZ << " voxels to be created." << std::endl;
+			//std::cout << boxesAlongX * boxesAlongY * boxesAlongZ << " voxels to be created." << std::endl;
             voxels.resize(boxesAlongX * boxesAlongY * boxesAlongZ);
 
             for (int i = 0; i < world.objects.size(); i++)
