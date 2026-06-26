@@ -10,6 +10,8 @@ The compilation is based on this [video](https://www.youtube.com/watch?v=t0z3Roj
 
 You should have CMake installed on your device. I recommend [CMake GUI](https://cmake.org/download); if you are on Windows, just download and install the .msi of the latest version.
 
+You should also have [OpenCL](https://www.khronos.org/opencl/) installed on your device. The easiest way to install this is by first installing [vcpkg](https://vcpkg.io/en/) on your device. Afterwards, navigate to the installation folder using a command prompt, and then install OpenCL by typing "vcpkg install opencl". When it has been installed, it might be required to add this to your PATH. 
+
 Then, clone this repository, and open it. I recommend [Visual Studio Community 2022](https://visualstudio.microsoft.com/downloads). You should also install some additional C++ libraries - please watch the video linked above to see what you should install.
 
 After you have VS Community 2022 and SFML correctly installed on your device, open a command or Powershell prompt. Navigate to where the project is located (the path should end in "Template" if you haven't changed any of the names).
@@ -32,8 +34,8 @@ Then, you can hit "Run" at the top of the screen, and both the console (outputti
 - Depth of field
 - Field of view
 - Positionable camera
-- `.obj` file reader
-- Acceleration structures: grid, k-d tree, BVH
+- Grid acceleration structure
+- GPU version that makes use of OpenCL
 
 Configuration settings (such as field of view, screen size, max bouncing depth, etc.) can be found in `configuration.hpp`.
 
