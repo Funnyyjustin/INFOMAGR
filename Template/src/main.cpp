@@ -176,7 +176,7 @@ int main()
 				if (structure == 1)
 					res = cam.render_gpu(world, rendered, Camera::NONE);
 				else if (structure == 2)
-					std::cout << "Grid is not yet implemented on the GPU!\n";
+					res = cam.render_gpu(world, rendered, Camera::GRID);
 			}
 			
 			rendered = true;

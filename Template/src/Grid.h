@@ -22,6 +22,9 @@ class Grid : public Primitive
     public:
         vector<Voxel> voxels;
         vector<shared_ptr<Primitive>> primitives;
+        Point3 worldMin, worldMax;
+        Vec3 cellDimensions;
+        int boxesAlongX, boxesAlongY, boxesAlongZ;
 
         Grid() = default;
 
@@ -69,7 +72,7 @@ class Grid : public Primitive
                             std::cout << object << " ";
                         }
                         std::cout << std::endl;
-                    }*/
+                    }
 
             bool acc = true;
             for (bool exist: exists) {
@@ -78,6 +81,7 @@ class Grid : public Primitive
 
             if (acc) std::cout << "All primitives exist in at least one voxel" << std::endl;
             else std::cout << "Not all primitives exist in at least one voxel" << std::endl;
+            */
 
             /*
             int boxes_along_x = conf::boxes_along_x;
@@ -164,11 +168,6 @@ class Grid : public Primitive
         }
 
     private:
-        Point3 worldMin, worldMax;
-		Vec3 cellDimensions;
-		int boxesAlongX, boxesAlongY, boxesAlongZ;
-
-
         bool traverse(const Ray& r, Point3 voxindex, Vec3 stepV, Vec3 maxV, Vec3 deltaV, double exit, Hit_record& rec, Interval ray_t) const
         {
             if (voxindex.x() < 0 || voxindex.x() >= boxesAlongX ||

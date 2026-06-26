@@ -116,6 +116,41 @@ class Camera
             conf->max_depth = conf::max_depth;
             conf->num_samples = conf::samples_per_pixel;
 
+            // use grid?
+            bool use_grid = axl == AccelerationStructure::GRID;
+            conf->use_grid = use_grid;
+
+            Grid grid(world);
+            if (use_grid) 
+            {
+                conf->worldMin = Point3toFloat4(grid.worldMin);
+                conf->worldMax = Point3toFloat4(grid.worldMax);
+                conf->cellDimensions = Vec3toFloat4(grid.cellDimensions);
+                conf->boxesAlongX = grid.boxesAlongX;
+                conf->boxesAlongY = grid.boxesAlongY;
+                conf->boxesAlongZ = grid.boxesAlongZ;
+            }
+
+            // flatten voxels into two arrays for passing to gpu
+            std::vector<cl_int2> voxelDescs;
+            std::vector<cl_int> voxelIndices;
+            if (use_grid) 
+            {
+                int startIdx = 0;
+                for (const Voxel& v : grid.voxels)
+                {
+                    cl_int2 desc;
+                    desc.s[0] = startIdx;
+                    desc.s[1] = (int)v.objects.size();
+                    voxelDescs.push_back(desc);
+
+                    for (int idx : v.objects)
+                        voxelIndices.push_back(idx);
+
+                    startIdx += v.objects.size();
+                }
+            }
+
             // Array of pixels
             auto arr = sf::VertexArray(sf::PrimitiveType::Points, size);
 
@@ -170,6 +205,27 @@ class Camera
             cl_mem materials_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(MaterialNew) * sphere_count, materials, &err);
             std::cout << "Create material buffer: " << err << "\n";
 
+            // grid buffers
+            cl_mem voxels_buffer = nullptr;
+            cl_mem indices_buffer = nullptr;
+
+            if (use_grid) 
+            {
+                voxels_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int2) * voxelDescs.size(), voxelDescs.data(), &err);
+                std::cout << "Create voxels buffer: " << err << "\n";
+
+                indices_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int) * voxelIndices.size(), voxelIndices.data(), &err);
+                std::cout << "Create voxel indices buffer: " << err << "\n";
+            }
+            else 
+            {
+                // dummy buffers for not using grid
+                cl_int dummy = 0;
+                cl_int2 dummy2 = { 0, 0 };
+                voxels_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int2), &dummy2, &err);
+                indices_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(cl_int), &dummy, &err);
+            }
+
             // Write buffers to GPU
             err = clEnqueueWriteBuffer(queue, image_buffer, CL_TRUE, 0, sizeof(cl_float4) * size, arr_temp, 0, nullptr, nullptr);
             std::cout << "Write image buffer: " << err << "\n";
@@ -212,9 +268,15 @@ class Camera
             err = clSetKernelArg(kernel, 3, sizeof(cl_mem), &materials_buffer);
             std::cout << "Set kernel argument 3: " << err << "\n";
 
+            err = clSetKernelArg(kernel, 4, sizeof(cl_mem), &voxels_buffer);
+            std::cout << "Set kernel argument 4: " << err << "\n";
+
+            err = clSetKernelArg(kernel, 5, sizeof(cl_mem), &indices_buffer);
+            std::cout << "Set kernel argument 5: " << err << "\n";
+
             // Run kernel
             size_t globalsize = size;
-            size_t localsize = 1;
+            size_t localsize = 128;
             err = clEnqueueNDRangeKernel(queue, kernel, 1, 0, &globalsize, &localsize, 0, nullptr, nullptr);
             std::cout << "Kernel enqueue: " << err << "\n";
 
@@ -231,6 +293,8 @@ class Camera
             clReleaseMemObject(conf_buffer);
             clReleaseMemObject(spheres_buffer);
             clReleaseMemObject(materials_buffer);
+            clReleaseMemObject(voxels_buffer);
+            clReleaseMemObject(indices_buffer);
             clReleaseCommandQueue(queue);
             clReleaseContext(context);
 

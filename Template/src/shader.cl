@@ -18,6 +18,15 @@ typedef struct
 	int screen_width;
 	int max_depth;
 	int num_samples;
+	
+	// Grid configs
+	int use_grid;
+	float4 worldMin;
+	float4 worldMax;
+	float4 cellDimensions;
+	int boxesAlongX;
+	int boxesAlongY;
+	int boxesAlongZ;
 } Configuration;
 
 // Ray struct and functions
@@ -270,6 +279,50 @@ HitRecord hit(Ray r, Sphere s)
 	return hr;
 }
 
+void goTo(float* maxT, float delta, float entry_t)
+{
+	if (*maxT == INFINITY) return;
+	if (*maxT < entry_t)
+	{
+		float d = entry_t - *maxT;
+		float num_steps = ceil(d / delta);
+		*maxT += num_steps * delta;
+	}
+}
+
+float nextBoundaryT(int start, float r_origin, float r_dir, float min, float cellDim, int step)
+{
+	// ray will not hit current axis
+    if (r_dir == 0) return INFINITY;
+
+    int step_;
+    if (step > 0) step_ = 1;
+    else step_ = 0;
+
+    float boundary = min + (start + step_) * cellDim;
+    return (boundary - r_origin) / r_dir;
+}
+
+int3 getVoxelIndex(float4 p, float4 worldMin, float4 cellDims, int boxesAlongX, int boxesAlongY, int boxesAlongZ)
+{
+	float4 offset = p - worldMin;
+	int3 idx;
+	idx.x = (int)floor(offset.x / cellDims.x);
+	idx.y = (int)floor(offset.y / cellDims.y);
+	idx.z = (int)floor(offset.z / cellDims.z);
+
+	idx.x = clamp(idx.x, 0, boxesAlongX - 1);
+	idx.y = clamp(idx.y, 0, boxesAlongY - 1);
+	idx.z = clamp(idx.z, 0, boxesAlongZ - 1);
+
+	return idx;
+}
+
+int index3(int x, int y, int z, int boxesAlongX, int boxesAlongY)
+{
+	return x + boxesAlongX * (y + boxesAlongY * z);
+}
+
 // General functions
 
 void set_color(__global float4* img, int index, float4 color)
@@ -278,6 +331,145 @@ void set_color(__global float4* img, int index, float4 color)
 	img[index].y = color.y;
 	img[index].z = color.z;
 	img[index].w = 0;
+}
+
+float4 gridTraverse(Ray r, __global Sphere* spheres, __global Material* materials, __global int2* voxels, 
+	__global int* voxelIndices, __global Configuration* conf, uint* seed)
+{
+	Ray ray = r;
+	float4 throughput = (float4)(1, 1, 1, 0);
+	int depth = conf->max_depth;
+
+	for (int bounce = 0; bounce <= depth; bounce++)
+    {
+        float entry_t = 0.001f;
+        float exit_t = 1e30f;
+
+        // Check if ray hits the grid bounding box at all (bug preserved: uses max instead of min for exit_t)
+        float4 invDir = (float4)(1.0f / ray.dir.x, 1.0f / ray.dir.y, 1.0f / ray.dir.z, 0);
+        float4 t0 = (conf->worldMin - ray.origin) * invDir;
+        float4 t1 = (conf->worldMax - ray.origin) * invDir;
+        float4 tmin4 = fmin(t0, t1);
+        float4 tmax4 = fmax(t0, t1);
+        float tenter = fmax(fmax(tmin4.x, tmin4.y), tmin4.z);
+        float texit  = fmin(fmin(tmax4.x, tmax4.y), tmax4.z);
+
+        if (tenter > texit || texit < 0.001f)
+        {
+            // Ray misses grid — return sky
+            float4 unit_dir = normalize(ray.dir);
+            float a = 0.5f * (unit_dir.y + 1.0f);
+            float4 sky = (1.0f - a) * (float4)(1.0f, 1.0f, 1.0f, 0) + a * (float4)(0.5f, 0.7f, 1.0f, 0);
+            return throughput * sky;
+        }
+
+        entry_t = max(0.001f, tenter);
+        exit_t  = max(1e30f,  exit_t);  // bug preserved from C++
+
+        float4 entryPoint = ray.origin + entry_t * ray.dir;
+
+        int3 vi = getVoxelIndex(entryPoint, conf->worldMin, conf->cellDimensions,
+                                conf->boxesAlongX, conf->boxesAlongY, conf->boxesAlongZ);
+
+        int stepX = (ray.dir.x > 0) ? 1 : -1;
+        int stepY = (ray.dir.y > 0) ? 1 : -1;
+        int stepZ = (ray.dir.z > 0) ? 1 : -1;
+
+        float deltaX = conf->cellDimensions.x / fabs(ray.dir.x);
+        float deltaY = conf->cellDimensions.y / fabs(ray.dir.y);
+        float deltaZ = conf->cellDimensions.z / fabs(ray.dir.z);
+
+        float maxT_x = nextBoundaryT(vi.x, ray.origin.x, ray.dir.x, conf->worldMin.x, conf->cellDimensions.x, stepX);
+        float maxT_y = nextBoundaryT(vi.y, ray.origin.y, ray.dir.y, conf->worldMin.y, conf->cellDimensions.y, stepY);
+        float maxT_z = nextBoundaryT(vi.z, ray.origin.z, ray.dir.z, conf->worldMin.z, conf->cellDimensions.z, stepZ);
+
+        goTo(&maxT_x, deltaX, entry_t);
+        goTo(&maxT_y, deltaY, entry_t);
+        goTo(&maxT_z, deltaZ, entry_t);
+
+        int xi = vi.x, yi = vi.y, zi = vi.z;
+
+        // DDA traversal (Amanatides & Woo)
+        bool hit_anything = false;
+        HitRecord best;
+        int best_id = -1;
+        float closest = 1e30f;
+
+        while (true)
+        {
+            if (xi < 0 || xi >= conf->boxesAlongX ||
+                yi < 0 || yi >= conf->boxesAlongY ||
+                zi < 0 || zi >= conf->boxesAlongZ)
+                break;
+
+            int voxelIdx = index3(xi, yi, zi, conf->boxesAlongX, conf->boxesAlongY);
+            int2 voxel = voxels[voxelIdx];
+            int offset = voxel.x;
+            int count  = voxel.y;
+
+            for (int k = 0; k < count; k++)
+            {
+                int sphereIdx = voxelIndices[offset + k];
+                HitRecord hr = hit(ray, spheres[sphereIdx]);
+                if (hr.hit == 1 && hr.t < closest)
+                {
+                    closest   = hr.t;
+                    best      = hr;
+                    best_id   = sphereIdx;
+                    hit_anything = true;
+                }
+            }
+
+            if (hit_anything)
+			{
+				float nextBoundary = min(maxT_x, min(maxT_y, maxT_z));
+				// break if hit is closer than the next voxel boundary
+				if(closest <= nextBoundary)
+					break;
+			}
+                
+
+            // Step to next voxel
+            if (maxT_x < maxT_y)
+            {
+                if (maxT_x < maxT_z) 
+					{ xi += stepX; maxT_x += deltaX; }
+                else                  
+					{ zi += stepZ; maxT_z += deltaZ; }
+            }
+            else
+            {
+                if (maxT_y < maxT_z) 
+					{ yi += stepY; maxT_y += deltaY; }
+                else                  
+					{ zi += stepZ; maxT_z += deltaZ; }
+            }
+        }
+
+        if (hit_anything)
+        {
+            Material m = materials[best_id];
+            ScatReturn sr = scatter(ray, m, best.p, best.normal, best.front_face, seed);
+            if (sr.success == 1)
+            {
+                throughput *= sr.att;
+                ray = sr.scat;
+            }
+            else
+            {
+                return throughput * (float4)(0, 0, 0, 0);
+            }
+        }
+        else
+        {
+            float4 unit_dir = normalize(ray.dir);
+            float a = 0.5f * (unit_dir.y + 1.0f);
+            float4 sky = (1.0f - a) * (float4)(1.0f, 1.0f, 1.0f, 0) + a * (float4)(0.5f, 0.7f, 1.0f, 0);
+            return throughput * sky;
+        }
+    }
+
+    return throughput;
 }
 
 float4 traverse(Ray r, __global Sphere* spheres, __global Material* materials, int sphere_count, int depth, uint *seed)
@@ -344,7 +536,7 @@ float4 traverse(Ray r, __global Sphere* spheres, __global Material* materials, i
 	return throughput;
 }
 
-__kernel void get_color(__global float4* img, __global Configuration* conf, __global Sphere* spheres, __global Material* materials)
+__kernel void get_color(__global float4* img, __global Configuration* conf, __global Sphere* spheres, __global Material* materials, __global int2* voxels, __global int* voxelIndices)
 {
 	int index = get_global_id(0);
 	uint seed = WangHash((index + 1) * 17);
@@ -358,7 +550,10 @@ __kernel void get_color(__global float4* img, __global Configuration* conf, __gl
 	for (int i = 0; i < samples; i++)
 	{
 		Ray r = get_ray(conf, x, y, &seed);
-		color += traverse(r, spheres, materials, conf->sphere_count, conf->max_depth, &seed);
+		if (conf->use_grid)
+			color += gridTraverse(r, spheres, materials, voxels, voxelIndices, conf, &seed);
+		else
+			color += traverse(r, spheres, materials, conf->sphere_count, conf->max_depth, &seed);
 	}
 
 	color *= (float)(1.0 / (float)samples);

@@ -22,4 +22,14 @@ struct Configuration
     cl_int screen_width;
     cl_int max_depth;
     cl_int num_samples;
+
+    cl_int use_grid;
+    cl_int padding[3]; // padding
+    cl_float4 worldMin;
+    cl_float4 worldMax;
+    cl_float4 cellDimensions;
+    cl_int boxesAlongX;
+    cl_int boxesAlongY;
+    cl_int boxesAlongZ;
+    cl_int padding2; // padding
 };
